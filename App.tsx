@@ -156,7 +156,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
+  const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean = true) => {
       if (!gameState.currentScenario) return;
       const scenarioAct = gameState.currentScenario.act;
       if (scenarioAct !== gameState.currentAct) {
@@ -169,11 +169,14 @@ const App: React.FC = () => {
       const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
       const newQuality = Math.max(0, Math.min(100, gameState.ticketQuality + qualityChange));
 
-      // Track abgeschlossenes Szenario
-      const updatedCompleted = Array.from(new Set([...gameState.completedScenarios, gameState.currentScenario.id]));
-
       // 2. Log Outcome
       addLog(outcomeText, 'SYSTEM');
+
+      // Track completed scenario ONLY if answered correctly
+      let updatedCompleted = [...gameState.completedScenarios];
+      if (isCorrect && !updatedCompleted.includes(gameState.currentScenario.id)) {
+          updatedCompleted.push(gameState.currentScenario.id);
+      }
 
       // 3. Determine if Level/Act Complete
       let nextAct = gameState.currentAct;
@@ -182,8 +185,14 @@ const App: React.FC = () => {
       let newUnlockedLocs = [...gameState.unlockedLocationIds];
       let newUnlockedSkills = [...gameState.unlockedSkillIds];
 
-      // Check Game Over Conditions
-      if (newSla <= 0 || newMorale <= 0 || newQuality <= 0) {
+      // Check if answer was wrong - show game over screen immediately
+      if (!isCorrect) {
+          gameStatus = 'lost';
+          newScreen = 'GAME_OVER';
+          addLog("FALSCHE ENTSCHEIDUNG: Das Szenario wurde nicht korrekt gelöst.", 'SYSTEM');
+      }
+      // Check Game Over Conditions (stats hit zero)
+      else if (newSla <= 0 || newMorale <= 0 || newQuality <= 0) {
           gameStatus = 'lost';
           newScreen = 'GAME_OVER';
           addLog("SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
@@ -374,7 +383,8 @@ const App: React.FC = () => {
                                     handleScenarioComplete(
                                         success ? 20 : -20, 
                                         success ? 10 : -10, 
-                                        success ? "Modell erfolgreich refakturiert." : "Refactoring fehlgeschlagen. Spaghetti-Code entstanden."
+                                        success ? "Modell erfolgreich refakturiert." : "Refactoring fehlgeschlagen. Spaghetti-Code entstanden.",
+                                        success
                                     );
                                 }}
                             />
@@ -389,7 +399,8 @@ const App: React.FC = () => {
                                      handleScenarioComplete(
                                         success ? 15 : -10,
                                         success ? 5 : -5,
-                                        success ? "Zugriff gewährt." : "Zugriff verweigert."
+                                        success ? "Zugriff gewährt." : "Zugriff verweigert.",
+                                        success
                                      );
                                 }}
                             />

@@ -55,6 +55,7 @@ export interface ScenarioOption {
   outcome: string;
   qualityChange: number;
   moraleChange: number;
+  isCorrect?: boolean; // Flag to mark the correct answer
 }
 
 export interface Scenario {
