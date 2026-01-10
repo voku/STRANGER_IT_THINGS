@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS } from './constants';
+import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE, SLA_DECAY_INTERVAL } from './constants';
 import { Act, Character, GameState, LogEntry, Scenario, MapLocation, Skill } from './types';
 import RetroContainer from './components/RetroContainer';
 import Terminal from './components/Terminal';
@@ -54,7 +54,7 @@ const App: React.FC = () => {
 
     const timer = setInterval(() => {
       setGameState(prev => {
-        const newSla = Math.max(0, prev.slaTime - 2); // Reduce SLA by 2 every 30 seconds
+        const newSla = Math.max(0, prev.slaTime - SLA_DECAY_RATE);
         
         // Check for game over
         if (newSla <= 0) {
@@ -69,7 +69,7 @@ const App: React.FC = () => {
         
         return { ...prev, slaTime: newSla };
       });
-    }, 30000); // Every 30 seconds
+    }, SLA_DECAY_INTERVAL);
 
     return () => clearInterval(timer);
   }, [gameState.gameStatus, gameState.currentScreen]);
