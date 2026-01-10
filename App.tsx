@@ -18,7 +18,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE } from './constants';
-import { Act, Character, GameState, Scenario, MapLocation, Skill } from './types';
+import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry } from './types';
 import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
 import { useGameMechanics } from './hooks/useGameMechanics';
@@ -73,7 +73,7 @@ const App: React.FC = () => {
   /**
    * Adds a message to the game history log
    */
-  const addLog = useCallback((text: string, speaker: typeof createLogEntry extends (...args: any) => infer R ? R['speaker'] : never = 'SYSTEM') => {
+  const addLog = useCallback((text: string, speaker: LogEntry['speaker'] = 'SYSTEM') => {
     setGameState(prev => ({
       ...prev,
       history: [...prev.history, createLogEntry(text, speaker)]

@@ -219,7 +219,7 @@ describe('Edge Cases and Integration', () => {
     });
 
     it('should accept different speaker types', () => {
-      const speakers = ['SYSTEM', 'GM', 'PLAYER', 'DM'] as const;
+      const speakers = ['SYSTEM', 'GM', 'PLAYER', 'USER'] as const;
       speakers.forEach(speaker => {
         const log = createLogEntry('Test', speaker);
         expect(log.speaker).toBe(speaker);
