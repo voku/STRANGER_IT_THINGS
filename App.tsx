@@ -126,8 +126,12 @@ const App: React.FC = () => {
     }, 2000);
 
     setTimeout(() => {
-        setTransition(prev => ({ ...prev, stage: 'OUT', active: false }));
+        setTransition(prev => ({ ...prev, stage: 'OUT' }));
     }, 4500);
+
+    setTimeout(() => {
+        setTransition(prev => ({ ...prev, active: false }));
+    }, 5500); // Extra 1 second for fade out animation
   };
 
   /**

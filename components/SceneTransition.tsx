@@ -3,11 +3,26 @@ import React from 'react';
 interface SceneTransitionProps {
   title: string;
   subtitle?: string;
+  stage: 'IN' | 'INTERSTITIAL' | 'OUT';
 }
 
-const SceneTransition: React.FC<SceneTransitionProps> = ({ title, subtitle }) => {
+const SceneTransition: React.FC<SceneTransitionProps> = ({ title, subtitle, stage }) => {
+  // Determine opacity based on stage
+  const getOpacity = () => {
+    switch (stage) {
+      case 'IN':
+        return 'opacity-0 animate-fade-in';
+      case 'INTERSTITIAL':
+        return 'opacity-100';
+      case 'OUT':
+        return 'opacity-0 animate-fade-out';
+      default:
+        return 'opacity-100';
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center pointer-events-none">
+    <div className={`fixed inset-0 z-50 bg-black flex flex-col items-center justify-center pointer-events-none transition-opacity duration-1000 ${getOpacity()}`}>
       <div className="animate-chapter-zoom flex flex-col items-center justify-center w-full px-4">
         {subtitle && (
           <p className="font-stranger text-red-800 text-lg md:text-2xl tracking-[0.3em] text-center uppercase mb-4 opacity-80">

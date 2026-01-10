@@ -1,12 +1,25 @@
 import React from 'react';
-import { Character, GameState } from '../types';
+import { Character, Skill, Act } from '../types';
 
 interface StatsPanelProps {
   character: Character;
-  gameState: GameState;
+  skill: Skill | null;
+  slaTime: number;
+  teamMorale: number;
+  ticketQuality: number;
+  currentAct: Act;
+  gameStatus: 'active' | 'won' | 'lost';
 }
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ character, gameState }) => {
+const StatsPanel: React.FC<StatsPanelProps> = ({ 
+  character, 
+  skill,
+  slaTime, 
+  teamMorale, 
+  ticketQuality,
+  currentAct,
+  gameStatus
+}) => {
   
   // Helper for progress bars
   const renderBar = (label: string, value: number, colorClass: string, statusText: string | null = null) => (
@@ -51,7 +64,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ character, gameState }) => {
     return { color: "bg-green-500 shadow-[0_0_10px_#22c55e]", text: "SICHER" };
   };
 
-  const slaConfig = getSLAConfig(gameState.slaTime);
+  const slaConfig = getSLAConfig(slaTime);
 
   return (
     <div className={`border-2 p-4 bg-gray-900/95 backdrop-blur rounded flex flex-col md:flex-row gap-6 items-center justify-between ${character.themeColor} shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-colors duration-500`}>
@@ -69,26 +82,26 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ character, gameState }) => {
 
       {/* Stats Grid */}
       <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-3 gap-4">
-        {renderBar("SLA BUFFER", gameState.slaTime, slaConfig.color, slaConfig.text)}
-        {renderBar("TEAM MORAL", gameState.teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
-        {renderBar("TICKET QUALITÄT", gameState.ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
+        {renderBar("SLA BUFFER", slaTime, slaConfig.color, slaConfig.text)}
+        {renderBar("TEAM MORAL", teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
+        {renderBar("TICKET QUALITÄT", ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
       </div>
 
       {/* Act Info & Inventory */}
       <div className="flex flex-col items-end gap-2 min-w-[150px] border-l border-gray-700 pl-4 hidden md:flex">
         <div className="font-vt323 text-right">
-            <div className="text-xl text-green-400 mb-1 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">{gameState.currentAct.split(':')[0]}</div>
-            <div className={`text-xs uppercase tracking-widest ${gameState.gameStatus === 'active' ? 'text-gray-400' : gameState.gameStatus === 'won' ? 'text-green-400' : 'text-red-500'}`}>
-                Status: {gameState.gameStatus}
+            <div className="text-xl text-green-400 mb-1 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">{currentAct.split(':')[0]}</div>
+            <div className={`text-xs uppercase tracking-widest ${gameStatus === 'active' ? 'text-gray-400' : gameStatus === 'won' ? 'text-green-400' : 'text-red-500'}`}>
+                Status: {gameStatus}
             </div>
         </div>
 
         {/* Active Skill Display */}
         <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded border border-gray-600">
             <span className="text-xs text-gray-500 font-vt323">ITEM:</span>
-            {gameState.selectedSkill ? (
-                <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={gameState.selectedSkill.description}>
-                    {gameState.selectedSkill.icon} <span className="hidden lg:inline">{gameState.selectedSkill.name}</span>
+            {skill ? (
+                <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={skill.description}>
+                    {skill.icon} <span className="hidden lg:inline">{skill.name}</span>
                 </span>
             ) : (
                 <span className="text-xs text-gray-600 italic">KEINS</span>
