@@ -1,5 +1,6 @@
 import React from 'react';
 import { GameState, CharacterRole } from '../types';
+import { ACT_2_CORE_SCENARIOS } from '../constants';
 
 interface EndScreenProps {
   gameState: GameState;
@@ -34,7 +35,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
   // Dynamic Narrative Generation
   const generateNarrative = () => {
     let lines: string[] = [];
-    const act2CoreMissing = ['act2_1', 'act2_2'].filter(id => !completed.includes(id));
+    const act2CoreMissing = ACT_2_CORE_SCENARIOS.filter(id => !completed.includes(id));
 
     // 1. Role Specific Outcome
     if (selectedCharacter) {

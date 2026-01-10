@@ -4,6 +4,9 @@ export const INITIAL_SLA = 100;
 export const INITIAL_MORALE = 100;
 export const INITIAL_QUALITY = 50;
 
+// Kern-Szenarien in Akt 2, die vor dem Boss erledigt sein sollen
+export const ACT_2_CORE_SCENARIOS = ['act2_1', 'act2_2'];
+
 export const MAP_LOCATIONS: MapLocation[] = [
   {
     id: 'MALL',

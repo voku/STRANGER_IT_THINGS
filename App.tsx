@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS } from './constants';
+import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS } from './constants';
 import { Act, Character, GameState, LogEntry, Scenario, MapLocation, Skill } from './types';
 import RetroContainer from './components/RetroContainer';
 import Terminal from './components/Terminal';
@@ -161,6 +161,7 @@ const App: React.FC = () => {
       const scenarioAct = gameState.currentScenario.act;
       if (scenarioAct !== gameState.currentAct) {
           addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression. Bitte zum aktuellen Akt zurückkehren.", 'SYSTEM');
+          return;
       }
 
       // 1. Update Stats
@@ -201,7 +202,7 @@ const App: React.FC = () => {
               newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
           }
           else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
-               const act2CoreDone = ['act2_1', 'act2_2'].every(id => updatedCompleted.includes(id));
+               const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
                if (scenarioAct === Act.ACT_2_PERSPECTIVE && act2CoreDone) {
                    nextAct = Act.ACT_3_BOSS;
                    newUnlockedLocs.push('LAB');
