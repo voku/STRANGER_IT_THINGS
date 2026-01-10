@@ -39,6 +39,13 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
   const [nameError, setNameError] = useState(false);
   
+  // Ensure ausgewählte Items wirklich freigeschaltet sind
+  useEffect(() => {
+    if (gameState.selectedSkill && !gameState.unlockedSkillIds.includes(gameState.selectedSkill.id)) {
+        setGameState(prev => ({ ...prev, selectedSkill: null }));
+    }
+  }, [gameState.selectedSkill, gameState.unlockedSkillIds]);
+
   // Transition State
   const [transition, setTransition] = useState<{ 
     active: boolean; 
@@ -150,6 +157,12 @@ const App: React.FC = () => {
   };
 
   const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
+      // Abbruch, wenn der Abschluss nicht zum aktuellen Akt passt
+      if (!gameState.currentScenario || gameState.currentScenario.act !== gameState.currentAct) {
+          addLog("Akt-Reihenfolge verletzt. Abschluss nicht möglich.", 'SYSTEM');
+          return;
+      }
+
       // 1. Update Stats
       const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
       const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
