@@ -180,7 +180,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean = true) => {
+  const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean = false) => {
       if (!gameState.currentScenario) return;
       const scenarioAct = gameState.currentScenario.act;
       if (scenarioAct !== gameState.currentAct) {

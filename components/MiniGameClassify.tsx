@@ -36,7 +36,8 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
   const handleConfirm = () => {
     if (selectedOption === null || !scenario.options) return;
     const option = scenario.options[selectedOption];
-    onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? true);
+    // No fallback - if isCorrect is missing, it will be undefined and treated as wrong
+    onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? false);
   };
 
   if (!scenario.options) return <div>Datenkorruptionsfehler.</div>;
