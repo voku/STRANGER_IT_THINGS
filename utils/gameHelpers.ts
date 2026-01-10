@@ -70,6 +70,7 @@ export function createLogEntry(
  * Clamps a value between 0 and 100
  * 
  * Ensures stat values never go below 0 or above 100.
+ * Handles NaN values by converting them to 0 to prevent state corruption.
  * 
  * @param value - The value to clamp
  * @returns The clamped value between 0 and 100
@@ -79,8 +80,14 @@ export function createLogEntry(
  * clampStat(150) // returns 100
  * clampStat(-10) // returns 0
  * clampStat(75)  // returns 75
+ * clampStat(NaN) // returns 0 (prevents corruption)
  * ```
  */
 export function clampStat(value: number): number {
+  // Prevent NaN from corrupting game state
+  if (isNaN(value) || !isFinite(value)) {
+    console.warn('clampStat received invalid value:', value, '- defaulting to 0');
+    return 0;
+  }
   return Math.max(0, Math.min(100, value));
 }
