@@ -157,16 +157,15 @@ const App: React.FC = () => {
   };
 
   const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
-      // Abbruch, wenn der Abschluss nicht zum aktuellen Akt passt
-      if (!gameState.currentScenario || gameState.currentScenario.act !== gameState.currentAct) {
-          addLog("Akt-Reihenfolge verletzt. Abschluss nicht möglich.", 'SYSTEM');
-          return;
-      }
+      if (!gameState.currentScenario) return;
 
       // 1. Update Stats
       const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
       const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
       const newQuality = Math.max(0, Math.min(100, gameState.ticketQuality + qualityChange));
+
+      // Track abgeschlossenes Szenario
+      const updatedCompleted = Array.from(new Set([...gameState.completedScenarios, gameState.currentScenario.id]));
 
       // 2. Log Outcome
       addLog(outcomeText, 'SYSTEM');
@@ -197,8 +196,10 @@ const App: React.FC = () => {
               });
               newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
           }
-          else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE && gameState.currentScenario?.type === 'TRIAGE') {
-               // Act 2 Complete -> Act 3
+          else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
+               // Act 2 requires Kern-Szenen (Tempel + Change) vor Boss
+               const act2CoreDone = ['act2_1', 'act2_2'].every(id => updatedCompleted.includes(id));
+               if (act2CoreDone) {
                nextAct = Act.ACT_3_BOSS;
                newUnlockedLocs.push('LAB');
                newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
@@ -208,6 +209,9 @@ const App: React.FC = () => {
                   addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
                });
                newScreen = 'SKILL_SELECT';
+               } else {
+                  addLog("Akt 2 Training noch nicht abgeschlossen. ITIL-Tempel und Change-Rätsel meistern, bevor es weitergeht.", 'SYSTEM');
+               }
           }
           else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
               // Victory
@@ -225,8 +229,9 @@ const App: React.FC = () => {
           currentAct: nextAct,
           currentScreen: newScreen,
           gameStatus: gameStatus,
-          unlockedLocationIds: newUnlockedLocs,
-          unlockedSkillIds: newUnlockedSkills,
+          unlockedLocationIds: Array.from(new Set(newUnlockedLocs)),
+          unlockedSkillIds: Array.from(new Set(newUnlockedSkills)),
+          completedScenarios: updatedCompleted,
           currentScenario: null // Reset active scenario
       }));
   };
