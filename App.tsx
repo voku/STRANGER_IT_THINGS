@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS } from './constants';
+import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS } from './constants';
 import { Act, Character, GameState, LogEntry, Scenario, MapLocation, Skill } from './types';
 import RetroContainer from './components/RetroContainer';
 import Terminal from './components/Terminal';
@@ -39,6 +39,13 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
   const [nameError, setNameError] = useState(false);
   
+  // Ensure ausgewählte Items wirklich freigeschaltet sind
+  useEffect(() => {
+    if (gameState.selectedSkill && !gameState.unlockedSkillIds.includes(gameState.selectedSkill.id)) {
+        setGameState(prev => ({ ...prev, selectedSkill: null }));
+    }
+  }, [gameState.selectedSkill, gameState.unlockedSkillIds]);
+
   // Transition State
   const [transition, setTransition] = useState<{ 
     active: boolean; 
@@ -150,10 +157,20 @@ const App: React.FC = () => {
   };
 
   const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
+      if (!gameState.currentScenario) return;
+      const scenarioAct = gameState.currentScenario.act;
+      if (scenarioAct !== gameState.currentAct) {
+          addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression. Bitte zum aktuellen Akt zurückkehren.", 'SYSTEM');
+          return;
+      }
+
       // 1. Update Stats
       const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
       const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
       const newQuality = Math.max(0, Math.min(100, gameState.ticketQuality + qualityChange));
+
+      // Track abgeschlossenes Szenario
+      const updatedCompleted = Array.from(new Set([...gameState.completedScenarios, gameState.currentScenario.id]));
 
       // 2. Log Outcome
       addLog(outcomeText, 'SYSTEM');
@@ -184,17 +201,21 @@ const App: React.FC = () => {
               });
               newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
           }
-          else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE && gameState.currentScenario?.type === 'TRIAGE') {
-               // Act 2 Complete -> Act 3
-               nextAct = Act.ACT_3_BOSS;
-               newUnlockedLocs.push('LAB');
-               newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
-               
-               triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
-                  addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                  addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
-               });
-               newScreen = 'SKILL_SELECT';
+          else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
+               const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
+               if (act2CoreDone) {
+                   nextAct = Act.ACT_3_BOSS;
+                   newUnlockedLocs.push('LAB');
+                   newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
+                   
+                   triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
+                      addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
+                      addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
+                   });
+                   newScreen = 'SKILL_SELECT';
+               } else {
+                   addLog("Akt 3 noch gesperrt: ITIL-Tempel und Change-Rätsel abschließen, um den Boss freizuschalten.", 'SYSTEM');
+               }
           }
           else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
               // Victory
@@ -212,8 +233,9 @@ const App: React.FC = () => {
           currentAct: nextAct,
           currentScreen: newScreen,
           gameStatus: gameStatus,
-          unlockedLocationIds: newUnlockedLocs,
-          unlockedSkillIds: newUnlockedSkills,
+          unlockedLocationIds: Array.from(new Set(newUnlockedLocs)),
+          unlockedSkillIds: Array.from(new Set(newUnlockedSkills)),
+          completedScenarios: updatedCompleted,
           currentScenario: null // Reset active scenario
       }));
   };
