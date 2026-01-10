@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stranger IT Things</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --stranger-red: #e11d23;
+        --stranger-glow: #ff4d4d;
+      }
+
+      body {
+        background-color: #050505;
+        color: #e2e8f0;
+        overflow-x: hidden;
+        margin: 0;
+      }
+
+      /* Typography */
+      .font-vt323 { font-family: 'VT323', monospace; }
+      .font-press-start { font-family: 'Press Start 2P', cursive; }
+      .font-stranger { font-family: 'Libre Baskerville', serif; }
+
+      /* Stranger Things Title Effect */
+      .stranger-title {
+        font-family: 'Libre Baskerville', serif;
+        -webkit-text-stroke: 2px var(--stranger-red);
+        color: transparent;
+        text-shadow: 0 0 15px var(--stranger-glow);
+        letter-spacing: -0.05em;
+      }
+
+      .stranger-heading {
+        font-family: 'Libre Baskerville', serif;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--stranger-red);
+        text-shadow: 0 0 8px rgba(225, 29, 35, 0.8);
+        font-weight: 700;
+        text-transform: uppercase;
+        position: relative;
+      }
+      
+      .stranger-heading::before {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: var(--stranger-red);
+        opacity: 0.3;
+        filter: blur(4px);
+        z-index: -1;
+      }
+
+      /* Animations */
+      @keyframes chapterZoom {
+        0% { transform: scale(0.8); opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { transform: scale(1.2); opacity: 0; }
+      }
+      .animate-chapter-zoom {
+        animation: chapterZoom 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+      .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+      @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .animate-zoom-in { animation: zoomIn 0.3s ease-out forwards; }
+
+      /* CRT Effects */
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.2) 50%,
+          rgba(0,0,0,0.2)
+        );
+        background-size: 100% 4px;
+        animation: scanlineMove 10s linear infinite;
+      }
+      @keyframes scanlineMove {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 100%; }
+      }
+
+      .spore {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: floatUp linear infinite;
+        bottom: -10px;
+        pointer-events: none;
+      }
+
+      @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        20% { opacity: 0.5; }
+        80% { opacity: 0.2; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+      }
+
+      /* Custom Scrollbar for Terminal */
+      .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+          background: #020602;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #15803d; 
+          border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #22c55e; 
+      }
+
+      .blink {
+        animation: blink-animation 1.5s steps(2, start) infinite;
+      }
+      @keyframes blink-animation {
+        to {
+          visibility: hidden;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
