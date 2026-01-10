@@ -13,7 +13,7 @@ import HawkinsMap from './components/HawkinsMap';
 import SkillSelect from './components/SkillSelect';
 import EndScreen from './components/EndScreen';
 import SceneTransition from './components/SceneTransition';
-import { getRandomSystemMessage } from './services/geminiService';
+import { getRandomSystemMessage } from './services/systemService';
 
 const initialGameState: GameState = {
   currentScreen: 'INTRO',
