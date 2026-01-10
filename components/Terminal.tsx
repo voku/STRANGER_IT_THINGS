@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { LogEntry } from '../types';
 
 interface TerminalProps {
-  logs: LogEntry[];
+  history: LogEntry[];
 }
 
-const Terminal: React.FC<TerminalProps> = ({ logs }) => {
+const Terminal: React.FC<TerminalProps> = ({ history }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
@@ -20,10 +20,10 @@ const Terminal: React.FC<TerminalProps> = ({ logs }) => {
   };
 
   useEffect(() => {
-    if (shouldAutoScrollRef.current) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (shouldAutoScrollRef.current && bottomRef.current?.scrollIntoView) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [logs]);
+  }, [history]);
 
   return (
     <div 
@@ -34,11 +34,11 @@ const Terminal: React.FC<TerminalProps> = ({ logs }) => {
       {/* Phosphor Glow Overlay */}
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] z-10"></div>
       
-      {logs.length === 0 && (
+      {history.length === 0 && (
           <div className="text-green-800 text-center mt-10 animate-pulse">Initializing System Link...</div>
       )}
       <div className="relative z-0">
-        {logs.map((log) => (
+        {history.map((log) => (
             <div key={log.id} className="mb-4 leading-relaxed border-b border-green-900/30 pb-2 last:border-0">
             <div className="flex items-baseline mb-1">
                 <span className="text-green-700 text-base font-mono mr-3">[{log.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}]</span>
