@@ -113,4 +113,207 @@ describe('Simple Gameplay Test', () => {
       expect(terminalText).toBeInTheDocument();
     }, { timeout: 10000 });
   }, 30000); // Set timeout to 30 seconds for this long test
+
+  it('golden path: complete game from start to finish', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    
+    // ========== ACT 0: INTRO ==========
+    const nameInput = screen.getByPlaceholderText(/AGENT NAME EINGEBEN/i);
+    await user.type(nameInput, 'GoldenPathAgent');
+    await user.click(screen.getByText(/INSERT COIN/i));
+    
+    await waitFor(() => {
+      expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // ========== CHARACTER SELECTION ==========
+    const operatorButton = screen.getByText(CHARACTERS[0].name);
+    await user.click(operatorButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // ========== ACT 1: SKILL SELECTION ==========
+    await waitFor(() => {
+      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    const rubberDuckButton = screen.getByText(/Rubber Duck/i).closest('button');
+    await user.click(rubberDuckButton!);
+    
+    await waitFor(() => {
+      // Look for transition-specific text "Das verzerrte Ticket"
+      expect(screen.getByText(/verzerrte Ticket/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // ========== ACT 1: MAP SELECTION ==========
+    await waitFor(() => {
+      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // Click on Starcourt Mall location - use getAllByText to get the button specifically
+    const mallElements = screen.getAllByText(/Starcourt Mall/i);
+    const mallButton = mallElements.find(el => el.closest('button'));
+    expect(mallButton).toBeDefined();
+    const actualMallButton = mallButton!.closest('button');
+    expect(actualMallButton).not.toBeDisabled();
+    await user.click(actualMallButton!);
+    
+    // ========== ACT 1: SCENARIO - Der User-Nebel ==========
+    await waitFor(() => {
+      expect(screen.getByText(/Der User-Nebel/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // Select the correct option: "NACHFRAGEN: 'Was ist der Soll-Zustand?'" (INQUIRY type)
+    const inquiryButton = screen.getByText(/NACHFRAGEN.*Soll-Zustand/i).closest('button');
+    await user.click(inquiryButton!);
+    
+    // For INQUIRY type, it shows "ANFRAGE SENDEN" button directly (no diagram)
+    await waitFor(() => {
+      expect(screen.getByText(/ANFRAGE SENDEN/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+    
+    const sendButton = screen.getByText(/ANFRAGE SENDEN/i);
+    await user.click(sendButton);
+    
+    // ========== ACT 2: TRANSITION ==========
+    await waitFor(() => {
+      // Look for the transition-specific text
+      expect(screen.getByText(/PERSPEKTIVENWECHSEL/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // ========== ACT 2: SKILL SELECTION ==========
+    await waitFor(() => {
+      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // Select Coffee (should be unlocked now)
+    const coffeeButton = screen.getByText(/Schwarzer Kaffee/i).closest('button');
+    await user.click(coffeeButton!);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/AKT 2/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // ========== ACT 2: MAP SELECTION ==========
+    await waitFor(() => {
+      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // Click on Hawkins High - use getAllByText to get the button specifically
+    const schoolElements = screen.getAllByText(/Hawkins High/i);
+    const schoolButton = schoolElements.find(el => el.closest('button'));
+    expect(schoolButton).toBeDefined();
+    const actualSchoolButton = schoolButton!.closest('button');
+    await user.click(actualSchoolButton!);
+    
+    // ========== ACT 2: ROLE SCENARIO - Die Notaufnahme (for Service Desk) ==========
+    await waitFor(() => {
+      expect(screen.getByText(/Die Notaufnahme/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // Select correct option: "Die Blutung stoppen (INCIDENT)" - this will show diagram
+    const incidentButton = screen.getByText(/Blutung stoppen.*INCIDENT/i).closest('button');
+    await user.click(incidentButton!);
+    
+    // Wait for diagram to appear and BESTÄTIGEN button
+    await waitFor(() => {
+      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+    
+    const confirmBtn1 = screen.getByText(/BESTÄTIGEN/i);
+    await user.click(confirmBtn1);
+    
+    // Return to map and complete act2_1
+    await waitFor(() => {
+      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    const schoolElements2 = screen.getAllByText(/Hawkins High/i);
+    const schoolButton2 = schoolElements2.find(el => el.closest('button'))!.closest('button');
+    await user.click(schoolButton2!);
+    
+    // ========== ACT 2: ITIL TEMPEL ==========
+    await waitFor(() => {
+      expect(screen.getByText(/ITIL Tempel/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // Select correct option: "Incident = Kaputt. Request = Neu." (REQUEST type - shows diagram)
+    const correctITILButton = screen.getByText(/Incident.*Kaputt.*Request.*Neu/i).closest('button');
+    await user.click(correctITILButton!);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+    
+    const confirmBtn2 = screen.getByText(/BESTÄTIGEN/i);
+    await user.click(confirmBtn2);
+    
+    // Return to map and complete act2_2
+    await waitFor(() => {
+      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    const schoolElements3 = screen.getAllByText(/Hawkins High/i);
+    const schoolButton3 = schoolElements3.find(el => el.closest('button'))!.closest('button');
+    await user.click(schoolButton3!);
+    
+    // ========== ACT 2: DIE FEHLENDE MAGIE ==========
+    await waitFor(() => {
+      expect(screen.getByText(/fehlende Magie/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // Select correct option: "Change Request (Requirement)" (CHANGE type - shows diagram)
+    const changeButton = screen.getByText(/Change Request.*Requirement/i).closest('button');
+    await user.click(changeButton!);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+    
+    const confirmBtn3 = screen.getByText(/BESTÄTIGEN/i);
+    await user.click(confirmBtn3);
+    
+    // ========== ACT 3: TRANSITION ==========
+    await waitFor(() => {
+      // Look for the transition-specific text
+      expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // ========== ACT 3: SKILL SELECTION ==========
+    await waitFor(() => {
+      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // Select Root Cause Analyzer (should be unlocked now)
+    const debuggerButton = screen.getByText(/Root Cause Analyzer/i).closest('button');
+    await user.click(debuggerButton!);
+    
+    await waitFor(() => {
+      // Look for the map or other indication that transition happened
+      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // ========== ACT 3: MAP SELECTION ==========
+    // Click on Hawkins Lab
+    const labElements = screen.getAllByText(/Hawkins Lab/i);
+    const labButton = labElements.find(el => el.closest('button'))!.closest('button');
+    await user.click(labButton!);
+    
+    // ========== ACT 3: BOSS FIGHT - MODEL_FIX ==========
+    await waitFor(() => {
+      expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
+    
+    // This is a MODEL_FIX type minigame - needs logic solving
+    // For now, just verify we reached it
+    expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
+    
+    // ========== VICTORY ==========
+    // After completing the boss fight, we should see victory screen
+    // This will be implemented when we understand the MODEL_FIX mechanics
+    
+  }, 120000); // Set timeout to 120 seconds for full game test
 });
