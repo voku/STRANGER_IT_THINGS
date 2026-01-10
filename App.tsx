@@ -203,7 +203,7 @@ const App: React.FC = () => {
           }
           else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
                const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
-               if (scenarioAct === Act.ACT_2_PERSPECTIVE && act2CoreDone) {
+               if (act2CoreDone) {
                    nextAct = Act.ACT_3_BOSS;
                    newUnlockedLocs.push('LAB');
                    newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
@@ -213,7 +213,7 @@ const App: React.FC = () => {
                       addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
                    });
                    newScreen = 'SKILL_SELECT';
-               } else if (scenarioAct === Act.ACT_2_PERSPECTIVE && !act2CoreDone) {
+               } else {
                    addLog("Akt 3 noch gesperrt: ITIL-Tempel und Change-Rätsel abschließen, um den Boss freizuschalten.", 'SYSTEM');
                }
           }
