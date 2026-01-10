@@ -132,9 +132,27 @@ const App: React.FC = () => {
         scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act1_1');
     } 
     else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE && location.id === 'SCHOOL') {
-        // Find role-specific scenario
+        // Find role-specific scenario first
         if (gameState.selectedCharacter) {
-             scenarioToLoad = STORY_SCENARIOS.find(s => s.id === `act2_role_${gameState.selectedCharacter?.id}`);
+             const roleScenarioId = `act2_role_${gameState.selectedCharacter?.id}`;
+             // Only load role scenario if not completed yet
+             if (!gameState.completedScenarios.includes(roleScenarioId)) {
+                 scenarioToLoad = STORY_SCENARIOS.find(s => s.id === roleScenarioId);
+             } else {
+                 // Role scenario done, check core scenarios
+                 const act2_1_completed = gameState.completedScenarios.includes('act2_1');
+                 const act2_2_completed = gameState.completedScenarios.includes('act2_2');
+                 
+                 if (!act2_1_completed) {
+                     scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_1');
+                 } else if (!act2_2_completed) {
+                     scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_2');
+                 } else {
+                     // All Act 2 scenarios completed
+                     addLog(`Alle Szenarien in ${location.name} wurden abgeschlossen.`, 'SYSTEM');
+                     return;
+                 }
+             }
         }
         // Fallback if not found (should not happen if constants are aligned)
         if (!scenarioToLoad) scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_1');
@@ -144,6 +162,12 @@ const App: React.FC = () => {
     }
 
     if (scenarioToLoad) {
+        // Check if scenario is already completed
+        if (gameState.completedScenarios.includes(scenarioToLoad.id)) {
+            addLog(`Dieses Szenario wurde bereits erfolgreich abgeschlossen.`, 'SYSTEM');
+            return;
+        }
+        
         addLog(`Reise nach ${location.name}...`, 'SYSTEM');
         addLog(scenarioToLoad.description, 'GM');
         setGameState(prev => ({
