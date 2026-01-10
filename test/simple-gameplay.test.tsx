@@ -99,10 +99,7 @@ describe('Simple Gameplay Test', () => {
     const rubberDuckButton = screen.getByText(/Rubber Duck/i).closest('button');
     expect(rubberDuckButton).not.toBeNull();
     expect(rubberDuckButton).not.toBeDisabled();
-    
-    if (rubberDuckButton) {
-      await user.click(rubberDuckButton);
-    }
+    await user.click(rubberDuckButton!);
     
     // Step 8: Wait for transition to next screen (AKT 1)
     await waitFor(() => {
