@@ -157,7 +157,7 @@ const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, ski
 
       {hintRevealed && (
           <div className="mb-4 text-green-400 font-mono bg-black/80 p-2 border border-green-700 rounded animate-pulse">
-            >> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.
+            {'>> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.'}
           </div>
       )}
 

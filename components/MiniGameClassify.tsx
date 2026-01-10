@@ -114,7 +114,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
       {/* Hint Display */}
       {hintRevealed && !showDiagram && (
           <div className="mb-6 max-w-xl bg-indigo-950/80 border border-indigo-500 p-4 rounded text-center shadow-[0_0_15px_rgba(99,102,241,0.3)] animate-fade-in-up">
-              <span className="text-indigo-300 font-bold font-mono block mb-1">>> SYSTEM-HINWEIS ENTSCHLÜSSELT:</span>
+              <span className="text-indigo-300 font-bold font-mono block mb-1">{'>> SYSTEM-HINWEIS ENTSCHLÜSSELT:'}</span>
               <span className="text-white font-vt323 text-lg">{scenario.hint}</span>
               <div className="text-green-400 font-press-start text-xs mt-2">OPTIMALE HANDLUNG MARKIERT</div>
           </div>
