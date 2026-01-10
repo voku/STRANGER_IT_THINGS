@@ -1,9 +1,5 @@
 # Stranger IT Things
 
-<div align="center">
-  <img width="1200" height="475" alt="Stranger IT Things Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 A retro-themed IT support adventure game inspired by Stranger Things. Navigate through mysterious IT incidents, solve technical challenges, and manage team morale in this interactive web experience.
 
 ## 🎮 Features
