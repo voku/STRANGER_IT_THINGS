@@ -307,13 +307,22 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // This is a MODEL_FIX type minigame - needs logic solving
-    // For now, just verify we reached it
-    expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
+    // This is a MODEL_FIX type minigame - use the DEBUGGER AUTO-FIX
+    await waitFor(() => {
+      expect(screen.getByText(/DEBUGGER STARTEN.*AUTO-FIX/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+    
+    const autoFixButton = screen.getByText(/DEBUGGER STARTEN.*AUTO-FIX/i);
+    await user.click(autoFixButton);
     
     // ========== VICTORY ==========
-    // After completing the boss fight, we should see victory screen
-    // This will be implemented when we understand the MODEL_FIX mechanics
+    await waitFor(() => {
+      // After completing the boss fight, we should see game over screen with victory
+      expect(screen.getByText(/SIEG|MISSION ERFOLGREICH/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
+    
+    // Verify victory message
+    expect(screen.getByText(/Der Modell-Endgegner wurde besiegt|stabil/i)).toBeInTheDocument();
     
   }, 120000); // Set timeout to 120 seconds for full game test
 });
