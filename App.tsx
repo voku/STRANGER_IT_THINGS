@@ -158,6 +158,10 @@ const App: React.FC = () => {
 
   const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
       if (!gameState.currentScenario) return;
+      const scenarioAct = gameState.currentScenario.act;
+      if (scenarioAct !== gameState.currentAct) {
+          addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression. Bitte zum aktuellen Akt zurückkehren.", 'SYSTEM');
+      }
 
       // 1. Update Stats
       const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
@@ -197,21 +201,20 @@ const App: React.FC = () => {
               newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
           }
           else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
-               // Akt 3 freigeben, aber merken falls Kerntraining übersprungen wurde
                const act2CoreDone = ['act2_1', 'act2_2'].every(id => updatedCompleted.includes(id));
-
-               nextAct = Act.ACT_3_BOSS;
-               newUnlockedLocs.push('LAB');
-               newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
-               
-               triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
-                  addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                  addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
-                  if (!act2CoreDone) {
-                     addLog("Hinweis: ITIL-Tempel oder Change-Rätsel übersprungen – Auswirkungen im Abschlussbericht.", 'SYSTEM');
-                  }
-               });
-               newScreen = 'SKILL_SELECT';
+               if (scenarioAct === Act.ACT_2_PERSPECTIVE && act2CoreDone) {
+                   nextAct = Act.ACT_3_BOSS;
+                   newUnlockedLocs.push('LAB');
+                   newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
+                   
+                   triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
+                      addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
+                      addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
+                   });
+                   newScreen = 'SKILL_SELECT';
+               } else if (scenarioAct === Act.ACT_2_PERSPECTIVE && !act2CoreDone) {
+                   addLog("Akt 3 noch gesperrt: ITIL-Tempel und Change-Rätsel abschließen, um den Boss freizuschalten.", 'SYSTEM');
+               }
           }
           else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
               // Victory
