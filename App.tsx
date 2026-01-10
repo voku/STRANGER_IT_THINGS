@@ -197,9 +197,9 @@ const App: React.FC = () => {
               newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
           }
           else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
-               // Act 2 requires Kern-Szenen (Tempel + Change) vor Boss
+               // Akt 3 freigeben, aber merken falls Kerntraining übersprungen wurde
                const act2CoreDone = ['act2_1', 'act2_2'].every(id => updatedCompleted.includes(id));
-               if (act2CoreDone) {
+
                nextAct = Act.ACT_3_BOSS;
                newUnlockedLocs.push('LAB');
                newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
@@ -207,11 +207,11 @@ const App: React.FC = () => {
                triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
                   addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
                   addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
+                  if (!act2CoreDone) {
+                     addLog("Hinweis: ITIL-Tempel oder Change-Rätsel übersprungen – Auswirkungen im Abschlussbericht.", 'SYSTEM');
+                  }
                });
                newScreen = 'SKILL_SELECT';
-               } else {
-                  addLog("Akt 2 Training noch nicht abgeschlossen. ITIL-Tempel und Change-Rätsel meistern, bevor es weitergeht.", 'SYSTEM');
-               }
           }
           else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
               // Victory

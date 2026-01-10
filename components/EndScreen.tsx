@@ -12,6 +12,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
   const victory = gameStatus === 'won';
   const charName = selectedCharacter?.name || "Unbekannter Agent";
   const skillName = selectedSkill?.name || "Standard-Ausrüstung";
+  const completed = gameState.completedScenarios || [];
   
   // Grade Calculation (Weighted)
   const score = (ticketQuality * 0.4) + (teamMorale * 0.3) + (slaTime * 0.3);
@@ -33,6 +34,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
   // Dynamic Narrative Generation
   const generateNarrative = () => {
     let lines: string[] = [];
+    const act2CoreMissing = ['act2_1', 'act2_2'].filter(id => !completed.includes(id));
 
     // 1. Role Specific Outcome
     if (selectedCharacter) {
@@ -77,6 +79,11 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
         }
     }
 
+    // 1b. Lernpfad-Hinweise
+    if (act2CoreMissing.length > 0) {
+        lines.push("Lernpfad verpasst: ITIL-Tempel/Change-Rätsel wurden übersprungen. Klassifizierungsmodell blieb unsauber.");
+    }
+
     // 2. Skill Impact
     if (selectedSkill) {
         if (selectedSkill.id === 'ITIL_BOOK') {
@@ -94,6 +101,11 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
     if (ticketQuality < 40) lines.push("WARNUNG: Klassifizierungsgenauigkeit war kritisch niedrig. Nachschulung empfohlen.");
     if (teamMorale < 30) lines.push("ALARM: Team leidet unter schwerem Burnout.");
     if (slaTime < 20) lines.push("HINWEIS: Mehrere SLA-Verletzungen verzeichnet.");
+    if (!victory) {
+        if (slaTime <= 0) lines.push("Grund für Niederlage: SLA-Puffer aufgebraucht – Incident-Handling zu langsam.");
+        if (teamMorale <= 0) lines.push("Grund für Niederlage: Team-Moral kollabiert – zu viel Ping-Pong oder Druck.");
+        if (ticketQuality <= 0) lines.push("Grund für Niederlage: Ticket-Qualität bei 0 – falsche Klassifikation dominierte.");
+    }
     if (score > 90) lines.push("BELOBIGUNG: Hervorragende Leistung in allen Metriken.");
 
     return lines.join(" ");
