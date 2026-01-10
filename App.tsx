@@ -1,6 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { CHARACTERS, INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS } from './constants';
-import { Act, Character, GameState, LogEntry, Scenario, MapLocation, Skill } from './types';
+/**
+ * Main Application Component
+ * 
+ * This is the root component that orchestrates the entire game.
+ * It has been refactored into smaller, maintainable modules:
+ * 
+ * - Game state initialization: utils/gameState.ts
+ * - Helper functions: utils/gameHelpers.ts  
+ * - Game mechanics (timers): hooks/useGameMechanics.ts
+ * 
+ * The App component now focuses on:
+ * 1. Managing game state with React hooks
+ * 2. Coordinating event handlers for user actions
+ * 3. Rendering the appropriate screens based on game state
+ * 
+ * @module App
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE } from './constants';
+import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry } from './types';
+import { initialGameState } from './utils/gameState';
+import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
+import { useGameMechanics } from './hooks/useGameMechanics';
+
+// UI Components
 import RetroContainer from './components/RetroContainer';
 import Terminal from './components/Terminal';
 import StatsPanel from './components/StatsPanel';
@@ -15,38 +38,17 @@ import EndScreen from './components/EndScreen';
 import SceneTransition from './components/SceneTransition';
 import { getRandomSystemMessage } from './services/systemService';
 
-const initialGameState: GameState = {
-  currentScreen: 'INTRO',
-  currentAct: Act.ACT_1_TICKET,
-  selectedCharacter: null,
-  selectedSkill: null,
-  playerName: '',
-  selectedLocation: null,
-  unlockedLocationIds: ['MALL'], // Start with Mall unlocked
-  unlockedSkillIds: ['RUBBER_DUCK', 'ITIL_BOOK'], // Start with Rubber Duck and ITIL Book
-  completedScenarios: [],
-  slaTime: INITIAL_SLA,
-  teamMorale: INITIAL_MORALE,
-  ticketQuality: INITIAL_QUALITY,
-  turnCount: 0,
-  history: [],
-  currentScenario: null,
-  isLoading: false,
-  gameStatus: 'active'
-};
-
+/**
+ * Main App Component
+ * 
+ * Manages the entire game flow from intro to game over.
+ * Uses custom hooks for time-based mechanics and helper functions for game logic.
+ */
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
   const [nameError, setNameError] = useState(false);
   
-  // Ensure ausgewählte Items wirklich freigeschaltet sind
-  useEffect(() => {
-    if (gameState.selectedSkill && !gameState.unlockedSkillIds.includes(gameState.selectedSkill.id)) {
-        setGameState(prev => ({ ...prev, selectedSkill: null }));
-    }
-  }, [gameState.selectedSkill, gameState.unlockedSkillIds]);
-
-  // Transition State
+  // Transition state for screen animations
   const [transition, setTransition] = useState<{ 
     active: boolean; 
     stage: 'OUT' | 'INTERSTITIAL' | 'IN'; 
@@ -58,46 +60,92 @@ const App: React.FC = () => {
     title: '',
   });
 
-  // --- Helpers ---
-  const addLog = (text: string, speaker: LogEntry['speaker'] = 'SYSTEM') => {
+  /**
+   * Ensures selected skill is always unlocked
+   * Prevents cheating by selecting locked skills
+   */
+  useEffect(() => {
+    if (gameState.selectedSkill && !gameState.unlockedSkillIds.includes(gameState.selectedSkill.id)) {
+        setGameState(prev => ({ ...prev, selectedSkill: null }));
+    }
+  }, [gameState.selectedSkill, gameState.unlockedSkillIds]);
+
+  /**
+   * Adds a message to the game history log
+   */
+  const addLog = useCallback((text: string, speaker: LogEntry['speaker'] = 'SYSTEM') => {
     setGameState(prev => ({
       ...prev,
-      history: [...prev.history, {
-        id: Date.now().toString() + Math.random(),
-        speaker,
-        text,
-        timestamp: new Date()
-      }]
+      history: [...prev.history, createLogEntry(text, speaker)]
     }));
-  };
+  }, []);
 
+  /**
+   * Handles SLA decay from the timer
+   * Called by useGameMechanics hook every SLA_DECAY_INTERVAL
+   */
+  const handleSlaDecay = useCallback(() => {
+    setGameState(prev => {
+      const newSla = clampStat(prev.slaTime - SLA_DECAY_RATE);
+      
+      // Check for game over due to time expiration
+      if (newSla <= 0) {
+        addLog("SLA TIME EXPIRED: Zeit ist abgelaufen.", 'SYSTEM');
+        return {
+          ...prev,
+          slaTime: 0,
+          gameStatus: 'lost' as const,
+          currentScreen: 'GAME_OVER' as const
+        };
+      }
+      
+      return { ...prev, slaTime: newSla };
+    });
+  }, [addLog]);
+
+  // Register game mechanics (time-based SLA decay)
+  useGameMechanics({
+    gameStatus: gameState.gameStatus,
+    currentScreen: gameState.currentScreen,
+    onSlaDecay: handleSlaDecay
+  });
+
+  /**
+   * Triggers a screen transition animation
+   * 
+   * @param title - Main transition text
+   * @param subtitle - Optional subtitle
+   * @param callback - Function to call after transition completes
+   */
   const triggerTransition = (title: string, subtitle?: string, callback?: () => void) => {
     setTransition({ active: true, stage: 'IN', title, subtitle });
     
     setTimeout(() => {
         setTransition(prev => ({ ...prev, stage: 'INTERSTITIAL' }));
         if (callback) callback();
-    }, 2000); // Wait for fade in/zoom
+    }, 2000);
 
     setTimeout(() => {
         setTransition(prev => ({ ...prev, stage: 'OUT', active: false }));
-    }, 4500); // Wait for reading time
+    }, 4500);
   };
 
-  // --- Handlers ---
-
+  /**
+   * Handler: Start game with player name
+   */
   const handleStartGame = (name: string) => {
-    if (!name.trim()) {
-        setNameError(true);
-        return;
+    if (!name || name.trim().length < 2) {
+      setNameError(true);
+      return;
     }
-    setGameState(prev => ({ ...prev, playerName: name }));
-    
-    triggerTransition("DIE AUSWAHL", "Wähle deine Rolle", () => {
-        setGameState(prev => ({ ...prev, currentScreen: 'CHAR_SELECT' }));
-    });
+    setNameError(false);
+    setGameState(prev => ({ ...prev, playerName: name, currentScreen: 'CHAR_SELECT' }));
+    triggerTransition("DIE AUSWAHL", "Wähle deine Rolle");
   };
 
+  /**
+   * Handler: Select character (sets initial stats)
+   */
   const handleCharacterSelect = (char: Character) => {
     setGameState(prev => ({ 
         ...prev, 
@@ -112,6 +160,9 @@ const App: React.FC = () => {
     });
   };
 
+  /**
+   * Handler: Select skill/item for the current act
+   */
   const handleSkillSelect = (skill: Skill) => {
     setGameState(prev => ({ ...prev, selectedSkill: skill }));
     
@@ -122,21 +173,46 @@ const App: React.FC = () => {
     });
   };
 
+  /**
+   * Handler: Select location on map (loads appropriate scenario)
+   * 
+   * Handles scenario sequencing for Act 2:
+   * - First: Role-specific scenario
+   * - Then: act2_1 (ITIL basics)
+   * - Finally: act2_2 (Change management)
+   */
   const handleLocationSelect = (location: MapLocation) => {
     setGameState(prev => ({ ...prev, selectedLocation: location }));
     
     let scenarioToLoad: Scenario | undefined;
 
-    // Logic to select scenario based on Act and Location
+    // Scenario selection logic based on Act and Location
     if (gameState.currentAct === Act.ACT_1_TICKET && location.id === 'MALL') {
         scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act1_1');
     } 
     else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE && location.id === 'SCHOOL') {
-        // Find role-specific scenario
+        // Act 2 scenario sequencing
         if (gameState.selectedCharacter) {
-             scenarioToLoad = STORY_SCENARIOS.find(s => s.id === `act2_role_${gameState.selectedCharacter?.id}`);
+             const roleScenarioId = `act2_role_${gameState.selectedCharacter?.id}`;
+             
+             if (!gameState.completedScenarios.includes(roleScenarioId)) {
+                 // Load role-specific scenario first
+                 scenarioToLoad = STORY_SCENARIOS.find(s => s.id === roleScenarioId);
+             } else {
+                 // Role done, check core scenarios
+                 const act2_1_completed = gameState.completedScenarios.includes('act2_1');
+                 const act2_2_completed = gameState.completedScenarios.includes('act2_2');
+                 
+                 if (!act2_1_completed) {
+                     scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_1');
+                 } else if (!act2_2_completed) {
+                     scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_2');
+                 } else {
+                     addLog(`Alle Szenarien in ${location.name} wurden abgeschlossen.`, 'SYSTEM');
+                     return;
+                 }
+             }
         }
-        // Fallback if not found (should not happen if constants are aligned)
         if (!scenarioToLoad) scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_1');
     }
     else if (gameState.currentAct === Act.ACT_3_BOSS && location.id === 'LAB') {
@@ -144,6 +220,12 @@ const App: React.FC = () => {
     }
 
     if (scenarioToLoad) {
+        // Prevent replaying completed scenarios
+        if (gameState.completedScenarios.includes(scenarioToLoad.id)) {
+            addLog(`Dieses Szenario wurde bereits erfolgreich abgeschlossen.`, 'SYSTEM');
+            return;
+        }
+        
         addLog(`Reise nach ${location.name}...`, 'SYSTEM');
         addLog(scenarioToLoad.description, 'GM');
         setGameState(prev => ({
@@ -156,295 +238,379 @@ const App: React.FC = () => {
     }
   };
 
-  const handleScenarioComplete = (qualityChange: number, moraleChange: number, outcomeText: string) => {
+  /**
+   * Handler: Complete a scenario (applies stat changes and checks game over)
+   * 
+   * This is the core game logic that:
+   * 1. Applies SLA penalties (base + wrong item penalty)
+   * 2. Updates all stats (SLA, morale, quality)
+   * 3. Checks for game over conditions
+   * 4. Marks scenario as completed (only if correct answer)
+   * 5. Handles act progression
+   * 
+   * @param qualityChange - Change to ticket quality stat
+   * @param moraleChange - Change to team morale stat
+   * @param outcomeText - Message to display to player
+   * @param isCorrect - Whether the answer was correct
+   */
+  const handleScenarioComplete = (
+    qualityChange: number, 
+    moraleChange: number, 
+    outcomeText: string, 
+    isCorrect: boolean
+  ) => {
       if (!gameState.currentScenario) return;
+      
       const scenarioAct = gameState.currentScenario.act;
       if (scenarioAct !== gameState.currentAct) {
-          addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression. Bitte zum aktuellen Akt zurückkehren.", 'SYSTEM');
+          addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression.", 'SYSTEM');
           return;
       }
 
-      // 1. Update Stats
-      const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
-      const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
-      const newQuality = Math.max(0, Math.min(100, gameState.ticketQuality + qualityChange));
+      // Calculate SLA penalty (base + wrong item penalty)
+      let slaPenalty = 10; // Base penalty for completing scenario
+      
+      if (gameState.selectedSkill) {
+        const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
+        if (skill && skill.targetAct && skill.targetAct !== gameState.currentAct && skill.slaPenalty) {
+          slaPenalty += skill.slaPenalty;
+          addLog(`WARNUNG: ${skill.name} ist nicht optimal für diesen Akt. -${skill.slaPenalty}% SLA.`, 'SYSTEM');
+        }
+      }
+      
+      // Update all stats (clamped to 0-100)
+      const newSla = clampStat(gameState.slaTime - slaPenalty);
+      const newMorale = clampStat(gameState.teamMorale + moraleChange);
+      const newQuality = clampStat(gameState.ticketQuality + qualityChange);
 
-      // Track abgeschlossenes Szenario
-      const updatedCompleted = Array.from(new Set([...gameState.completedScenarios, gameState.currentScenario.id]));
-
-      // 2. Log Outcome
+      // Log outcome
       addLog(outcomeText, 'SYSTEM');
 
-      // 3. Determine if Level/Act Complete
+      // Track completion (only if correct)
+      let updatedCompleted = [...gameState.completedScenarios];
+      if (isCorrect && !updatedCompleted.includes(gameState.currentScenario.id)) {
+          updatedCompleted.push(gameState.currentScenario.id);
+      }
+
+      // Check game over conditions
+      const gameOverCheck = checkGameOver(newSla, newMorale, newQuality);
+      
+      // Initialize next state
       let nextAct = gameState.currentAct;
       let newScreen: GameState['currentScreen'] = 'MAP_SELECT';
       let gameStatus: GameState['gameStatus'] = 'active';
       let newUnlockedLocs = [...gameState.unlockedLocationIds];
       let newUnlockedSkills = [...gameState.unlockedSkillIds];
 
-      // Check Game Over Conditions
-      if (newSla <= 0 || newMorale <= 0 || newQuality <= 0) {
+      // Handle wrong answer (immediate game over)
+      if (!isCorrect) {
           gameStatus = 'lost';
           newScreen = 'GAME_OVER';
-          addLog("SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
+          addLog("FALSCHE ENTSCHEIDUNG: Das Szenario wurde nicht korrekt gelöst.", 'SYSTEM');
+      }
+      // Handle game over from stats
+      else if (gameOverCheck.isGameOver) {
+          gameStatus = 'lost';
+          newScreen = 'GAME_OVER';
+          addLog(gameOverCheck.reason || "SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
       } else {
-          // Act Progression Logic
+          // Handle act progression
           if (gameState.currentAct === Act.ACT_1_TICKET && gameState.currentScenario?.id === 'act1_1') {
-              // Act 1 Complete -> Act 2
+              // Advance to Act 2
               nextAct = Act.ACT_2_PERSPECTIVE;
               newUnlockedLocs.push('SCHOOL');
-              newUnlockedSkills.push('COFFEE'); // Unlock Coffee for Act 2
+              newUnlockedSkills.push('COFFEE');
               
               triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
                   addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
                   addLog("Neues Item verfügbar: SCHWARZER KAFFEE", 'SYSTEM');
               });
-              newScreen = 'SKILL_SELECT'; // Let player re-equip for Act 2
+              newScreen = 'SKILL_SELECT';
           }
           else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
+               // Check if all core scenarios are done
                const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
                if (act2CoreDone) {
+                   // Advance to Act 3
                    nextAct = Act.ACT_3_BOSS;
                    newUnlockedLocs.push('LAB');
-                   newUnlockedSkills.push('DEBUGGER'); // Unlock Debugger for Boss
+                   newUnlockedSkills.push('DEBUGGER');
                    
                    triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
                       addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                      addLog("Neues Item verfügbar: ROOT CAUSE ANALYZER", 'SYSTEM');
+                      addLog("Bonus Item freigeschaltet: ROOT CAUSE ANALYZER", 'SYSTEM');
                    });
                    newScreen = 'SKILL_SELECT';
-               } else {
-                   addLog("Akt 3 noch gesperrt: ITIL-Tempel und Change-Rätsel abschließen, um den Boss freizuschalten.", 'SYSTEM');
                }
           }
           else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
-              // Victory
+              // Game won!
               gameStatus = 'won';
-              newScreen = 'VICTORY';
-              addLog("BEDROHUNG ELIMINIERT. SERVICE WIEDERHERGESTELLT.", 'SYSTEM');
+              newScreen = 'GAME_OVER';
+              addLog("SIEG! Der Modell-Endgegner wurde besiegt. Das System ist stabil.", 'SYSTEM');
           }
       }
 
+      // Apply all updates
       setGameState(prev => ({
           ...prev,
           slaTime: newSla,
           teamMorale: newMorale,
           ticketQuality: newQuality,
+          completedScenarios: updatedCompleted,
           currentAct: nextAct,
           currentScreen: newScreen,
           gameStatus: gameStatus,
-          unlockedLocationIds: Array.from(new Set(newUnlockedLocs)),
-          unlockedSkillIds: Array.from(new Set(newUnlockedSkills)),
-          completedScenarios: updatedCompleted,
-          currentScenario: null // Reset active scenario
+          unlockedLocationIds: newUnlockedLocs,
+          unlockedSkillIds: newUnlockedSkills,
+          currentScenario: null
       }));
   };
 
+  /**
+   * Handler: Replay game with same character
+   */
   const handleReplay = () => {
-      setGameState(initialGameState);
-      setTransition({ active: false, stage: 'IN', title: '' });
+    setGameState({ ...initialGameState, playerName: gameState.playerName });
   };
 
-  // --- Rendering Content based on Screen ---
+  /**
+   * Renders the current screen based on game state
+   */
   const renderContent = () => {
-    switch(gameState.currentScreen) {
-        case 'INTRO':
-            return (
-                <div className="flex flex-col items-center justify-center h-full text-center px-4 animate-fade-in-up">
-                    <h1 className="text-5xl md:text-8xl font-stranger text-red-600 mb-8 stranger-title tracking-widest leading-none">
-                        STRANGER<br/>IT THINGS
-                    </h1>
-                    <div className="max-w-2xl bg-black/60 border-2 border-red-900/50 p-6 rounded-lg backdrop-blur-sm mb-8 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
-                        <p className="font-vt323 text-xl md:text-2xl text-gray-300 leading-relaxed mb-4">
-                            HAWKINS INCIDENT CENTER<br/>
-                            1986. Eine Störung aus dem Upside Down bedroht die Infrastruktur.
-                            Ist es ein Incident? Ein Request? Oder etwas viel Dunkleres?
-                        </p>
-                        <p className="font-vt323 text-lg text-red-400 animate-pulse">
-                            Wähle deine Rolle. Rette den Service.
-                        </p>
-                    </div>
-                    
-                    <div className="flex flex-col gap-2 w-full max-w-sm">
-                        <input 
-                            type="text" 
-                            placeholder="AGENT NAME EINGEBEN..." 
-                            className={`bg-gray-900 border-2 ${nameError ? 'border-red-500 animate-shake' : 'border-green-800'} text-green-500 font-vt323 text-xl p-3 text-center outline-none focus:border-green-500 transition-colors uppercase`}
-                            onChange={(e) => {
-                                setGameState(prev => ({ ...prev, playerName: e.target.value }));
-                                setNameError(false);
-                            }}
-                            onKeyDown={(e) => e.key === 'Enter' && handleStartGame(gameState.playerName)}
-                            value={gameState.playerName}
-                            maxLength={12}
-                        />
-                        <button 
-                            onClick={() => handleStartGame(gameState.playerName)}
-                            className="bg-red-900/80 hover:bg-red-800 text-white font-press-start py-4 px-8 rounded border border-red-600 shadow-[0_0_15px_red] transition-all transform hover:scale-105 active:scale-95 text-xs md:text-sm tracking-widest"
-                        >
-                            INSERT COIN (START)
-                        </button>
-                    </div>
-                </div>
-            );
-        
-        case 'CHAR_SELECT':
-            return (
-                <div className="flex flex-col items-center h-full p-4 overflow-y-auto">
-                    <h2 className="text-3xl font-stranger text-red-500 mb-6 mt-4">WÄHLE DEINEN CHARAKTER</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full max-w-7xl pb-8">
-                        {CHARACTERS.map(char => (
-                            <button 
-                                key={char.id}
-                                onClick={() => handleCharacterSelect(char)}
-                                className={`group relative p-4 border-2 bg-gray-900/80 backdrop-blur hover:bg-gray-800 transition-all text-left flex flex-col gap-2 ${char.themeColor} hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]`}
-                            >
-                                <div className="absolute top-2 right-2 text-4xl group-hover:animate-bounce">{char.portraitEmoji}</div>
-                                <h3 className="font-press-start text-xs md:text-sm text-white mb-1 uppercase leading-snug max-w-[80%]">{char.name}</h3>
-                                <div className="text-[10px] font-mono uppercase tracking-widest opacity-70 mb-2">{char.role.split('(')[0]}</div>
-                                <p className="font-vt323 text-lg text-gray-300 leading-tight">{char.description}</p>
-                                <div className="mt-auto pt-4 flex gap-2 text-[10px] font-mono text-gray-400">
-                                    <span className={char.stats.sla > 70 ? 'text-green-400' : 'text-yellow-500'}>SPD: {char.stats.sla}</span>
-                                    <span className={char.stats.quality > 70 ? 'text-green-400' : 'text-yellow-500'}>ACC: {char.stats.quality}</span>
-                                    <span className={char.stats.morale > 70 ? 'text-green-400' : 'text-yellow-500'}>HP: {char.stats.morale}</span>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-
-        case 'SKILL_SELECT':
-            return (
-                <SkillSelect 
-                    currentAct={gameState.currentAct} 
-                    unlockedSkillIds={gameState.unlockedSkillIds} 
-                    onSelectSkill={handleSkillSelect} 
-                />
-            );
-
-        case 'MAP_SELECT':
-            if (!gameState.selectedCharacter) return null;
-            return (
-                <HawkinsMap 
-                    playerName={gameState.playerName}
-                    character={gameState.selectedCharacter}
-                    unlockedLocationIds={gameState.unlockedLocationIds}
-                    currentAct={gameState.currentAct}
-                    onSelectLocation={handleLocationSelect}
-                />
-            );
-
-        case 'GAME':
-            if (!gameState.currentScenario) return <div>Lade Fehler...</div>;
-            return (
-                <div className="flex flex-col items-center justify-center h-full w-full max-w-5xl mx-auto p-4 animate-fade-in">
-                    <div className="w-full bg-gray-900/90 border-2 border-gray-600 p-6 rounded-lg shadow-2xl mb-6 relative overflow-hidden">
-                        {/* Scenario Header */}
-                        <div className="flex justify-between items-start mb-4 border-b border-gray-700 pb-2">
-                             <div>
-                                <h3 className="text-yellow-500 font-press-start text-sm md:text-lg mb-1">{gameState.currentScenario.title}</h3>
-                                <span className="text-gray-400 font-vt323 text-xl">{gameState.currentScenario.environment}</span>
-                             </div>
-                             <div className="bg-red-900/40 text-red-400 px-3 py-1 rounded font-mono text-xs border border-red-800 animate-pulse">
-                                PRIORITY: HIGH
-                             </div>
-                        </div>
-
-                        {/* Scenario Description */}
-                        <div className="font-vt323 text-xl md:text-2xl text-gray-200 leading-relaxed whitespace-pre-line">
-                            {gameState.currentScenario.description}
-                        </div>
-                    </div>
-
-                    <div className="w-full">
-                        {gameState.currentScenario.type === 'TRIAGE' && (
-                            <MiniGameClassify 
-                                scenario={gameState.currentScenario}
-                                skill={gameState.selectedSkill}
-                                onComplete={handleScenarioComplete}
-                            />
-                        )}
-                        
-                        {gameState.currentScenario.type === 'MODEL_FIX' && (
-                            <MiniGameLogic 
-                                scenario={gameState.currentScenario}
-                                skill={gameState.selectedSkill}
-                                onComplete={(success) => {
-                                    handleScenarioComplete(
-                                        success ? 20 : -20, 
-                                        success ? 10 : -10, 
-                                        success ? "Modell erfolgreich refakturiert." : "Refactoring fehlgeschlagen. Spaghetti-Code entstanden."
-                                    );
-                                }}
-                            />
-                        )}
-
-                        {/* Fallback for other potential types if extended */}
-                        {gameState.currentScenario.type === 'DECRYPT' && (
-                            <MiniGameDecipher
-                                scenario={gameState.currentScenario}
-                                skill={gameState.selectedSkill}
-                                onComplete={(success) => {
-                                     handleScenarioComplete(
-                                        success ? 15 : -10,
-                                        success ? 5 : -5,
-                                        success ? "Zugriff gewährt." : "Zugriff verweigert."
-                                     );
-                                }}
-                            />
-                        )}
-                    </div>
-                </div>
-            );
-        
-        case 'VICTORY':
-        case 'GAME_OVER':
-            return (
-                <EndScreen 
-                    gameState={gameState} 
-                    onReplay={() => {
-                        setGameState(prev => ({
-                            ...initialGameState,
-                            playerName: prev.playerName // Keep name
-                        }));
-                    }}
-                    onFullReset={handleReplay}
-                />
-            );
-
-        default: 
-            return null;
+    // Intro screen
+    if (gameState.currentScreen === 'INTRO') {
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center px-4 animate-fade-in">
+          <h1 className="text-5xl md:text-8xl font-stranger mb-8 drop-shadow-lg text-red-600 tracking-widest animate-pulse">
+            <span className="block">STRANGER</span>
+            <span className="block text-blue-500">IT THINGS</span>
+          </h1>
+          <div className="max-w-2xl mb-8 space-y-4">
+            <p className="font-vt323 text-2xl text-red-500">HAWKINS INCIDENT CENTER</p>
+            <p className="font-mono text-lg text-gray-300">
+              1986. Eine Störung aus dem Upside Down bedroht die Infrastruktur. 
+              Ist es ein Incident? Ein Request? Oder etwas viel Dunkleres?
+            </p>
+            <p className="font-vt323 text-xl text-yellow-400">
+              Wähle deine Rolle. Rette den Service.
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 w-full max-w-md">
+            <input 
+              type="text" 
+              placeholder="AGENT NAME EINGEBEN..."
+              maxLength={20}
+              onChange={(e) => setGameState(prev => ({ ...prev, playerName: e.target.value }))}
+              onKeyDown={(e) => e.key === 'Enter' && handleStartGame(gameState.playerName)}
+              className={`px-4 py-3 bg-black border-2 ${nameError ? 'border-red-500 animate-shake' : 'border-green-600'} text-green-500 font-vt323 text-xl focus:outline-none focus:border-green-400 placeholder-green-800`}
+            />
+            {nameError && <p className="text-red-500 font-mono text-sm">Name zu kurz (min. 2 Zeichen)</p>}
+            <button 
+              onClick={() => handleStartGame(gameState.playerName)}
+              className="px-8 py-4 bg-red-700 border-2 border-red-500 text-white font-press-start hover:bg-red-600 hover:scale-105 transition-all text-sm shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse"
+            >
+              INSERT COIN (START)
+            </button>
+          </div>
+        </div>
+      );
     }
+
+    // Character selection
+    if (gameState.currentScreen === 'CHAR_SELECT') {
+      return (
+        <div className="flex flex-col items-center w-full h-full p-4 animate-fade-in overflow-y-auto">
+          <h2 className="text-3xl md:text-5xl font-stranger mb-8 text-yellow-400 tracking-widest">
+            WÄHLE DEINEN CHARAKTER
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
+            {CHARACTERS.map((char) => (
+              <button
+                key={char.id}
+                onClick={() => handleCharacterSelect(char)}
+                className={`p-6 bg-gray-900 border-4 ${char.themeColor} hover:scale-105 transition-all rounded-lg shadow-lg flex flex-col items-center gap-4 font-press-start`}
+              >
+                <div className="text-6xl">{char.portraitEmoji}</div>
+                <h3 className="text-xl">{char.name}</h3>
+                <div className="text-xs text-gray-400">{char.role.split('(')[0]}</div>
+                <p className="text-xs text-center leading-relaxed text-gray-300">{char.description}</p>
+                <div className="flex gap-4 text-xs">
+                  <div>SPD: {char.stats.sla}</div>
+                  <div>ACC: {char.stats.quality}</div>
+                  <div>HP: {char.stats.morale}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Skill selection
+    if (gameState.currentScreen === 'SKILL_SELECT') {
+      return (
+        <SkillSelect 
+          currentAct={gameState.currentAct}
+          unlockedSkillIds={gameState.unlockedSkillIds}
+          onSkillSelect={handleSkillSelect}
+        />
+      );
+    }
+
+    // Map selection
+    if (gameState.currentScreen === 'MAP_SELECT') {
+      return (
+        <HawkinsMap 
+          playerName={gameState.playerName}
+          character={gameState.selectedCharacter!}
+          unlockedLocationIds={gameState.unlockedLocationIds}
+          currentAct={gameState.currentAct}
+          onSelectLocation={handleLocationSelect}
+        />
+      );
+    }
+
+    // Active game (scenario)
+    if (gameState.currentScreen === 'GAME' && gameState.currentScenario) {
+      return (
+        <div className="flex flex-col items-center w-full h-full p-4 animate-fade-in overflow-y-auto">
+          <div className="max-w-4xl w-full bg-gray-900/80 p-6 rounded-lg border-2 border-gray-700 mb-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+            <div className="flex justify-between items-start mb-4">
+               <div>
+                  <h3 className="text-yellow-500 font-press-start text-sm md:text-lg mb-1">{gameState.currentScenario.title}</h3>
+                  <span className="text-gray-400 font-vt323 text-xl">{gameState.currentScenario.environment}</span>
+               </div>
+               <div className="bg-red-900/40 text-red-400 px-3 py-1 rounded font-mono text-xs border border-red-800 animate-pulse">
+                  PRIORITY: HIGH
+               </div>
+            </div>
+
+            <div className="font-vt323 text-xl md:text-2xl text-gray-200 leading-relaxed whitespace-pre-line">
+                {gameState.currentScenario.description}
+            </div>
+          </div>
+
+          <div className="w-full">
+              {gameState.currentScenario.type === 'TRIAGE' && (
+                  <MiniGameClassify 
+                      scenario={gameState.currentScenario}
+                      skill={gameState.selectedSkill}
+                      onComplete={handleScenarioComplete}
+                  />
+              )}
+              
+              {gameState.currentScenario.type === 'MODEL_FIX' && (
+                  <MiniGameLogic 
+                      scenario={gameState.currentScenario}
+                      skill={gameState.selectedSkill}
+                      onComplete={(success) => {
+                          handleScenarioComplete(
+                              success ? 20 : -20, 
+                              success ? 10 : -10, 
+                              success ? "Modell erfolgreich refakturiert." : "Refactoring fehlgeschlagen. Spaghetti-Code entstanden.",
+                              success
+                          );
+                      }}
+                  />
+              )}
+
+              {gameState.currentScenario.type === 'DECRYPT' && (
+                  <MiniGameDecipher
+                      scenario={gameState.currentScenario}
+                      skill={gameState.selectedSkill}
+                      onComplete={(success) => {
+                           handleScenarioComplete(
+                              success ? 15 : -10,
+                              success ? 5 : -5,
+                              success ? "Zugriff gewährt." : "Zugriff verweigert.",
+                              success
+                           );
+                      }}
+                  />
+              )}
+
+              {gameState.currentScenario.type === 'MEMORY' && (
+                  <MiniGameMemory 
+                      scenario={gameState.currentScenario}
+                      skill={gameState.selectedSkill}
+                      onComplete={(success) => {
+                          handleScenarioComplete(
+                              success ? 15 : -10,
+                              success ? 5 : -5,
+                              success ? "Pattern erkannt." : "Fehlerhafte Zuordnung.",
+                              success
+                          );
+                      }}
+                  />
+              )}
+
+              {gameState.currentScenario.type === 'REFLEX' && (
+                  <MiniGameReflex 
+                      scenario={gameState.currentScenario}
+                      skill={gameState.selectedSkill}
+                      onComplete={(success) => {
+                          handleScenarioComplete(
+                              success ? 10 : -10,
+                              success ? 5 : -5,
+                              success ? "Reaktionstest bestanden." : "Zu langsam.",
+                              success
+                          );
+                      }}
+                  />
+              )}
+          </div>
+        </div>
+      );
+    }
+
+    // Game over (win/lose)
+    if (gameState.currentScreen === 'GAME_OVER') {
+      return (
+        <EndScreen 
+          gameState={gameState}
+          onReplay={handleReplay}
+          onFullReset={() => setGameState(initialGameState)}
+        />
+      );
+    }
+
+    return null;
   };
 
   return (
     <RetroContainer>
-        {/* Transition Overlay */}
-        {transition.active && (
-            <div className={`fixed inset-0 z-50 transition-opacity duration-1000 ${transition.stage === 'OUT' ? 'opacity-0' : 'opacity-100'}`}>
-                <SceneTransition title={transition.title} subtitle={transition.subtitle} />
-            </div>
-        )}
+      {/* Transition overlay */}
+      {transition.active && (
+        <SceneTransition 
+          title={transition.title}
+          subtitle={transition.subtitle}
+          stage={transition.stage}
+        />
+      )}
 
-        {/* Global HUD */}
-        {gameState.currentScreen !== 'INTRO' && gameState.currentScreen !== 'CHAR_SELECT' && gameState.selectedCharacter && (
-            <div className="w-full max-w-7xl mx-auto p-4 animate-fade-in-up">
-                <StatsPanel character={gameState.selectedCharacter} gameState={gameState} />
-            </div>
-        )}
+      {/* Stats panel (visible during gameplay) */}
+      {gameState.selectedCharacter && gameState.currentScreen !== 'INTRO' && gameState.currentScreen !== 'CHAR_SELECT' && (
+        <StatsPanel 
+          character={gameState.selectedCharacter}
+          skill={gameState.selectedSkill}
+          slaTime={gameState.slaTime}
+          teamMorale={gameState.teamMorale}
+          ticketQuality={gameState.ticketQuality}
+          currentAct={gameState.currentAct}
+          gameStatus={gameState.gameStatus}
+        />
+      )}
 
-        {/* Main Content Area */}
-        <div className="flex-grow flex flex-col items-center justify-center w-full max-w-7xl mx-auto p-4 relative z-10">
-            {renderContent()}
-        </div>
+      {/* Main content area */}
+      <div className="flex-1 overflow-hidden relative z-10">
+        {renderContent()}
+      </div>
 
-        {/* Terminal/Log (Bottom, always visible except Intro) */}
-        {gameState.currentScreen !== 'INTRO' && gameState.currentScreen !== 'VICTORY' && gameState.currentScreen !== 'GAME_OVER' && (
-             <div className="w-full max-w-7xl mx-auto p-4">
-                <Terminal logs={gameState.history} />
-             </div>
-        )}
+      {/* Terminal log (visible after character selection) */}
+      {gameState.currentScreen !== 'INTRO' && gameState.currentScreen !== 'CHAR_SELECT' && (
+        <Terminal history={gameState.history} />
+      )}
     </RetroContainer>
   );
 };

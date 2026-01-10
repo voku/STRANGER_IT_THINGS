@@ -5,7 +5,7 @@ import LifecycleDiagram from './LifecycleDiagram';
 interface MiniGameClassifyProps {
   scenario: Scenario;
   skill: Skill | null;
-  onComplete: (qualityChange: number, moraleChange: number, outcomeText: string) => void;
+  onComplete: (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean) => void;
 }
 
 const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, onComplete }) => {
@@ -13,12 +13,10 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
   const [showDiagram, setShowDiagram] = useState(false);
   const [hintRevealed, setHintRevealed] = useState(false);
 
-  // Calculate the best option based on Quality Change (Technical Accuracy)
+  // Calculate the best option based on isCorrect flag
   const bestOptionIndex = useMemo(() => {
       if (!scenario.options) return -1;
-      return scenario.options.reduce((bestIdx, current, idx, arr) => 
-          current.qualityChange > arr[bestIdx].qualityChange ? idx : bestIdx
-      , 0);
+      return scenario.options.findIndex(opt => opt.isCorrect === true);
   }, [scenario.options]);
 
   const handleSelect = (index: number) => {
@@ -38,7 +36,8 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
   const handleConfirm = () => {
     if (selectedOption === null || !scenario.options) return;
     const option = scenario.options[selectedOption];
-    onComplete(option.qualityChange, option.moraleChange, option.outcome);
+    // Default to false if isCorrect is missing - fail-safe behavior
+    onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? false);
   };
 
   if (!scenario.options) return <div>Datenkorruptionsfehler.</div>;

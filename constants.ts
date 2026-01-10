@@ -4,6 +4,10 @@ export const INITIAL_SLA = 100;
 export const INITIAL_MORALE = 100;
 export const INITIAL_QUALITY = 50;
 
+// SLA decay configuration
+export const SLA_DECAY_RATE = 2; // Percentage points reduced per interval
+export const SLA_DECAY_INTERVAL = 30000; // 30 seconds in milliseconds
+
 // Kern-Szenarien in Akt 2, die vor dem Boss erledigt sein sollen
 export const ACT_2_CORE_SCENARIOS = ['act2_1', 'act2_2'];
 
@@ -128,7 +132,8 @@ export const SKILLS: Skill[] = [
         description: "Der stille Zuhörer. Hilft beim Nachdenken.",
         icon: "🦆",
         color: "bg-yellow-600 border-yellow-400",
-        targetAct: Act.ACT_1_TICKET
+        targetAct: Act.ACT_1_TICKET,
+        slaPenalty: 5 // Small penalty if used in wrong Act
     },
     {
         id: 'ITIL_BOOK',
@@ -136,7 +141,8 @@ export const SKILLS: Skill[] = [
         description: "Enthüllt Hinweise in Act 1 & 2.",
         icon: "📘",
         color: "bg-blue-800 border-blue-600",
-        targetAct: Act.ACT_1_TICKET
+        targetAct: Act.ACT_1_TICKET,
+        slaPenalty: 5
     },
     {
         id: 'COFFEE',
@@ -144,7 +150,8 @@ export const SKILLS: Skill[] = [
         description: "Universeller Fokus. Gibt kleine Hinweise überall.",
         icon: "☕",
         color: "bg-orange-900 border-orange-700",
-        targetAct: Act.ACT_2_PERSPECTIVE
+        targetAct: Act.ACT_2_PERSPECTIVE,
+        slaPenalty: 3 // Lower penalty - more universal
     },
     {
         id: 'DEBUGGER',
@@ -152,7 +159,8 @@ export const SKILLS: Skill[] = [
         description: "Enthüllt Logik-Fehler im Boss-Kampf.",
         icon: "🐞",
         color: "bg-green-800 border-green-600",
-        targetAct: Act.ACT_3_BOSS
+        targetAct: Act.ACT_3_BOSS,
+        slaPenalty: 10 // Higher penalty if used outside boss fight
     }
 ];
 
@@ -199,21 +207,24 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "FEHLER. Du hast dem User blind geglaubt. Ein Incident bedeutet 'Abweichung vom Soll-Zustand' (Kaputt). Hier funktioniert das System technisch einwandfrei, der User darf nur nicht rein. Du hast Ressourcen für eine 'Reparatur' verschwendet, wo nichts zu reparieren ist.",
                 qualityChange: -20,
-                moraleChange: -30
+                moraleChange: -30,
+                isCorrect: false
             },
             {
                 label: "REQUEST anlegen",
                 type: 'REQUEST',
                 outcome: "RISKANT. Statistisch wahrscheinlich, aber geraten. Ohne Prüfung weißt du nicht, ob es ein Bug (Incident) oder fehlende Rechte (Request) sind. Ein guter Agent prüft erst den 'Soll-Zustand'.",
                 qualityChange: +10,
-                moraleChange: 0
+                moraleChange: 0,
+                isCorrect: false
             },
             {
                 label: "NACHFRAGEN: 'Was ist der Soll-Zustand?'",
                 type: 'INQUIRY',
                 outcome: "KORREKT. Diagnose: Der User bekommt 'Access Denied'. Das System verhält sich genau wie spezifiziert (Soll-Zustand). Es ist keine Störung, sondern eine Anforderung nach Erweiterung (Request). Der User wusste das nicht – woher auch?",
                 qualityChange: +30,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             }
         ],
         successMessage: "Triage erfolgreich. User-Sicht von System-Sicht getrennt.",
@@ -237,14 +248,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "KRITISCHER ERFOLG. Incident Management bedeutet 'Restoration of Service'. Leben gerettet. Die Nasen-OP (Request) kommt auf die Warteliste.",
                 qualityChange: +25,
-                moraleChange: +15
+                moraleChange: +15,
+                isCorrect: true
             },
             {
                 label: "Die Nase operieren (REQUEST)",
                 type: 'REQUEST',
                 outcome: "KRITISCHER FEHLER. Während du die Nase verschönerst (Change/Request), verblutet der andere Patient (SLA Breach). Du hast Prioritäten missachtet.",
                 qualityChange: -25,
-                moraleChange: -30
+                moraleChange: -30,
+                isCorrect: false
             }
         ],
         successMessage: "Patient stabil. Triage korrekt.",
@@ -266,14 +279,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "FEHLER. Du hast die Tür eingetreten und das Schloss getauscht. Das System (Tür) war aber nie kaputt. Es hat korrekt den Zutritt verweigert.",
                 qualityChange: -15,
-                moraleChange: -10
+                moraleChange: -10,
+                isCorrect: false
             },
             {
                 label: "Upgrade buchen (REQUEST)",
                 type: 'REQUEST',
                 outcome: "ERFOLG. Du erkennst: Es ist ein 'Provisioning' Thema. Der Gast braucht ein Upgrade (Rechte), keine Reparatur.",
                 qualityChange: +20,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             }
         ],
         successMessage: "Check-in erfolgreich. Sicherheit gewahrt.",
@@ -295,14 +310,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "ERFOLG. Du hast den Blackout verhindert (Incident Management). Der Bürgermeister muss warten, bis das Netz stabil ist.",
                 qualityChange: +25,
-                moraleChange: +15
+                moraleChange: +15,
+                isCorrect: true
             },
             {
                 label: "Kabel verlegen (REQUEST)",
                 type: 'REQUEST',
                 outcome: "FEHLER. Du verlegst neue Kabel, während das Kraftwerk explodiert. Was nützt der Anschluss, wenn kein Strom fließt?",
                 qualityChange: -25,
-                moraleChange: -25
+                moraleChange: -25,
+                isCorrect: false
             }
         ],
         successMessage: "Netz stabil. Blackout verhindert.",
@@ -324,14 +341,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "RICHTIG. Hygienemangel ist ein Abweichung vom Soll-Zustand (Bug). Das hat Prio 1 vor Sonderwünschen.",
                 qualityChange: +20,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             },
             {
                 label: "Veganes Steak erfinden (CHANGE)",
                 type: 'CHANGE',
                 outcome: "FEHLER. Du entwickelst neue Rezepte, während das Gesundheitsamt den Laden wegen Rattenbefall schließt.",
                 qualityChange: -20,
-                moraleChange: -20
+                moraleChange: -20,
+                isCorrect: false
             }
         ],
         successMessage: "Qualität gesichert. Essen serviert.",
@@ -353,14 +372,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "ERFOLG. Assets geschützt. Ohne Bücher nützt auch der Ausweis nichts.",
                 qualityChange: +20,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             },
             {
                 label: "Ausweis ausstellen (REQUEST)",
                 type: 'REQUEST',
                 outcome: "FEHLER. Du füllst Formulare aus, während das Wissen der Welt verbrennt. Compliance hilft nicht gegen Asche.",
                 qualityChange: -25,
-                moraleChange: -15
+                moraleChange: -15,
+                isCorrect: false
             }
         ],
         successMessage: "Wissen bewahrt. Archiv intakt.",
@@ -382,14 +403,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "ERFOLG. Der Fluss muss fließen. Incident Management stellt den Normalbetrieb wieder her.",
                 qualityChange: +20,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             },
             {
                 label: "Eckige Flaschen designen (CHANGE)",
                 type: 'REQUEST',
                 outcome: "FEHLER. Du designst neue Flaschen für eine Fabrik, die nichts produziert. Stillstand kostet Gold.",
                 qualityChange: -20,
-                moraleChange: -20
+                moraleChange: -20,
+                isCorrect: false
             }
         ],
         successMessage: "Produktion läuft. Quote erfüllt.",
@@ -411,14 +434,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "ERFOLG. Die Route ist der kritische Pfad. Ohne Weg keine Lieferung, egal wie schnell die LKWs sind.",
                 qualityChange: +25,
-                moraleChange: +15
+                moraleChange: +15,
+                isCorrect: true
             },
             {
                 label: "Schnellere LKWs kaufen (REQUEST)",
                 type: 'REQUEST',
                 outcome: "FEHLER. Du kaufst Sportwagen, die dann vor der kaputten Brücke im Stau stehen. Logistik versagt.",
                 qualityChange: -25,
-                moraleChange: -20
+                moraleChange: -20,
+                isCorrect: false
             }
         ],
         successMessage: "Lieferung angekommen. Versorgung gesichert.",
@@ -440,14 +465,16 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "FALSCH. Der User kennt den 'Soll-Zustand' nicht. Er sieht nur ein Problem. Die IT muss entscheiden, ob repariert (Incident) oder geliefert (Request) wird.",
                 qualityChange: -15,
-                moraleChange: -10
+                moraleChange: -10,
+                isCorrect: false
             },
             {
                 label: "Incident = Kaputt. Request = Neu.",
                 type: 'REQUEST',
                 outcome: "KORREKT. Incident = Wiederherstellung des definierten Services (Repair/Restoration). Request = Bereitstellung von etwas Neuem/Zusätzlichem (Provide/Provisioning).",
                 qualityChange: +20,
-                moraleChange: +10
+                moraleChange: +10,
+                isCorrect: true
             }
         ],
         successMessage: "Konzept verstanden: Restoration vs. Provisioning.",
@@ -468,21 +495,24 @@ export const STORY_SCENARIOS: Scenario[] = [
                 type: 'INCIDENT',
                 outcome: "FALSCH. Man kann nichts reparieren, was nie da war. Das System funktioniert wie spezifiziert (ohne Eis-Wand). Es ist kein Ausfall.",
                 qualityChange: -15,
-                moraleChange: -10
+                moraleChange: -10,
+                isCorrect: false
             },
             {
                 label: "Request (Standard)",
                 type: 'REQUEST',
                 outcome: "FALSCH. Ein Service Request bedient sich aus dem Katalog (Standard). 'Eis-Wand' steht nicht im Katalog. Es ist also kein Standard-Prozess.",
                 qualityChange: -5,
-                moraleChange: 0
+                moraleChange: 0,
+                isCorrect: false
             },
             {
                 label: "Change Request (Requirement)",
                 type: 'CHANGE',
                 outcome: "RICHTIG. Wir müssen den 'Soll-Zustand' ändern. Das ist ein neues Requirement (Feature). Das erfordert Entwicklung, Testing und Deployment -> Change Management.",
                 qualityChange: +35,
-                moraleChange: +15
+                moraleChange: +15,
+                isCorrect: true
             }
         ],
         successMessage: "Requirement erkannt. Nicht als Bug an Dev gegeben.",
