@@ -46,6 +46,34 @@ const App: React.FC = () => {
     }
   }, [gameState.selectedSkill, gameState.unlockedSkillIds]);
 
+  // Time-based SLA reduction - runs every 30 seconds during active game
+  useEffect(() => {
+    if (gameState.gameStatus !== 'active' || gameState.currentScreen === 'INTRO' || gameState.currentScreen === 'CHAR_SELECT') {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setGameState(prev => {
+        const newSla = Math.max(0, prev.slaTime - 2); // Reduce SLA by 2 every 30 seconds
+        
+        // Check for game over
+        if (newSla <= 0) {
+          addLog("SLA TIME EXPIRED: Zeit ist abgelaufen.", 'SYSTEM');
+          return {
+            ...prev,
+            slaTime: 0,
+            gameStatus: 'lost',
+            currentScreen: 'GAME_OVER'
+          };
+        }
+        
+        return { ...prev, slaTime: newSla };
+      });
+    }, 30000); // Every 30 seconds
+
+    return () => clearInterval(timer);
+  }, [gameState.gameStatus, gameState.currentScreen]);
+
   // Transition State
   const [transition, setTransition] = useState<{ 
     active: boolean; 
@@ -69,6 +97,20 @@ const App: React.FC = () => {
         timestamp: new Date()
       }]
     }));
+  };
+
+  // Check game over conditions and update state accordingly
+  const checkGameOver = (sla: number, morale: number, quality: number): { isGameOver: boolean; reason?: string } => {
+    if (sla <= 0) {
+      return { isGameOver: true, reason: "SLA FAILURE: Zeit ist abgelaufen." };
+    }
+    if (morale <= 0) {
+      return { isGameOver: true, reason: "MORAL COLLAPSE: Team-Moral ist zusammengebrochen." };
+    }
+    if (quality <= 0) {
+      return { isGameOver: true, reason: "QUALITY FAILURE: Ticket-Qualität ist auf Null gesunken." };
+    }
+    return { isGameOver: false };
   };
 
   const triggerTransition = (title: string, subtitle?: string, callback?: () => void) => {
@@ -189,7 +231,18 @@ const App: React.FC = () => {
       }
 
       // 1. Update Stats
-      const newSla = Math.max(0, Math.min(100, gameState.slaTime - 10)); // Time passes
+      let slaPenalty = 10; // Base time penalty
+      
+      // Apply additional SLA penalty if using wrong item for this Act
+      if (gameState.selectedSkill) {
+        const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
+        if (skill && skill.targetAct && skill.targetAct !== gameState.currentAct && skill.slaPenalty) {
+          slaPenalty += skill.slaPenalty;
+          addLog(`WARNUNG: ${skill.name} ist nicht optimal für diesen Akt. -${skill.slaPenalty}% SLA.`, 'SYSTEM');
+        }
+      }
+      
+      const newSla = Math.max(0, Math.min(100, gameState.slaTime - slaPenalty));
       const newMorale = Math.max(0, Math.min(100, gameState.teamMorale + moraleChange));
       const newQuality = Math.max(0, Math.min(100, gameState.ticketQuality + qualityChange));
 
@@ -202,7 +255,10 @@ const App: React.FC = () => {
           updatedCompleted.push(gameState.currentScenario.id);
       }
 
-      // 3. Determine if Level/Act Complete
+      // 3. Check game over conditions FIRST
+      const gameOverCheck = checkGameOver(newSla, newMorale, newQuality);
+      
+      // 4. Determine if Level/Act Complete
       let nextAct = gameState.currentAct;
       let newScreen: GameState['currentScreen'] = 'MAP_SELECT';
       let gameStatus: GameState['gameStatus'] = 'active';
@@ -216,10 +272,10 @@ const App: React.FC = () => {
           addLog("FALSCHE ENTSCHEIDUNG: Das Szenario wurde nicht korrekt gelöst.", 'SYSTEM');
       }
       // Check Game Over Conditions (stats hit zero)
-      else if (newSla <= 0 || newMorale <= 0 || newQuality <= 0) {
+      else if (gameOverCheck.isGameOver) {
           gameStatus = 'lost';
           newScreen = 'GAME_OVER';
-          addLog("SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
+          addLog(gameOverCheck.reason || "SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
       } else {
           // Act Progression Logic
           if (gameState.currentAct === Act.ACT_1_TICKET && gameState.currentScenario?.id === 'act1_1') {

@@ -38,6 +38,7 @@ export interface Skill {
   icon: string;
   color: string;
   targetAct?: Act; // Hint where this skill is most useful
+  slaPenalty?: number; // SLA penalty if used in wrong context
 }
 
 export interface MapLocation {

@@ -128,7 +128,8 @@ export const SKILLS: Skill[] = [
         description: "Der stille Zuhörer. Hilft beim Nachdenken.",
         icon: "🦆",
         color: "bg-yellow-600 border-yellow-400",
-        targetAct: Act.ACT_1_TICKET
+        targetAct: Act.ACT_1_TICKET,
+        slaPenalty: 5 // Small penalty if used in wrong Act
     },
     {
         id: 'ITIL_BOOK',
@@ -136,7 +137,8 @@ export const SKILLS: Skill[] = [
         description: "Enthüllt Hinweise in Act 1 & 2.",
         icon: "📘",
         color: "bg-blue-800 border-blue-600",
-        targetAct: Act.ACT_1_TICKET
+        targetAct: Act.ACT_1_TICKET,
+        slaPenalty: 5
     },
     {
         id: 'COFFEE',
@@ -144,7 +146,8 @@ export const SKILLS: Skill[] = [
         description: "Universeller Fokus. Gibt kleine Hinweise überall.",
         icon: "☕",
         color: "bg-orange-900 border-orange-700",
-        targetAct: Act.ACT_2_PERSPECTIVE
+        targetAct: Act.ACT_2_PERSPECTIVE,
+        slaPenalty: 3 // Lower penalty - more universal
     },
     {
         id: 'DEBUGGER',
@@ -152,7 +155,8 @@ export const SKILLS: Skill[] = [
         description: "Enthüllt Logik-Fehler im Boss-Kampf.",
         icon: "🐞",
         color: "bg-green-800 border-green-600",
-        targetAct: Act.ACT_3_BOSS
+        targetAct: Act.ACT_3_BOSS,
+        slaPenalty: 10 // Higher penalty if used outside boss fight
     }
 ];
 
