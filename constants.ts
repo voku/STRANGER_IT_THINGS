@@ -39,16 +39,26 @@ export const MAP_LOCATIONS: MapLocation[] = [
   {
     id: 'ARCADE',
     name: 'Palace Arcade',
-    description: 'Bonus Level (Gesperrt)',
+    description: 'Gaming Paradies - Hier kannst du dich entspannen.',
     coords: { x: 30, y: 75 },
-    type: 'SAFE'
+    type: 'SAFE',
+    requiredAct: Act.ACT_1_TICKET  // Accessible from Act 1
+  },
+  {
+    id: 'FOREST',
+    name: 'Mirkwood Forest',
+    description: 'Ein dunkler Wald - Könnte gefährlich sein...',
+    coords: { x: 65, y: 50 },
+    type: 'DANGER',
+    requiredAct: Act.ACT_1_TICKET  // Accessible from Act 1
   },
   {
     id: 'UPSIDEDOWN',
     name: 'The Upside Down',
-    description: 'Legacy Systems (Gesperrt)',
+    description: 'Legacy Systems - Nur für Experten zugänglich.',
     coords: { x: 70, y: 80 },
-    type: 'DANGER'
+    type: 'DANGER',
+    requiredAct: Act.ACT_3_BOSS  // Only accessible in Act 3
   }
 ];
 

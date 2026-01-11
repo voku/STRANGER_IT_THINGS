@@ -165,12 +165,31 @@ const App: React.FC = () => {
   };
 
   /**
+   * Helper: Get Act title and subtitle for transitions
+   */
+  const getActTransitionInfo = (act: Act): { title: string; subtitle: string } => {
+    switch (act) {
+      case Act.ACT_1_TICKET:
+        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+      case Act.ACT_2_PERSPECTIVE:
+        return { title: "AKT 2", subtitle: "Das Perspektiven-Labyrinth" };
+      case Act.ACT_3_BOSS:
+        return { title: "AKT 3", subtitle: "Der Modell-Endgegner" };
+      case Act.ACT_4_EPILOGUE:
+        return { title: "AKT 4", subtitle: "Die neue Welt" };
+      default:
+        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+    }
+  };
+
+  /**
    * Handler: Select skill/item for the current act
    */
   const handleSkillSelect = (skill: Skill) => {
     setGameState(prev => ({ ...prev, selectedSkill: skill }));
     
-    triggerTransition("AKT 1", "Das verzerrte Ticket", () => {
+    const actInfo = getActTransitionInfo(gameState.currentAct);
+    triggerTransition(actInfo.title, actInfo.subtitle, () => {
         addLog("SYSTEM NEUSTART...", 'SYSTEM');
         addLog(`Willkommen, ${gameState.selectedCharacter?.name}. Der Demogorgon (User) ist unruhig.`, 'GM');
         setGameState(prev => ({ ...prev, currentScreen: 'MAP_SELECT' }));
@@ -184,11 +203,47 @@ const App: React.FC = () => {
    * - First: Role-specific scenario
    * - Then: act2_1 (ITIL basics)
    * - Finally: act2_2 (Change management)
+   * 
+   * Also handles detour locations (wrong moves) that provide flavor text
    */
   const handleLocationSelect = (location: MapLocation) => {
     setGameState(prev => ({ ...prev, selectedLocation: location }));
     
     let scenarioToLoad: Scenario | undefined;
+
+    // Handle detour locations (no scenarios, just flavor text)
+    if (location.id === 'ARCADE') {
+        addLog(`Du betrittst das Palace Arcade...`, 'SYSTEM');
+        addLog(`Die blinkenden Automaten locken, aber das ist nicht der richtige Weg. Die Mission wartet woanders.`, 'GM');
+        addLog(`-5 SLA (Zeitverschwendung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - 5)
+        }));
+        return;
+    }
+    
+    if (location.id === 'FOREST') {
+        addLog(`Du verirrst dich im Mirkwood Forest...`, 'SYSTEM');
+        addLog(`Die dunklen Pfade führen nirgendwohin. Du verlierst wertvolle Zeit. Kehre zurück zur Mission!`, 'GM');
+        addLog(`-10 SLA (Verirrt)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - 10)
+        }));
+        return;
+    }
+    
+    if (location.id === 'UPSIDEDOWN') {
+        addLog(`Du versuchst, ins Upside Down vorzudringen...`, 'SYSTEM');
+        addLog(`Die Energie ist zu stark. Du bist noch nicht bereit für diesen Ort. Zugriff verweigert.`, 'GM');
+        addLog(`-5 Moral (Überforderung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            teamMorale: clampStat(prev.teamMorale - 5)
+        }));
+        return;
+    }
 
     // Scenario selection logic based on Act and Location
     if (gameState.currentAct === Act.ACT_1_TICKET && location.id === 'MALL') {
