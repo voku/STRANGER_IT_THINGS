@@ -457,7 +457,7 @@ const App: React.FC = () => {
         <SkillSelect 
           currentAct={gameState.currentAct}
           unlockedSkillIds={gameState.unlockedSkillIds}
-          onSkillSelect={handleSkillSelect}
+          onSelectSkill={handleSkillSelect}
         />
       );
     }
