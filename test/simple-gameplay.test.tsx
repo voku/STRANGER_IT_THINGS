@@ -24,10 +24,10 @@ describe('Simple Gameplay Test', () => {
     const startButton = screen.getByText(/INSERT COIN/i);
     await user.click(startButton);
     
-    // Should reach character selection
+    // Should reach character selection (faster transitions now ~1.7s)
     await waitFor(() => {
       expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
   });
 
   it('should select character without fake timers', async () => {
@@ -41,7 +41,7 @@ describe('Simple Gameplay Test', () => {
     
     await waitFor(() => {
       expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Select first character
     const firstCharacter = CHARACTERS[0];
@@ -51,12 +51,12 @@ describe('Simple Gameplay Test', () => {
     // Wait for transition to show
     await waitFor(() => {
       expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
-    // Wait for skill selection screen (using real timers - 5.5 seconds)
+    // Wait for skill selection screen (faster transitions now ~1.7s)
     await waitFor(() => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Verify we're on skill selection and can see content
     expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
@@ -71,10 +71,10 @@ describe('Simple Gameplay Test', () => {
     await user.type(nameInput, 'TestAgent');
     await user.click(screen.getByText(/INSERT COIN/i));
     
-    // Step 2: Wait for and verify character selection screen
+    // Step 2: Wait for and verify character selection screen (faster transitions)
     await waitFor(() => {
       expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Step 3: Select first character (The Operator)
     const firstCharacter = CHARACTERS[0];
@@ -84,12 +84,12 @@ describe('Simple Gameplay Test', () => {
     // Step 4: Wait for transition animation
     await waitFor(() => {
       expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
     // Step 5: Wait for skill selection screen (AUSRÜSTUNGSPHASE)
     await waitFor(() => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Step 6: Verify initial unlocked skills (Rubber Duck and ITIL Book should be available)
     expect(screen.getByText(/Rubber Duck/i)).toBeInTheDocument();
@@ -104,15 +104,15 @@ describe('Simple Gameplay Test', () => {
     // Step 8: Wait for transition to next screen (AKT 1)
     await waitFor(() => {
       expect(screen.getByText(/AKT 1/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
     // Step 9: Verify we reach the map selection screen after transition
     await waitFor(() => {
       // Look for map-related text or terminal messages
       const terminalText = screen.queryByText(/SYSTEM NEUSTART/i) || screen.queryByText(/Willkommen/i);
       expect(terminalText).toBeInTheDocument();
-    }, { timeout: 10000 });
-  }, 30000); // Set timeout to 30 seconds for this long test
+    }, { timeout: 5000 });
+  }, 20000); // Reduced timeout due to faster transitions
 
   it('golden path: complete game from start to finish', async () => {
     const user = userEvent.setup();
@@ -125,7 +125,7 @@ describe('Simple Gameplay Test', () => {
     
     await waitFor(() => {
       expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // ========== CHARACTER SELECTION ==========
     const operatorButton = screen.getByText(CHARACTERS[0].name);
@@ -133,12 +133,12 @@ describe('Simple Gameplay Test', () => {
     
     await waitFor(() => {
       expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
     // ========== ACT 1: SKILL SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     const rubberDuckButton = screen.getByText(/Rubber Duck/i).closest('button');
     await user.click(rubberDuckButton!);
@@ -146,12 +146,12 @@ describe('Simple Gameplay Test', () => {
     await waitFor(() => {
       // Look for transition-specific text "Das verzerrte Ticket"
       expect(screen.getByText(/verzerrte Ticket/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
     // ========== ACT 1: MAP SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Click on Starcourt Mall location - use getAllByText to get the button specifically
     const mallElements = screen.getAllByText(/Starcourt Mall/i);
@@ -182,12 +182,12 @@ describe('Simple Gameplay Test', () => {
     await waitFor(() => {
       // Look for the transition-specific text
       expect(screen.getByText(/PERSPEKTIVENWECHSEL/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // ========== ACT 2: SKILL SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Select Coffee (should be unlocked now)
     const coffeeButton = screen.getByText(/Schwarzer Kaffee/i).closest('button');
@@ -195,12 +195,12 @@ describe('Simple Gameplay Test', () => {
     
     await waitFor(() => {
       expect(screen.getByText(/AKT 2/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 3000 });
     
     // ========== ACT 2: MAP SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Click on Hawkins High - use getAllByText to get the button specifically
     const schoolElements = screen.getAllByText(/Hawkins High/i);
@@ -229,7 +229,7 @@ describe('Simple Gameplay Test', () => {
     // Return to map and complete act2_1
     await waitFor(() => {
       expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     const schoolElements2 = screen.getAllByText(/Hawkins High/i);
     const schoolButton2 = schoolElements2.find(el => el.closest('button'))!.closest('button');
@@ -254,7 +254,7 @@ describe('Simple Gameplay Test', () => {
     // Return to map and complete act2_2
     await waitFor(() => {
       expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     const schoolElements3 = screen.getAllByText(/Hawkins High/i);
     const schoolButton3 = schoolElements3.find(el => el.closest('button'))!.closest('button');
@@ -280,12 +280,12 @@ describe('Simple Gameplay Test', () => {
     await waitFor(() => {
       // Look for the transition-specific text
       expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // ========== ACT 3: SKILL SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // Select Root Cause Analyzer (should be unlocked now)
     const debuggerButton = screen.getByText(/Root Cause Analyzer/i).closest('button');
@@ -294,7 +294,7 @@ describe('Simple Gameplay Test', () => {
     await waitFor(() => {
       // Look for the map or other indication that transition happened
       expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+    }, { timeout: 5000 });
     
     // ========== ACT 3: MAP SELECTION ==========
     // Click on Hawkins Lab
@@ -318,11 +318,11 @@ describe('Simple Gameplay Test', () => {
     // ========== VICTORY ==========
     await waitFor(() => {
       // After completing the boss fight, we should see game over screen with victory
-      expect(screen.getByText(/SIEG|MISSION ERFOLGREICH/i)).toBeInTheDocument();
-    }, { timeout: 10000 });
+      expect(screen.getByText(/MISSION ERFÜLLT/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
     
-    // Verify victory message
-    expect(screen.getByText(/Der Modell-Endgegner wurde besiegt|stabil/i)).toBeInTheDocument();
+    // Verify we're on end screen with single restart button
+    expect(screen.getByText(/NEU STARTEN/i)).toBeInTheDocument();
     
-  }, 120000); // Set timeout to 120 seconds for full game test
+  }, 60000); // Reduced timeout due to faster transitions
 });

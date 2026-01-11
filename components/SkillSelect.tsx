@@ -5,10 +5,11 @@ import { SKILLS } from '../constants';
 interface SkillSelectProps {
   currentAct: Act;
   unlockedSkillIds: string[];
+  selectedSkill: Skill | null;
   onSelectSkill: (skill: Skill) => void;
 }
 
-const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds, onSelectSkill }) => {
+const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds, selectedSkill, onSelectSkill }) => {
   
   const getMissionBrief = () => {
       switch(currentAct) {
@@ -23,68 +24,88 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
       }
   };
 
-  // Find the single best recommended skill that is unlocked
-  const recommendedSkillId = SKILLS.find(s => s.targetAct === currentAct && unlockedSkillIds.includes(s.id))?.id;
+  // Find the single best recommended skill that is unlocked and not already selected
+  const recommendedSkillId = SKILLS.find(s => 
+    s.targetAct === currentAct && 
+    unlockedSkillIds.includes(s.id) && 
+    s.id !== selectedSkill?.id
+  )?.id;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full p-4 relative z-20">
+    <div className="flex flex-col items-center justify-center min-h-full p-2 sm:p-4 relative z-20 overflow-y-auto">
       <h2 
         data-text="AUSRÜSTUNGSPHASE"
-        className="text-4xl md:text-5xl stranger-heading text-center mb-6 tracking-wider animate-pulse"
+        className="text-2xl sm:text-4xl md:text-5xl stranger-heading text-center mb-4 sm:mb-6 tracking-wider animate-pulse"
       >
         AUSRÜSTUNGSPHASE
       </h2>
       
-      <p className="font-vt323 text-xl text-yellow-400 mb-8 text-center max-w-2xl border-b border-gray-700 pb-4">
+      <p className="font-vt323 text-lg sm:text-xl text-yellow-400 mb-4 sm:mb-8 text-center max-w-2xl border-b border-gray-700 pb-4 px-2">
         {getMissionBrief()}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-6xl w-full px-2">
         {SKILLS.map((skill) => {
           const isRecommended = skill.id === recommendedSkillId;
           const isUnlocked = unlockedSkillIds.includes(skill.id);
+          const isAlreadyEquipped = selectedSkill?.id === skill.id;
+          const isSelectable = isUnlocked && !isAlreadyEquipped;
           
           return (
             <button
                 key={skill.id}
-                onClick={() => isUnlocked && onSelectSkill(skill)}
-                disabled={!isUnlocked}
+                onClick={() => isSelectable && onSelectSkill(skill)}
+                disabled={!isSelectable}
                 className={`
-                relative group flex flex-col items-center p-6 border-4 rounded-xl transition-all duration-300
-                ${isUnlocked ? `${skill.color} hover:scale-105 hover:shadow-[0_0_20px_currentColor] cursor-pointer` : 'border-gray-800 bg-gray-900 cursor-not-allowed opacity-60'}
+                relative group flex flex-col items-center p-3 sm:p-6 border-2 sm:border-4 rounded-xl transition-all duration-300
+                ${isSelectable ? `${skill.color} hover:scale-105 hover:shadow-[0_0_20px_currentColor] cursor-pointer active:scale-95` : 'border-gray-800 bg-gray-900 cursor-not-allowed opacity-60'}
                 bg-opacity-20 backdrop-blur-sm bg-black
-                ${isRecommended && isUnlocked ? 'ring-4 ring-yellow-500/50 transform scale-105 shadow-[0_0_30px_rgba(234,179,8,0.3)]' : ''}
+                ${isRecommended && isSelectable ? 'ring-2 sm:ring-4 ring-yellow-500/50 transform scale-105 shadow-[0_0_30px_rgba(234,179,8,0.3)]' : ''}
+                ${isAlreadyEquipped ? 'ring-2 sm:ring-4 ring-green-500 border-green-500 opacity-70' : ''}
                 `}
             >
                 {/* Lock Overlay */}
                 {!isUnlocked && (
                     <div className="absolute inset-0 z-20 bg-black/50 flex items-center justify-center rounded-lg">
-                        <span className="text-5xl drop-shadow-lg">🔒</span>
+                        <span className="text-3xl sm:text-5xl drop-shadow-lg">🔒</span>
                     </div>
                 )}
 
-                {isRecommended && isUnlocked && (
-                    <div className="absolute -top-3 bg-yellow-600 text-black font-bold font-press-start text-[10px] px-3 py-1 rounded shadow-lg z-10">
+                {/* Already Equipped Overlay */}
+                {isAlreadyEquipped && (
+                    <div className="absolute inset-0 z-20 bg-green-900/30 flex items-center justify-center rounded-lg">
+                        <span className="text-2xl sm:text-4xl drop-shadow-lg">✓</span>
+                    </div>
+                )}
+
+                {isRecommended && isSelectable && (
+                    <div className="absolute -top-2 sm:-top-3 bg-yellow-600 text-black font-bold font-press-start text-[8px] sm:text-[10px] px-2 sm:px-3 py-1 rounded shadow-lg z-10">
                         EMPFOHLEN
                     </div>
                 )}
+
+                {isAlreadyEquipped && (
+                    <div className="absolute -top-2 sm:-top-3 bg-green-600 text-black font-bold font-press-start text-[8px] sm:text-[10px] px-2 sm:px-3 py-1 rounded shadow-lg z-10">
+                        AUSGERÜSTET
+                    </div>
+                )}
                 
-                <div className={`text-6xl mb-4 filter drop-shadow-lg ${isUnlocked ? 'group-hover:animate-bounce' : 'grayscale opacity-30'}`}>
+                <div className={`text-4xl sm:text-6xl mb-2 sm:mb-4 filter drop-shadow-lg ${isSelectable ? 'group-hover:animate-bounce' : 'grayscale opacity-30'}`}>
                     {skill.icon}
                 </div>
                 
-                <h3 className={`font-press-start text-lg mb-2 text-center leading-tight ${isUnlocked ? 'text-white' : 'text-gray-500'}`}>
+                <h3 className={`font-press-start text-xs sm:text-lg mb-1 sm:mb-2 text-center leading-tight ${isUnlocked ? 'text-white' : 'text-gray-500'}`}>
                     {skill.name}
                 </h3>
                 
-                <div className="w-full h-px bg-white/30 my-3"></div>
+                <div className="w-full h-px bg-white/30 my-2 sm:my-3"></div>
                 
-                <p className={`font-vt323 text-lg text-center leading-tight ${isUnlocked ? 'text-gray-200' : 'text-gray-600'}`}>
+                <p className={`font-vt323 text-sm sm:text-lg text-center leading-tight ${isUnlocked ? 'text-gray-200' : 'text-gray-600'}`}>
                     {skill.description}
                 </p>
 
-                {isUnlocked && (
-                    <div className="absolute bottom-2 text-xs text-gray-500 uppercase tracking-widest font-mono group-hover:text-white transition-colors">
+                {isSelectable && (
+                    <div className="absolute bottom-1 sm:bottom-2 text-[8px] sm:text-xs text-gray-500 uppercase tracking-widest font-mono group-hover:text-white transition-colors">
                         Klicken zum Ausrüsten
                     </div>
                 )}

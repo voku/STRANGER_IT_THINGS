@@ -18,7 +18,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE } from './constants';
-import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry } from './types';
+import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry, WrongAnswer } from './types';
 import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
 import { useGameMechanics } from './hooks/useGameMechanics';
@@ -123,15 +123,15 @@ const App: React.FC = () => {
     setTimeout(() => {
         setTransition(prev => ({ ...prev, stage: 'INTERSTITIAL' }));
         if (callback) callback();
-    }, 2000);
+    }, 600);
 
     setTimeout(() => {
         setTransition(prev => ({ ...prev, stage: 'OUT' }));
-    }, 4500);
+    }, 1200);
 
     setTimeout(() => {
         setTransition(prev => ({ ...prev, active: false }));
-    }, 5500); // Extra 1 second for fade out animation
+    }, 1700); // Faster fade out
   };
 
   /**
@@ -256,12 +256,14 @@ const App: React.FC = () => {
    * @param moraleChange - Change to team morale stat
    * @param outcomeText - Message to display to player
    * @param isCorrect - Whether the answer was correct
+   * @param selectedOptionLabel - The option the player selected (for tracking wrong answers)
    */
   const handleScenarioComplete = (
     qualityChange: number, 
     moraleChange: number, 
     outcomeText: string, 
-    isCorrect: boolean
+    isCorrect: boolean,
+    selectedOptionLabel?: string
   ) => {
       if (!gameState.currentScenario) return;
       
@@ -292,11 +294,27 @@ const App: React.FC = () => {
 
       // Track completion (only if correct)
       let updatedCompleted = [...gameState.completedScenarios];
+      let updatedWrongAnswers = [...gameState.wrongAnswers];
+      
       if (isCorrect && !updatedCompleted.includes(gameState.currentScenario.id)) {
           updatedCompleted.push(gameState.currentScenario.id);
       }
+      
+      // Track wrong answers for end screen explanation (don't end game immediately)
+      if (!isCorrect && gameState.currentScenario.options) {
+          const correctOption = gameState.currentScenario.options.find(o => o.isCorrect === true);
+          const wrongAnswer: WrongAnswer = {
+              scenarioId: gameState.currentScenario.id,
+              scenarioTitle: gameState.currentScenario.title,
+              selectedOption: selectedOptionLabel || 'Unbekannt',
+              correctOption: correctOption?.label || 'Unbekannt',
+              explanation: outcomeText
+          };
+          updatedWrongAnswers.push(wrongAnswer);
+          addLog("HINWEIS: Falsche Entscheidung getroffen. Du kannst weiterspielen, aber beachte die Auswirkungen auf deine Stats.", 'SYSTEM');
+      }
 
-      // Check game over conditions
+      // Check game over conditions (only from stats, not from wrong answers)
       const gameOverCheck = checkGameOver(newSla, newMorale, newQuality);
       
       // Initialize next state
@@ -306,52 +324,48 @@ const App: React.FC = () => {
       let newUnlockedLocs = [...gameState.unlockedLocationIds];
       let newUnlockedSkills = [...gameState.unlockedSkillIds];
 
-      // Handle wrong answer (immediate game over)
-      if (!isCorrect) {
-          gameStatus = 'lost';
-          newScreen = 'GAME_OVER';
-          addLog("FALSCHE ENTSCHEIDUNG: Das Szenario wurde nicht korrekt gelöst.", 'SYSTEM');
-      }
-      // Handle game over from stats
-      else if (gameOverCheck.isGameOver) {
+      // Handle game over from stats (not from wrong answers anymore)
+      if (gameOverCheck.isGameOver) {
           gameStatus = 'lost';
           newScreen = 'GAME_OVER';
           addLog(gameOverCheck.reason || "SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
       } else {
-          // Handle act progression
-          if (gameState.currentAct === Act.ACT_1_TICKET && gameState.currentScenario?.id === 'act1_1') {
-              // Advance to Act 2
-              nextAct = Act.ACT_2_PERSPECTIVE;
-              newUnlockedLocs.push('SCHOOL');
-              newUnlockedSkills.push('COFFEE');
-              
-              triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
-                  addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
-                  addLog("Neues Item verfügbar: SCHWARZER KAFFEE", 'SYSTEM');
-              });
-              newScreen = 'SKILL_SELECT';
-          }
-          else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
-               // Check if all core scenarios are done
-               const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
-               if (act2CoreDone) {
-                   // Advance to Act 3
-                   nextAct = Act.ACT_3_BOSS;
-                   newUnlockedLocs.push('LAB');
-                   newUnlockedSkills.push('DEBUGGER');
-                   
-                   triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
-                      addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                      addLog("Bonus Item freigeschaltet: ROOT CAUSE ANALYZER", 'SYSTEM');
-                   });
-                   newScreen = 'SKILL_SELECT';
-               }
-          }
-          else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
-              // Game won!
-              gameStatus = 'won';
-              newScreen = 'GAME_OVER';
-              addLog("SIEG! Der Modell-Endgegner wurde besiegt. Das System ist stabil.", 'SYSTEM');
+          // Handle act progression (only if correct answer)
+          if (isCorrect) {
+              if (gameState.currentAct === Act.ACT_1_TICKET && gameState.currentScenario?.id === 'act1_1') {
+                  // Advance to Act 2
+                  nextAct = Act.ACT_2_PERSPECTIVE;
+                  newUnlockedLocs.push('SCHOOL');
+                  newUnlockedSkills.push('COFFEE');
+                  
+                  triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
+                      addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
+                      addLog("Neues Item verfügbar: SCHWARZER KAFFEE", 'SYSTEM');
+                  });
+                  newScreen = 'SKILL_SELECT';
+              }
+              else if (gameState.currentAct === Act.ACT_2_PERSPECTIVE) {
+                   // Check if all core scenarios are done
+                   const act2CoreDone = ACT_2_CORE_SCENARIOS.every(id => updatedCompleted.includes(id));
+                   if (act2CoreDone) {
+                       // Advance to Act 3
+                       nextAct = Act.ACT_3_BOSS;
+                       newUnlockedLocs.push('LAB');
+                       newUnlockedSkills.push('DEBUGGER');
+                       
+                       triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
+                          addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
+                          addLog("Bonus Item freigeschaltet: ROOT CAUSE ANALYZER", 'SYSTEM');
+                       });
+                       newScreen = 'SKILL_SELECT';
+                   }
+              }
+              else if (gameState.currentAct === Act.ACT_3_BOSS && gameState.currentScenario?.id === 'act3_1') {
+                  // Game won!
+                  gameStatus = 'won';
+                  newScreen = 'GAME_OVER';
+                  addLog("SIEG! Der Modell-Endgegner wurde besiegt. Das System ist stabil.", 'SYSTEM');
+              }
           }
       }
 
@@ -362,6 +376,7 @@ const App: React.FC = () => {
           teamMorale: newMorale,
           ticketQuality: newQuality,
           completedScenarios: updatedCompleted,
+          wrongAnswers: updatedWrongAnswers,
           currentAct: nextAct,
           currentScreen: newScreen,
           gameStatus: gameStatus,
@@ -457,6 +472,7 @@ const App: React.FC = () => {
         <SkillSelect 
           currentAct={gameState.currentAct}
           unlockedSkillIds={gameState.unlockedSkillIds}
+          selectedSkill={gameState.selectedSkill}
           onSelectSkill={handleSkillSelect}
         />
       );
@@ -574,7 +590,6 @@ const App: React.FC = () => {
         <EndScreen 
           gameState={gameState}
           onReplay={handleReplay}
-          onFullReset={() => setGameState(initialGameState)}
         />
       );
     }

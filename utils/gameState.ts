@@ -29,6 +29,7 @@ export const initialGameState: GameState = {
   unlockedLocationIds: ['MALL'], // Start with Mall unlocked
   unlockedSkillIds: ['RUBBER_DUCK', 'ITIL_BOOK'], // Start with Rubber Duck and ITIL Book
   completedScenarios: [],
+  wrongAnswers: [], // Track wrong answers for end screen
   slaTime: INITIAL_SLA,
   teamMorale: INITIAL_MORALE,
   ticketQuality: INITIAL_QUALITY,
