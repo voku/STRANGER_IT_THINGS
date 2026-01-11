@@ -91,13 +91,17 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Step 6: Verify skill selection screen shows randomized items
+    // Step 6: Wait for skill buttons to be rendered (after transition completes)
     // Since we now show 4 random items, we can't guarantee specific items will appear
     // Just verify that some skills are displayed and at least one is selectable
-    const skillButtons = screen.getAllByRole('button').filter(btn => 
-      btn.textContent?.includes('Klicken zum Ausrüsten')
-    );
-    expect(skillButtons.length).toBeGreaterThan(0);
+    let skillButtons: HTMLElement[] = [];
+    await waitFor(() => {
+      skillButtons = screen.queryAllByRole('button').filter(btn => 
+        btn.textContent?.includes('Klicken zum Ausrüsten')
+      );
+      expect(skillButtons.length).toBeGreaterThan(0);
+    }, { timeout: 3000 });
+    
     expect(skillButtons.length).toBeLessThanOrEqual(4); // Should show max 4 items
     
     // Step 7: Select the first available skill (any of the randomized ones)
@@ -145,11 +149,15 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Select any available skill (now randomized, so we can't guarantee Rubber Duck)
-    const skillButtons = screen.getAllByRole('button').filter(btn => 
-      btn.textContent?.includes('Klicken zum Ausrüsten')
-    );
-    expect(skillButtons.length).toBeGreaterThan(0);
+    // Wait for skill buttons to be rendered (after transition completes)
+    let skillButtons: HTMLElement[] = [];
+    await waitFor(() => {
+      skillButtons = screen.queryAllByRole('button').filter(btn => 
+        btn.textContent?.includes('Klicken zum Ausrüsten')
+      );
+      expect(skillButtons.length).toBeGreaterThan(0);
+    }, { timeout: 3000 });
+    
     await user.click(skillButtons[0]);
     
     await waitFor(() => {
@@ -198,9 +206,16 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Select Coffee (should be unlocked now)
-    const coffeeButton = screen.getByText(/Schwarzer Kaffee/i).closest('button');
-    await user.click(coffeeButton!);
+    // Select any available skill (now randomized, so we can't guarantee Coffee)
+    let skillButtons2: HTMLElement[] = [];
+    await waitFor(() => {
+      skillButtons2 = screen.queryAllByRole('button').filter(btn => 
+        btn.textContent?.includes('Klicken zum Ausrüsten')
+      );
+      expect(skillButtons2.length).toBeGreaterThan(0);
+    }, { timeout: 3000 });
+    
+    await user.click(skillButtons2[0]);
     
     await waitFor(() => {
       expect(screen.getByText(/AKT 2/i)).toBeInTheDocument();
