@@ -666,6 +666,7 @@ const App: React.FC = () => {
           ticketQuality={gameState.ticketQuality}
           currentAct={gameState.currentAct}
           gameStatus={gameState.gameStatus}
+          itemInventory={gameState.itemInventory}
         />
       )}
 
