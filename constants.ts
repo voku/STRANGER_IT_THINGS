@@ -126,41 +126,83 @@ export const CHARACTERS: Character[] = [
 ];
 
 export const SKILLS: Skill[] = [
+    // Good Items
     {
         id: 'RUBBER_DUCK',
         name: "Rubber Duck",
-        description: "Der stille Zuhörer. Hilft beim Nachdenken.",
+        description: "Der stille Zuhörer. Hilft beim Nachdenken. (Einmalig)",
         icon: "🦆",
         color: "bg-yellow-600 border-yellow-400",
         targetAct: Act.ACT_1_TICKET,
-        slaPenalty: 5 // Small penalty if used in wrong Act
+        slaPenalty: 5, // Small penalty if used in wrong Act
+        isBadItem: false
     },
     {
         id: 'ITIL_BOOK',
         name: "ITIL V4 Codex",
-        description: "Enthüllt Hinweise in Act 1 & 2.",
+        description: "Enthüllt Hinweise in Act 1 & 2. (Einmalig)",
         icon: "📘",
         color: "bg-blue-800 border-blue-600",
         targetAct: Act.ACT_1_TICKET,
-        slaPenalty: 5
+        slaPenalty: 5,
+        isBadItem: false
     },
     {
         id: 'COFFEE',
         name: "Schwarzer Kaffee",
-        description: "Universeller Fokus. Gibt kleine Hinweise überall.",
+        description: "Universeller Fokus. Gibt kleine Hinweise überall. (Einmalig)",
         icon: "☕",
         color: "bg-orange-900 border-orange-700",
         targetAct: Act.ACT_2_PERSPECTIVE,
-        slaPenalty: 3 // Lower penalty - more universal
+        slaPenalty: 3, // Lower penalty - more universal
+        isBadItem: false
     },
     {
         id: 'DEBUGGER',
         name: "Root Cause Analyzer",
-        description: "Enthüllt Logik-Fehler im Boss-Kampf.",
+        description: "Enthüllt Logik-Fehler im Boss-Kampf. (Einmalig)",
         icon: "🐞",
         color: "bg-green-800 border-green-600",
         targetAct: Act.ACT_3_BOSS,
-        slaPenalty: 10 // Higher penalty if used outside boss fight
+        slaPenalty: 10, // Higher penalty if used outside boss fight
+        isBadItem: false
+    },
+    // Bad Items (negative effects)
+    {
+        id: 'EXPIRED_ENERGY_DRINK',
+        name: "Abgelaufener Energy Drink",
+        description: "Macht wach, aber schadet der Moral. -10 Moral beim Nutzen. (Einmalig)",
+        icon: "🥤",
+        color: "bg-red-900 border-red-700",
+        targetAct: Act.ACT_1_TICKET,
+        slaPenalty: 3,
+        isBadItem: true,
+        qualityEffect: 0,
+        moraleEffect: -10
+    },
+    {
+        id: 'OUTDATED_DOCUMENTATION',
+        name: "Veraltete Doku",
+        description: "Führt in die Irre. -5 Qualität beim Nutzen. (Einmalig)",
+        icon: "📜",
+        color: "bg-gray-800 border-gray-600",
+        targetAct: Act.ACT_2_PERSPECTIVE,
+        slaPenalty: 8,
+        isBadItem: true,
+        qualityEffect: -5,
+        moraleEffect: 0
+    },
+    {
+        id: 'BUGGY_SCRIPT',
+        name: "Fehlerhaftes Script",
+        description: "Automatisierung mit Nebenwirkungen. -5 Qualität, -5 Moral. (Einmalig)",
+        icon: "⚠️",
+        color: "bg-orange-900 border-orange-700",
+        targetAct: Act.ACT_3_BOSS,
+        slaPenalty: 15,
+        isBadItem: true,
+        qualityEffect: -5,
+        moraleEffect: -5
     }
 ];
 

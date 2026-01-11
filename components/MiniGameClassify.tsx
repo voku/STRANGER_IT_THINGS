@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Scenario, Skill } from '../types';
+import { Scenario, Skill, ItemInventory } from '../types';
 import LifecycleDiagram from './LifecycleDiagram';
 
 interface MiniGameClassifyProps {
   scenario: Scenario;
   skill: Skill | null;
-  onComplete: (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean, selectedOptionLabel?: string) => void;
+  itemInventory: ItemInventory;
+  onComplete: (qualityChange: number, moraleChange: number, outcomeText: string, isCorrect: boolean, selectedOptionLabel?: string, itemUsed?: boolean) => void;
 }
 
-const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, onComplete }) => {
+const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, itemInventory, onComplete }) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showDiagram, setShowDiagram] = useState(false);
   const [hintRevealed, setHintRevealed] = useState(false);
@@ -37,8 +38,8 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
     if (selectedOption === null || !scenario.options) return;
     const option = scenario.options[selectedOption];
     // Default to false if isCorrect is missing - fail-safe behavior
-    // Pass selectedOptionLabel for tracking wrong answers
-    onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? false, option.label);
+    // Pass selectedOptionLabel and itemUsed flag for tracking
+    onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? false, option.label, hintRevealed);
   };
 
   if (!scenario.options) return <div>Datenkorruptionsfehler.</div>;
@@ -54,6 +55,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
   };
 
   const canUseHint = skill?.id === 'ITIL_BOOK' || skill?.id === 'COFFEE' || skill?.id === 'RUBBER_DUCK';
+  const hasItemInInventory = skill ? (itemInventory[skill.id] || 0) > 0 : false;
 
   return (
     <div className="flex flex-col items-center w-full animate-fade-in relative px-2 sm:px-0">
@@ -103,12 +105,22 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
 
       {/* Skill / Hint Button */}
       {!showDiagram && canUseHint && !hintRevealed && scenario.hint && skill && (
-          <button 
-            onClick={() => setHintRevealed(true)}
-            className="mb-4 sm:mb-6 px-3 sm:px-4 py-2 bg-indigo-900 border border-indigo-400 text-indigo-300 font-press-start text-[10px] sm:text-xs rounded shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:bg-indigo-800 animate-pulse"
-          >
-            {skill.icon} NUTZE {skill.name}
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            <button 
+              onClick={() => setHintRevealed(true)}
+              disabled={!hasItemInInventory}
+              className={`mb-2 px-3 sm:px-4 py-2 border font-press-start text-[10px] sm:text-xs rounded shadow-[0_0_10px_rgba(99,102,241,0.5)] transition-all
+                ${hasItemInInventory 
+                  ? 'bg-indigo-900 border-indigo-400 text-indigo-300 hover:bg-indigo-800 animate-pulse cursor-pointer' 
+                  : 'bg-gray-900 border-gray-600 text-gray-600 cursor-not-allowed opacity-50'
+                }`}
+            >
+              {skill.icon} NUTZE {skill.name} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : '(LEER)'}
+            </button>
+            {!hasItemInInventory && (
+              <p className="text-red-400 text-xs font-mono">⚠️ Kein Item verfügbar!</p>
+            )}
+          </div>
       )}
 
       {/* Hint Display */}
