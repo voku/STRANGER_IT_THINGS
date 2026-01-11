@@ -29,7 +29,7 @@ const Terminal: React.FC<TerminalProps> = ({ history }) => {
     <div 
       ref={containerRef}
       onScroll={handleScroll}
-      className="flex-grow bg-[#051105] border-4 border-green-900/50 p-6 font-vt323 text-2xl overflow-y-auto h-80 md:h-96 shadow-[0_0_20px_rgba(20,83,45,0.4)] rounded-lg mb-6 custom-scrollbar relative"
+      className="flex-grow bg-[#051105] border-2 sm:border-4 border-green-900/50 p-3 sm:p-6 font-vt323 text-lg sm:text-2xl overflow-y-auto h-48 sm:h-64 md:h-80 lg:h-96 shadow-[0_0_20px_rgba(20,83,45,0.4)] rounded-lg mb-2 sm:mb-4 md:mb-6 custom-scrollbar relative"
     >
       {/* Phosphor Glow Overlay */}
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] z-10"></div>

@@ -671,13 +671,17 @@ const App: React.FC = () => {
       )}
 
       {/* Main content area */}
-      <div className="flex-1 overflow-hidden relative z-10">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden relative z-10">
         {renderContent()}
       </div>
 
-      {/* Terminal log (visible after character selection) */}
-      {gameState.currentScreen !== 'INTRO' && gameState.currentScreen !== 'CHAR_SELECT' && (
-        <Terminal history={gameState.history} />
+      {/* Terminal log (visible after character selection, hidden on mobile during skill/map select for space) */}
+      {gameState.currentScreen !== 'INTRO' && 
+       gameState.currentScreen !== 'CHAR_SELECT' && 
+       gameState.currentScreen !== 'GAME_OVER' && (
+        <div className={`${(gameState.currentScreen === 'SKILL_SELECT' || gameState.currentScreen === 'MAP_SELECT') ? 'hidden md:block' : ''}`}>
+          <Terminal history={gameState.history} />
+        </div>
       )}
     </RetroContainer>
   );
