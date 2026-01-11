@@ -19,6 +19,7 @@ describe('Game Storylines', () => {
       expect(act1Scenario).toBeDefined();
       expect(act1Scenario?.act).toBe(Act.ACT_1_TICKET);
       expect(act1Scenario?.type).toBe('TRIAGE');
+      expect(act1Scenario?.title).toBe('Flackernde Lichter in der Starcourt Mall');
     });
 
     it('should have 3 options with one correct answer', () => {
@@ -61,11 +62,11 @@ describe('Game Storylines', () => {
       it('should be TRIAGE type with correct answer marked', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_1');
         expect(scenario?.type).toBe('TRIAGE');
-        expect(scenario?.title).toBe('Die Notaufnahme');
+        expect(scenario?.title).toBe('War Room unter der Mall – Die Incident-Lawine');
         
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
         expect(correctOption).toBeDefined();
-        expect(correctOption?.type).toBe('INCIDENT');
+        expect(correctOption?.type).toBe('REQUEST');
       });
     });
 
@@ -77,45 +78,45 @@ describe('Game Storylines', () => {
       });
     });
 
-    describe('Infrastructure scenario (act2_role_3 - Das Kraftwerk)', () => {
-      it('should have INCIDENT as correct answer', () => {
+    describe('Infrastructure scenario (act2_role_3 - Nerve Center)', () => {
+      it('should have REQUEST as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_3');
-        expect(scenario?.title).toBe('Das Kraftwerk');
+        expect(scenario?.title).toBe('Nerve Center – Die ruhigen Monitore');
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
-        expect(correctOption?.type).toBe('INCIDENT');
-        expect(correctOption?.label).toContain('Turbine');
+        expect(correctOption?.type).toBe('REQUEST');
+        expect(correctOption?.label).toContain('Infra-Sicht kein Incident');
       });
     });
 
     describe('Developer scenario (act2_role_4)', () => {
-      it('should have INCIDENT as correct answer', () => {
+      it('should have REQUEST as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_4');
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
-        expect(correctOption?.type).toBe('INCIDENT');
+        expect(correctOption?.type).toBe('REQUEST');
       });
     });
 
     describe('Licensing scenario (act2_role_5)', () => {
-      it('should have INCIDENT as correct answer', () => {
+      it('should have REQUEST as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_5');
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
-        expect(correctOption?.type).toBe('INCIDENT');
+        expect(correctOption?.type).toBe('REQUEST');
       });
     });
 
     describe('ERP scenario (act2_role_6)', () => {
-      it('should have INCIDENT as correct answer', () => {
+      it('should have REQUEST as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_6');
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
-        expect(correctOption?.type).toBe('INCIDENT');
+        expect(correctOption?.type).toBe('REQUEST');
       });
     });
 
     describe('Purchasing scenario (act2_role_7)', () => {
-      it('should have INCIDENT as correct answer', () => {
+      it('should have REQUEST as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_role_7');
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
-        expect(correctOption?.type).toBe('INCIDENT');
+        expect(correctOption?.type).toBe('REQUEST');
       });
     });
   });
@@ -129,12 +130,12 @@ describe('Game Storylines', () => {
       it('should test fundamental ITIL understanding', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_1');
         expect(scenario).toBeDefined();
-        expect(scenario?.title).toBe('Der ITIL Tempel');
+        expect(scenario?.title).toBe('Klassenraum von Hawkins High – Drei Türen');
         expect(scenario?.act).toBe(Act.ACT_2_PERSPECTIVE);
         
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
         expect(correctOption?.type).toBe('REQUEST');
-        expect(correctOption?.label).toContain('Incident = Kaputt');
+        expect(correctOption?.label).toContain('User beschreibt Impact');
       });
     });
 
@@ -142,11 +143,11 @@ describe('Game Storylines', () => {
       it('should require CHANGE as correct answer', () => {
         const scenario = STORY_SCENARIOS.find(s => s.id === 'act2_2');
         expect(scenario).toBeDefined();
-        expect(scenario?.title).toBe('Die fehlende Magie');
+        expect(scenario?.title).toBe('Das Void – Der Button aus einer anderen Dimension');
         
         const correctOption = scenario?.options?.find(o => o.isCorrect === true);
         expect(correctOption?.type).toBe('CHANGE');
-        expect(correctOption?.label).toContain('Change Request');
+        expect(correctOption?.label).toContain('Change');
       });
 
       it('should have 3 options with INCIDENT and REQUEST as wrong answers', () => {
@@ -165,7 +166,7 @@ describe('Game Storylines', () => {
       expect(act3Scenario).toBeDefined();
       expect(act3Scenario?.act).toBe(Act.ACT_3_BOSS);
       expect(act3Scenario?.type).toBe('MODEL_FIX');
-      expect(act3Scenario?.title).toBe('Der Modell-Endgegner');
+      expect(act3Scenario?.title).toBe('Hawkins Lab Core – Der Mind Router');
     });
 
     it('should have difficulty level configured', () => {
