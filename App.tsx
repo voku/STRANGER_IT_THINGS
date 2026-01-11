@@ -17,7 +17,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE } from './constants';
+import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE, DETOUR_PENALTIES } from './constants';
 import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry, WrongAnswer } from './types';
 import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
@@ -165,16 +165,76 @@ const App: React.FC = () => {
   };
 
   /**
+   * Helper: Get Act title and subtitle for transitions
+   */
+  const getActTransitionInfo = (act: Act): { title: string; subtitle: string } => {
+    switch (act) {
+      case Act.ACT_1_TICKET:
+        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+      case Act.ACT_2_PERSPECTIVE:
+        return { title: "AKT 2", subtitle: "Das Perspektiven-Labyrinth" };
+      case Act.ACT_3_BOSS:
+        return { title: "AKT 3", subtitle: "Der Modell-Endgegner" };
+      case Act.ACT_4_EPILOGUE:
+        return { title: "AKT 4", subtitle: "Die neue Welt" };
+      default:
+        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+    }
+  };
+
+  /**
    * Handler: Select skill/item for the current act
    */
   const handleSkillSelect = (skill: Skill) => {
     setGameState(prev => ({ ...prev, selectedSkill: skill }));
     
-    triggerTransition("AKT 1", "Das verzerrte Ticket", () => {
+    const actInfo = getActTransitionInfo(gameState.currentAct);
+    triggerTransition(actInfo.title, actInfo.subtitle, () => {
         addLog("SYSTEM NEUSTART...", 'SYSTEM');
         addLog(`Willkommen, ${gameState.selectedCharacter?.name}. Der Demogorgon (User) ist unruhig.`, 'GM');
         setGameState(prev => ({ ...prev, currentScreen: 'MAP_SELECT' }));
     });
+  };
+
+  /**
+   * Helper: Handle detour location visits (wrong moves with penalties)
+   * @returns true if location is a detour, false otherwise
+   */
+  const handleDetourLocation = (location: MapLocation): boolean => {
+    if (location.id === 'ARCADE') {
+        addLog(`Du betrittst das Palace Arcade...`, 'SYSTEM');
+        addLog(`Die blinkenden Automaten locken, aber das ist nicht der richtige Weg. Die Mission wartet woanders.`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.ARCADE_SLA_PENALTY} SLA (Zeitverschwendung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.ARCADE_SLA_PENALTY)
+        }));
+        return true;
+    }
+    
+    if (location.id === 'FOREST') {
+        addLog(`Du verirrst dich im Mirkwood Forest...`, 'SYSTEM');
+        addLog(`Die dunklen Pfade führen nirgendwohin. Du verlierst wertvolle Zeit. Kehre zurück zur Mission!`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.FOREST_SLA_PENALTY} SLA (Verirrt)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.FOREST_SLA_PENALTY)
+        }));
+        return true;
+    }
+    
+    if (location.id === 'UPSIDEDOWN') {
+        addLog(`Du versuchst, ins Upside Down vorzudringen...`, 'SYSTEM');
+        addLog(`Die Energie ist zu stark. Du bist noch nicht bereit für diesen Ort. Zugriff verweigert.`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY} Moral (Überforderung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            teamMorale: clampStat(prev.teamMorale - DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY)
+        }));
+        return true;
+    }
+    
+    return false;
   };
 
   /**
@@ -184,9 +244,16 @@ const App: React.FC = () => {
    * - First: Role-specific scenario
    * - Then: act2_1 (ITIL basics)
    * - Finally: act2_2 (Change management)
+   * 
+   * Also handles detour locations (wrong moves) that provide flavor text
    */
   const handleLocationSelect = (location: MapLocation) => {
     setGameState(prev => ({ ...prev, selectedLocation: location }));
+    
+    // Handle detour locations (no scenarios, just flavor text and penalties)
+    if (handleDetourLocation(location)) {
+        return;
+    }
     
     let scenarioToLoad: Scenario | undefined;
 

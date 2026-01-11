@@ -11,6 +11,13 @@ export const SLA_DECAY_INTERVAL = 30000; // 30 seconds in milliseconds
 // Kern-Szenarien in Akt 2, die vor dem Boss erledigt sein sollen
 export const ACT_2_CORE_SCENARIOS = ['act2_1', 'act2_2'];
 
+// Detour location penalties
+export const DETOUR_PENALTIES = {
+  ARCADE_SLA_PENALTY: 5,
+  FOREST_SLA_PENALTY: 10,
+  UPSIDEDOWN_MORALE_PENALTY: 5
+};
+
 export const MAP_LOCATIONS: MapLocation[] = [
   {
     id: 'MALL',
@@ -39,16 +46,26 @@ export const MAP_LOCATIONS: MapLocation[] = [
   {
     id: 'ARCADE',
     name: 'Palace Arcade',
-    description: 'Bonus Level (Gesperrt)',
+    description: 'Gaming Paradies - Hier kannst du dich entspannen.',
     coords: { x: 30, y: 75 },
-    type: 'SAFE'
+    type: 'SAFE',
+    requiredAct: Act.ACT_1_TICKET
+  },
+  {
+    id: 'FOREST',
+    name: 'Mirkwood Forest',
+    description: 'Ein dunkler Wald - Könnte gefährlich sein...',
+    coords: { x: 65, y: 50 },
+    type: 'DANGER',
+    requiredAct: Act.ACT_1_TICKET
   },
   {
     id: 'UPSIDEDOWN',
     name: 'The Upside Down',
-    description: 'Legacy Systems (Gesperrt)',
+    description: 'Legacy Systems - Nur für Experten zugänglich.',
     coords: { x: 70, y: 80 },
-    type: 'DANGER'
+    type: 'DANGER',
+    requiredAct: Act.ACT_3_BOSS
   }
 ];
 

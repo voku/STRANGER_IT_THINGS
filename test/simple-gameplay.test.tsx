@@ -311,9 +311,20 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Select Root Cause Analyzer (should be unlocked now)
-    const debuggerButton = screen.getByText(/Root Cause Analyzer/i).closest('button');
-    await user.click(debuggerButton!);
+    // Select any available skill (look for "Klicken zum Ausrüsten" which means clickable)
+    await waitFor(() => {
+      const availableSkillButtons = screen.queryAllByText(/Klicken zum Ausrüsten/i)
+        .map(el => el.closest('button'))
+        .filter((btn): btn is HTMLButtonElement => btn !== null && !btn.disabled);
+      
+      expect(availableSkillButtons.length).toBeGreaterThan(0);
+    }, { timeout: 5000 });
+    
+    const availableSkillButtons = screen.queryAllByText(/Klicken zum Ausrüsten/i)
+      .map(el => el.closest('button'))
+      .filter((btn): btn is HTMLButtonElement => btn !== null && !btn.disabled);
+    
+    await user.click(availableSkillButtons[0]);
     
     await waitFor(() => {
       // Look for the map or other indication that transition happened

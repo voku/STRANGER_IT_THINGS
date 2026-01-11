@@ -40,7 +40,7 @@ export const initialGameState: GameState = {
   selectedSkill: null,
   playerName: '',
   selectedLocation: null,
-  unlockedLocationIds: ['MALL'], // Start with Mall unlocked
+  unlockedLocationIds: ['MALL', 'ARCADE', 'FOREST'], // Start with Mall and detours unlocked
   unlockedSkillIds: getAllSkillIds(), // All skills unlocked from the start
   completedScenarios: [],
   wrongAnswers: [], // Track wrong answers for end screen
