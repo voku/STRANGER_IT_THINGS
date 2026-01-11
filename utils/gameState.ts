@@ -18,6 +18,7 @@ import { INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY } from '../constants';
  * - Default stats (SLA, Morale, Quality)
  * - Unlocked initial locations (Mall)
  * - Unlocked initial skills (Rubber Duck, ITIL Book)
+ * - Starting inventory with 1 of each unlocked item
  */
 export const initialGameState: GameState = {
   currentScreen: 'INTRO',
@@ -33,6 +34,10 @@ export const initialGameState: GameState = {
   slaTime: INITIAL_SLA,
   teamMorale: INITIAL_MORALE,
   ticketQuality: INITIAL_QUALITY,
+  itemInventory: { 
+    'RUBBER_DUCK': 1, 
+    'ITIL_BOOK': 1 
+  }, // Start with 1 of each initial item
   turnCount: 0,
   history: [],
   currentScenario: null,

@@ -136,8 +136,15 @@ describe('Game Mechanics', () => {
   });
 
   describe('Skill System', () => {
-    it('should have 4 skills total', () => {
-      expect(SKILLS).toHaveLength(4);
+    it('should have 7 skills total (4 good + 3 bad items)', () => {
+      expect(SKILLS).toHaveLength(7);
+    });
+
+    it('should have 4 good items and 3 bad items', () => {
+      const goodItems = SKILLS.filter(s => !s.isBadItem);
+      const badItems = SKILLS.filter(s => s.isBadItem);
+      expect(goodItems).toHaveLength(4);
+      expect(badItems).toHaveLength(3);
     });
 
     it('should have unique skill IDs', () => {

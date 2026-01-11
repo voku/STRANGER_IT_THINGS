@@ -39,6 +39,13 @@ export interface Skill {
   color: string;
   targetAct?: Act; // Hint where this skill is most useful
   slaPenalty?: number; // SLA penalty if used in wrong context
+  isBadItem?: boolean; // Flag for items with negative effects
+  qualityEffect?: number; // Additional quality effect when used (can be negative)
+  moraleEffect?: number; // Additional morale effect when used (can be negative)
+}
+
+export interface ItemInventory {
+  [skillId: string]: number; // Track quantity of each item
 }
 
 export interface MapLocation {
@@ -107,6 +114,7 @@ export interface GameState {
   slaTime: number; // Represents remaining time/SLA buffer
   teamMorale: number; // HP equivalent
   ticketQuality: number; // Score equivalent
+  itemInventory: ItemInventory; // Track collected items and quantities
   
   turnCount: number;
   history: LogEntry[];

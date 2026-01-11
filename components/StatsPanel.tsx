@@ -1,5 +1,5 @@
 import React from 'react';
-import { Character, Skill, Act } from '../types';
+import { Character, Skill, Act, ItemInventory } from '../types';
 
 interface StatsPanelProps {
   character: Character;
@@ -9,6 +9,7 @@ interface StatsPanelProps {
   ticketQuality: number;
   currentAct: Act;
   gameStatus: 'active' | 'won' | 'lost';
+  itemInventory?: ItemInventory;
 }
 
 const StatsPanel: React.FC<StatsPanelProps> = ({ 
@@ -18,8 +19,12 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   teamMorale, 
   ticketQuality,
   currentAct,
-  gameStatus
+  gameStatus,
+  itemInventory = {}
 }) => {
+  
+  // Get item count for equipped skill
+  const equippedItemCount = skill ? (itemInventory[skill.id] || 0) : 0;
   
   // Helper for progress bars
   const renderBar = (label: string, value: number, colorClass: string, statusText: string | null = null) => (
@@ -82,9 +87,12 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         {/* Mobile: Show item inline */}
         <div className="flex sm:hidden items-center gap-1 bg-black/40 px-2 py-1 rounded border border-gray-600 flex-shrink-0">
             {skill ? (
-                <span className="text-sm text-yellow-400" title={skill.description}>
-                    {skill.icon}
-                </span>
+                <div className="flex items-center gap-1">
+                    <span className="text-sm text-yellow-400" title={skill.description}>
+                        {skill.icon}
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-mono">x{equippedItemCount}</span>
+                </div>
             ) : (
                 <span className="text-[10px] text-gray-600">-</span>
             )}
@@ -111,9 +119,14 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded border border-gray-600">
             <span className="text-xs text-gray-500 font-vt323">ITEM:</span>
             {skill ? (
-                <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={skill.description}>
-                    {skill.icon} <span className="hidden lg:inline">{skill.name}</span>
-                </span>
+                <div className="flex items-center gap-1">
+                    <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={skill.description}>
+                        {skill.icon} <span className="hidden lg:inline">{skill.name}</span>
+                    </span>
+                    <span className={`text-xs font-mono ${equippedItemCount === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                        x{equippedItemCount}
+                    </span>
+                </div>
             ) : (
                 <span className="text-xs text-gray-600 italic">KEINS</span>
             )}

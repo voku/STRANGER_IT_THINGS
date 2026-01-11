@@ -246,24 +246,29 @@ const App: React.FC = () => {
    * Handler: Complete a scenario (applies stat changes and checks game over)
    * 
    * This is the core game logic that:
-   * 1. Applies SLA penalties (base + wrong item penalty)
-   * 2. Updates all stats (SLA, morale, quality)
-   * 3. Checks for game over conditions
-   * 4. Marks scenario as completed (only if correct answer)
-   * 5. Handles act progression
+   * 1. Consumes used item from inventory
+   * 2. Applies item effects (including bad item penalties)
+   * 3. Applies SLA penalties (base + wrong item penalty)
+   * 4. Updates all stats (SLA, morale, quality)
+   * 5. Checks for game over conditions
+   * 6. Marks scenario as completed (only if correct answer)
+   * 7. Handles act progression
+   * 8. Awards new items to inventory
    * 
    * @param qualityChange - Change to ticket quality stat
    * @param moraleChange - Change to team morale stat
    * @param outcomeText - Message to display to player
    * @param isCorrect - Whether the answer was correct
    * @param selectedOptionLabel - The option the player selected (for tracking wrong answers)
+   * @param itemUsed - Whether an item was used in this scenario
    */
   const handleScenarioComplete = (
     qualityChange: number, 
     moraleChange: number, 
     outcomeText: string, 
     isCorrect: boolean,
-    selectedOptionLabel?: string
+    selectedOptionLabel?: string,
+    itemUsed: boolean = false
   ) => {
       if (!gameState.currentScenario) return;
       
@@ -273,10 +278,38 @@ const App: React.FC = () => {
           return;
       }
 
+      // Track inventory changes
+      let newInventory = { ...gameState.itemInventory };
+
+      // Apply item effects if used
+      let itemQualityEffect = 0;
+      let itemMoraleEffect = 0;
+      
+      if (itemUsed && gameState.selectedSkill) {
+        const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
+        if (skill) {
+          // Consume item from inventory
+          const currentCount = newInventory[skill.id] || 0;
+          if (currentCount > 0) {
+            newInventory[skill.id] = currentCount - 1;
+            addLog(`${skill.icon} ${skill.name} wurde verbraucht. Verbleibend: ${newInventory[skill.id]}`, 'SYSTEM');
+          }
+          
+          // Apply bad item effects
+          if (skill.isBadItem) {
+            itemQualityEffect = skill.qualityEffect || 0;
+            itemMoraleEffect = skill.moraleEffect || 0;
+            if (itemQualityEffect !== 0 || itemMoraleEffect !== 0) {
+              addLog(`WARNUNG: ${skill.name} hat Nebenwirkungen!`, 'SYSTEM');
+            }
+          }
+        }
+      }
+
       // Calculate SLA penalty (base + wrong item penalty)
       let slaPenalty = 10; // Base penalty for completing scenario
       
-      if (gameState.selectedSkill) {
+      if (gameState.selectedSkill && itemUsed) {
         const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
         if (skill && skill.targetAct && skill.targetAct !== gameState.currentAct && skill.slaPenalty) {
           slaPenalty += skill.slaPenalty;
@@ -284,10 +317,10 @@ const App: React.FC = () => {
         }
       }
       
-      // Update all stats (clamped to 0-100)
+      // Update all stats (clamped to 0-100), including item effects
       const newSla = clampStat(gameState.slaTime - slaPenalty);
-      const newMorale = clampStat(gameState.teamMorale + moraleChange);
-      const newQuality = clampStat(gameState.ticketQuality + qualityChange);
+      const newMorale = clampStat(gameState.teamMorale + moraleChange + itemMoraleEffect);
+      const newQuality = clampStat(gameState.ticketQuality + qualityChange + itemQualityEffect);
 
       // Log outcome
       addLog(outcomeText, 'SYSTEM');
@@ -338,9 +371,14 @@ const App: React.FC = () => {
                   newUnlockedLocs.push('SCHOOL');
                   newUnlockedSkills.push('COFFEE');
                   
+                  // Add new items to inventory
+                  newInventory['COFFEE'] = (newInventory['COFFEE'] || 0) + 1;
+                  newInventory['EXPIRED_ENERGY_DRINK'] = (newInventory['EXPIRED_ENERGY_DRINK'] || 0) + 1;
+                  
                   triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
                       addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
-                      addLog("Neues Item verfügbar: SCHWARZER KAFFEE", 'SYSTEM');
+                      addLog("Neues Item gesammelt: SCHWARZER KAFFEE x1", 'SYSTEM');
+                      addLog("Gefunden: ABGELAUFENER ENERGY DRINK x1 (⚠️ Vorsicht!)", 'SYSTEM');
                   });
                   newScreen = 'SKILL_SELECT';
               }
@@ -353,9 +391,16 @@ const App: React.FC = () => {
                        newUnlockedLocs.push('LAB');
                        newUnlockedSkills.push('DEBUGGER');
                        
+                       // Add new items to inventory
+                       newInventory['DEBUGGER'] = (newInventory['DEBUGGER'] || 0) + 1;
+                       newInventory['OUTDATED_DOCUMENTATION'] = (newInventory['OUTDATED_DOCUMENTATION'] || 0) + 1;
+                       newInventory['BUGGY_SCRIPT'] = (newInventory['BUGGY_SCRIPT'] || 0) + 1;
+                       
                        triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
                           addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                          addLog("Bonus Item freigeschaltet: ROOT CAUSE ANALYZER", 'SYSTEM');
+                          addLog("Bonus Item gesammelt: ROOT CAUSE ANALYZER x1", 'SYSTEM');
+                          addLog("Gefunden: VERALTETE DOKU x1 (⚠️ Vorsicht!)", 'SYSTEM');
+                          addLog("Gefunden: FEHLERHAFTES SCRIPT x1 (⚠️ Vorsicht!)", 'SYSTEM');
                        });
                        newScreen = 'SKILL_SELECT';
                    }
@@ -382,6 +427,7 @@ const App: React.FC = () => {
           gameStatus: gameStatus,
           unlockedLocationIds: newUnlockedLocs,
           unlockedSkillIds: newUnlockedSkills,
+          itemInventory: newInventory,
           currentScenario: null
       }));
   };
@@ -473,6 +519,7 @@ const App: React.FC = () => {
           currentAct={gameState.currentAct}
           unlockedSkillIds={gameState.unlockedSkillIds}
           selectedSkill={gameState.selectedSkill}
+          itemInventory={gameState.itemInventory}
           onSelectSkill={handleSkillSelect}
         />
       );
@@ -516,6 +563,7 @@ const App: React.FC = () => {
                   <MiniGameClassify 
                       scenario={gameState.currentScenario}
                       skill={gameState.selectedSkill}
+                      itemInventory={gameState.itemInventory}
                       onComplete={handleScenarioComplete}
                   />
               )}
@@ -618,6 +666,7 @@ const App: React.FC = () => {
           ticketQuality={gameState.ticketQuality}
           currentAct={gameState.currentAct}
           gameStatus={gameState.gameStatus}
+          itemInventory={gameState.itemInventory}
         />
       )}
 
