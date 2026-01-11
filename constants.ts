@@ -249,343 +249,577 @@ export const SYSTEM_MESSAGES = {
 
 // The Linear Narrative Structure
 export const STORY_SCENARIOS: Scenario[] = [
-    // ACT 1: Das Ticket kommt rein
-    {
-        id: 'act1_1',
-        act: Act.ACT_1_TICKET,
-        type: 'TRIAGE',
-        title: "Der User-Nebel",
-        environment: "Service Desk Portal",
-        hint: "ITIL Sagt: Prüfe immer zuerst den 'Soll-Zustand' vs 'Ist-Zustand'. Wenn das System technisch OK ist, aber der User nicht darf, ist es kein Incident.",
-        description: "USER MÜLLER: 'HILFE!! Ich kann im neuen Trading-Bereich nichts bestellen! Der Shop ist kaputt! Produktion steht!!11' \n\nDu weißt: Der User kennt weder Servicegrenzen noch SLAs. Für ihn ist alles ein 'Problem'. Was tust du?",
-        options: [
-            {
-                label: "Sofort INCIDENT! (Prio 1)",
-                type: 'INCIDENT',
-                outcome: "FEHLER. Du hast dem User blind geglaubt. Ein Incident bedeutet 'Abweichung vom Soll-Zustand' (Kaputt). Hier funktioniert das System technisch einwandfrei, der User darf nur nicht rein. Du hast Ressourcen für eine 'Reparatur' verschwendet, wo nichts zu reparieren ist.",
-                qualityChange: -20,
-                moraleChange: -30,
-                isCorrect: false
-            },
-            {
-                label: "REQUEST anlegen",
-                type: 'REQUEST',
-                outcome: "RISKANT. Statistisch wahrscheinlich, aber geraten. Ohne Prüfung weißt du nicht, ob es ein Bug (Incident) oder fehlende Rechte (Request) sind. Ein guter Agent prüft erst den 'Soll-Zustand'.",
-                qualityChange: +10,
-                moraleChange: 0,
-                isCorrect: false
-            },
-            {
-                label: "NACHFRAGEN: 'Was ist der Soll-Zustand?'",
-                type: 'INQUIRY',
-                outcome: "KORREKT. Diagnose: Der User bekommt 'Access Denied'. Das System verhält sich genau wie spezifiziert (Soll-Zustand). Es ist keine Störung, sondern eine Anforderung nach Erweiterung (Request). Der User wusste das nicht – woher auch?",
-                qualityChange: +30,
-                moraleChange: +10,
-                isCorrect: true
-            }
-        ],
-        successMessage: "Triage erfolgreich. User-Sicht von System-Sicht getrennt.",
-        failureMessage: "Falsches Routing. Das Ping-Pong beginnt."
-    },
+  // ACT 1: Erstes Ticket – User-Perspektive, Impact vs Ursache
+  {
+    id: 'act1_1',
+    act: Act.ACT_1_TICKET,
+    type: 'TRIAGE',
+    title: "Flackernde Lichter in der Starcourt Mall",
+    environment: "Service-Desk-Ecke in der Starcourt Mall",
+    hint: "Die Lichter flackern immer zuerst in der Mall, nie im Lab. User beschreiben nur das Flackern – du musst herausfinden, ob wirklich etwas durchgebrannt ist.",
+    description:
+      "Später Abend in der Starcourt Mall. Die Neon-Schrift des neuen Trading-Shops flackert wie eine schlecht gelaunte Weihnachtkette.\n\n" +
+      "Über deiner kleinen Service-Desk-Station hängt ein alter Pager.\n" +
+      "Er explodiert fast vor Vibration:\n\n" +
+      "TICKET AUS DEM NICHTS:\n" +
+      "Von: mueller.trading@remondis.example\n" +
+      "Betreff: 'TRADING TOT!!! PRODUKTION STEHT!!!'\n\n" +
+      "Nachricht:\n" +
+      "'Im neuen Trading-Bereich kann ich NICHTS bestellen! Für mich steht alles still! Sofort fixen!!!'\n\n" +
+      "Du siehst auf die Mall: Andere Bildschirme leuchten ruhig.\n" +
+      "Müller spürt eine Störung – wie wenn in Hawkins plötzlich alle Lichter gleichzeitig flackern.\n" +
+      "Für ihn ist das 'der Demogorgon'. Für dich ist es erstmal nur ein Signal.\n\n" +
+      "Du musst entscheiden, wie du reagierst.",
+    options: [
+      {
+        label: "Den roten Alarmknopf drücken: P1-INCIDENT, alle wecken",
+        type: 'INCIDENT',
+        outcome:
+          "DU ZIEHST DEN HEBEL.\n\n" +
+          "Im Hawkins Rechenzentrum springen Infra und Dev aus ihren Stühlen, im Lab gehen die Notlichter an, in der Factory heulen Sirenen.\n" +
+          "Monitoring zeigt: Shop grün, Trading-Instanzen gesund, andere Nutzer bestellen fröhlich vor sich hin.\n\n" +
+          "Stunden später stellst du fest:\n" +
+          "Nur Müller ist blockiert. Der 'Demogorgon' war nur sein persönliches Dunkel, kein weltweiter Stromausfall.\n\n" +
+          "Du hast die Stadt geweckt, obwohl nur eine Glühbirne im Kopf eines Users flackerte.",
+        qualityChange: -20,
+        moraleChange: -20,
+        isCorrect: false
+      },
+      {
+        label: "Einfach als Service Request eintragen: 'Müller braucht Trading'",
+        type: 'REQUEST',
+        outcome:
+          "DU TIPPST: 'Service Request – Trading-Zugang für Müller'.\n\n" +
+          "Auf der Wandkarte erscheint ein kleines blaues Lämpchen in der Kategorie 'Requests'.\n" +
+          "Problem: Du weißt nicht, ob nicht doch irgendwo ein echtes Monster im System lauert:\n" +
+          "• Bug? (Incident)\n" +
+          "• fehlende Rolle? (Request)\n" +
+          "• Feature, das nie gebaut wurde? (Change)\n\n" +
+          "Deine Klassifikation ist geraten. In Hawkins nennen sie das: 'In den Wald gehen, ohne zu schauen, ob es Nacht ist.'",
+        qualityChange: +5,
+        moraleChange: 0,
+        isCorrect: false
+      },
+      {
+        label: "Wie Joyce bei den Lichterketten: erst alles genau fragen, bevor du schreiend losrennst",
+        type: 'INQUIRY',
+        outcome:
+          "DU ATMEST DURCH UND WIRST ZUM JOYCE-DER-IT.\n\n" +
+          "Du fragst zurück:\n" +
+          "'Welchen Button klickst du? Welche Meldung steht GENAU da? Seit wann? Können andere im Trading bestellen?'\n\n" +
+          "Antwort:\n" +
+          "'Ich bin als Lieferant drin. Gehe auf Trading, klicke \'In den Warenkorb\', bekomme \'Access denied\'. Kollegen können bestellen.'\n\n" +
+          "Jetzt hast du:\n" +
+          "• Impact: Für Müller steht die Welt (für ihn: Horrorfolge mit Cliffhanger)\n" +
+          "• Systembild: andere Accounts okay, Trading nicht komplett tot\n" +
+          "• Verdacht: Das Monster sitzt eher bei Rollen/Berechtigungen als im ganzen Shop\n\n" +
+          "Du trennst zum ersten Mal: User-Störung ≠ automatisch System-Incident.",
+        qualityChange: +30,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du hast wie Joyce mit den Lichterketten gearbeitet: erst verstehen, dann schreien.",
+    failureMessage: "Du hast Hawkins in Bereitschaft versetzt, weil ein einzelner Fernseher flackerte."
+  },
 
-    // --- ROLE SPECIFIC SCENARIOS (Act 2 Intro) ---
+  // --- ACT 2: Rollen-spezifische Perspektiven im Stranger-Things-Setting ---
 
-    // 1. Service Desk (Analogy: Emergency Room Triage)
-    {
-        id: 'act2_role_1',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Die Notaufnahme",
-        environment: "Feldlazarett (Frontline)",
-        hint: "Restoration (Blutung stoppen) hat Vorrang vor Enhancement (Schönheits-OP).",
-        description: "DM: 'Du bist der Triage-Arzt. Ein Patient kommt mit einer arteriellen Blutung (System Down / Incident). Ein anderer Patient schreit, er hätte gerne eine schönere Nase (New Feature / Request). Wen behandelst du zuerst?'",
-        options: [
-            {
-                label: "Die Blutung stoppen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "KRITISCHER ERFOLG. Incident Management bedeutet 'Restoration of Service'. Leben gerettet. Die Nasen-OP (Request) kommt auf die Warteliste.",
-                qualityChange: +25,
-                moraleChange: +15,
-                isCorrect: true
-            },
-            {
-                label: "Die Nase operieren (REQUEST)",
-                type: 'REQUEST',
-                outcome: "KRITISCHER FEHLER. Während du die Nase verschönerst (Change/Request), verblutet der andere Patient (SLA Breach). Du hast Prioritäten missachtet.",
-                qualityChange: -25,
-                moraleChange: -30,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Patient stabil. Triage korrekt.",
-        failureMessage: "Patient verloren. Falsche Priorität."
-    },
+  // 1. Service Desk
+  {
+    id: 'act2_role_1',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "War Room unter der Mall – Die Incident-Lawine",
+    environment: "Provisorischer Kontrollraum im Keller unter der Starcourt Mall",
+    hint: "Du bist die erste Verteidigungslinie. Wie Hopper: Du entscheidest, ob die Stadt geweckt wird – oder ob es nur ein genervter Teenager war.",
+    description:
+      "Unter der Starcourt Mall hat jemand einen War Room eingerichtet.\n" +
+      "Röhrenmonitore zeigen eingehende Tickets wie flackernde Weihnachtslichter.\n\n" +
+      "Eine Wand zeigt die letzten Wochen:\n" +
+      "• 'Shop kaputt' → später als Berechtigungsproblem enttarnt\n" +
+      "• 'Mail-Server down' → war nur Passwort abgelaufen\n" +
+      "• 'Lizenzsystem tot' → User hatte nie eine Lizenz\n\n" +
+      "Müllers Trading-Case blinkt wieder auf – diesmal in deiner persönlichen Tafel.\n" +
+      "Du weißt:\n" +
+      "• Für ihn ist es eine Störung\n" +
+      "• Für die Organisation entscheidet deine Klassifikation, ob Dev/Infra/IAM in den Kampf müssen\n\n" +
+      "Denk dran: In Stranger Things sind nicht alle Geräusche ein Demogorgon. Manchmal ist es nur eine lockere Tür.",
+    options: [
+      {
+        label: "Alles, was nach Panik klingt, direkt als Incident markieren – sicher ist sicher",
+        type: 'INCIDENT',
+        outcome:
+          "DU LÄSST DIE SIRENEN HEULEN.\n\n" +
+          "Die Incident-Wand färbt sich rot. Infra und Dev sehen wieder 'Shop-Incident Trading'.\n" +
+          "Später stellt sich raus: System war stabil, es fehlte nur eine Rolle.\n\n" +
+          "Du hast wieder einen 'Demogorgon' gerufen, wo nur eine verschlossene Tür war.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "Du übersetzt Müllers Schrei in: 'Service Request – braucht Trading-Rolle, Impact: kann nicht bestellen'",
+        type: 'REQUEST',
+        outcome:
+          "DU SCHREIBST:\n" +
+          "'User kann aktuell nicht bestellen (für ihn Produktionsstillstand), andere Accounts OK, Fehlermeldung \'Access denied\'. Bitte Trading-Rolle prüfen/setzen.'\n\n" +
+          "Auf deinem Board wird daraus ein sauber beschriebener Request mit hohem Impact.\n" +
+          "Müller bleibt subjektiv im Horror – aber du schickst das Ding nicht durch den falschen Tunnel.",
+        qualityChange: +25,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du bist Hopper im War Room: Du hörst den Schrei, aber du entscheidest, wie viele Streifenwagen fahren.",
+    failureMessage: "Du hast erneut die SWAT-Einheit gerufen, um eine kaputte Kellertür zu begutachten."
+  },
 
-    // 2. IAM (Analogy: The Hotel Check-in)
-    {
-        id: 'act2_role_2',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Das Grand Hotel",
-        environment: "Rezeption der Verdammten",
-        hint: "Funktionierendes Schloss + falscher Schlüssel = Request (Neuer Schlüssel). Kaputtes Schloss = Incident.",
-        description: "DM: 'Du bist der Concierge. Ein Gast schreit: 'Mein Schlüssel geht nicht für die Penthouse-Suite!' Du prüfst das System: Das Schloss ist online und intakt (Soll-Zustand). Der Gast hat aber nur eine Standard-Buchung.'",
-        options: [
-            {
-                label: "Schloss austauschen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "FEHLER. Du hast die Tür eingetreten und das Schloss getauscht. Das System (Tür) war aber nie kaputt. Es hat korrekt den Zutritt verweigert.",
-                qualityChange: -15,
-                moraleChange: -10,
-                isCorrect: false
-            },
-            {
-                label: "Upgrade buchen (REQUEST)",
-                type: 'REQUEST',
-                outcome: "ERFOLG. Du erkennst: Es ist ein 'Provisioning' Thema. Der Gast braucht ein Upgrade (Rechte), keine Reparatur.",
-                qualityChange: +20,
-                moraleChange: +10,
-                isCorrect: true
-            }
-        ],
-        successMessage: "Check-in erfolgreich. Sicherheit gewahrt.",
-        failureMessage: "Zimmertür zerstört. Hotel-Manager wütend."
-    },
+  // 2. IAM
+  {
+    id: 'act2_role_2',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Tor zum Lab – Die Keycard-Rituale",
+    environment: "Sicherheitsschleuse am Hawkins Lab",
+    hint: "Für den, der vor der Tür steht, fühlt sich alles gleich an: 'Ich komme nicht rein'. Für dich ist wichtig: Tür tot oder Keycard falsch.",
+    description:
+      "Du stehst vor dem Haupteingang des Hawkins Lab. Ein riesiges Stahltor, darüber eine rote Anzeige: ACCESS CONTROL ONLINE.\\n\\n" +
+      "Müllers Trading-Fall ist als Access-Problem bei dir gelandet.\\n" +
+      "Du siehst in deiner 'Keycard-Konsole':\\n" +
+      "• System 'TRADING' → ONLINE\\n" +
+      "• Rolle 'TRADING_BUYER' → existiert\\n" +
+      "• Andere User mit dieser Rolle → können bestellen\\n" +
+      "• Müller → hat nur 'SUPPLIER_SELLER'\\n\\n" +
+      "Er steht also vor einer funktionierenden Tür mit einem Schlüssel für den falschen Flur.\\n" +
+      "Von außen fühlt sich das aber an wie 'Tor zum Upside Down ist blockiert'.",
+    options: [
+      {
+        label: "Du meldest: 'Tor defekt' – Incident auf Tür und Schloss",
+        type: 'INCIDENT',
+        outcome:
+          "DU TRÄGST EIN: 'Haupttor Hawkins Lab defekt, berechtigte Person kommt nicht hinein'.\\n\\n" +
+          "Später überprüft Infra das Tor: alles okay.\\n" +
+          "Dev checkt die Türlogik: arbeitet exakt nach Rollenmodell.\\n\\n" +
+          "Ihr habt einen Incident auf ein System gelegt, das genau das tut, was ihr ihm beigebracht habt.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "Du meldest: 'Keycard-Erweiterung' – Request auf neue Rolle",
+        type: 'REQUEST',
+        outcome:
+          "DU SCHREIBST IN DEN RITUAL-KANAL:\\n" +
+          "'User Müller hat aktuell nur Lieferanten-Rolle. Für Trading benötigt er zusätzlich Käufer-Rolle. System verweigert zu Recht. Bitte Rolle ergänzen.'\\n\\n" +
+          "Damit behandelst du Müllers Horror-Szene fachlich korrekt: kein Portal-Defekt, sondern fehlendes Ritual (Rolle).",
+        qualityChange: +25,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du bist der echte Gatekeeper: Du unterscheidest Dimensionentore von schlecht codierten Badges.",
+    failureMessage: "Du hast dem Lab vorgeworfen, kaputt zu sein, obwohl es nur deinen Anweisungen zu Rollen gefolgt ist."
+  },
 
-    // 3. Infrastructure (Analogy: The Power Plant)
-    {
-        id: 'act2_role_3',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Das Kraftwerk",
-        environment: "Reaktor-Kern",
-        hint: "Turbine brennt = Incident. Neues Kabel verlegen = Request.",
-        description: "DM: 'Du steuerst das Stromnetz. Warnung: Turbine 4 brennt (Incident/Ausfall). Gleichzeitig ruft der Bürgermeister an: Er will eine neue Stromleitung zum Rathaus gelegt haben (Request/Provisioning).'",
-        options: [
-            {
-                label: "Turbine löschen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "ERFOLG. Du hast den Blackout verhindert (Incident Management). Der Bürgermeister muss warten, bis das Netz stabil ist.",
-                qualityChange: +25,
-                moraleChange: +15,
-                isCorrect: true
-            },
-            {
-                label: "Kabel verlegen (REQUEST)",
-                type: 'REQUEST',
-                outcome: "FEHLER. Du verlegst neue Kabel, während das Kraftwerk explodiert. Was nützt der Anschluss, wenn kein Strom fließt?",
-                qualityChange: -25,
-                moraleChange: -25,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Netz stabil. Blackout verhindert.",
-        failureMessage: "Kernschmelze. Stadt im Dunkeln."
-    },
+  // 3. Infrastructure
+  {
+    id: 'act2_role_3',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Nerve Center – Die ruhigen Monitore",
+    environment: "Monitoringraum unter Hawkins",
+    hint: "In deiner Welt sind Demogorgons: CPU bei 100 %, Cluster down, Latency-Explosion. Ein einzelner panischer Schrei ist kein globaler Ausfall.",
+    description:
+      "Du sitzt im 'Nerve Center' unter Hawkins. Wand voller Monitore:\\n" +
+      "• Cluster-Status\\n" +
+      "• Latenzen\\n" +
+      "• Error-Rates\\n" +
+      "• Uptime-Grafen\\n\\n" +
+      "Ein Alert vom Service Desk blinkt: 'TRADING KAPUTT – PRODUKTION STEHT'.\\n\\n" +
+      "Du checkst:\\n" +
+      "• Trading-Cluster: grün\\n" +
+      "• Datenbank: stabil\\n" +
+      "• Error-Rates: normale Spitze, wenn alle gleichzeitig klicken\\n" +
+      "• Testbestellung mit System-Account: läuft sauber durch\\n\\n" +
+      "Auf deinen Bildschirmen sieht die Welt verdächtig unspektakulär aus – kein Mind Flayer, nur etwas Rauschen.",
+    options: [
+      {
+        label: "Incident: 'Trading-Infrastruktur instabil' – man weiß ja nie",
+        type: 'INCIDENT',
+        outcome:
+          "DU SCHREIBST EINEN INFRA-INCIDENT:\\n" +
+          "'Trading-Instanzen verdächtig, User meldet Totalausfall.'\\n\\n" +
+          "Die halbe Nacht lang werden Cluster gedreht, Pods gerestartet, Logs gewälzt – und alles ist gesund.\\n" +
+          "Deine Welt ist wie eine geglättete EKG-Linie ohne Alarm.\\n\\n" +
+          "Du hast versucht, einen Schatten im Mall-Fernsehen mit einem Stromausfall im ganzen Land zu erklären.",
+        qualityChange: -20,
+        moraleChange: -15,
+        isCorrect: false
+      },
+      {
+        label: "Du antwortest: 'Aus Infra-Sicht kein Incident – Cluster ok, Problem wohl user-/rollenbezogen'",
+        type: 'REQUEST',
+        outcome:
+          "DU FUNKST ZURÜCK:\\n" +
+          "'Infra-Checks grün, andere Trading-Bestellungen laufen. Kein Hinweis auf Infra-Incident. Vermutlich Berechtigung/Lizenz/Business-Logik. Bitte bei IAM/Dev prüfen.'\\n\\n" +
+          "Damit bleibt der Nerve Center für echte Monster reserviert: CPU-Stürme, Netzspikes, Storage-Kollaps.",
+        qualityChange: +20,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du hast den Mind Flayer im Blick, nicht jede Taschenlampe, die kurz klemmt.",
+    failureMessage: "In deiner Incident-Liste stehen nur noch Geister – und wenn etwas wirklich brennt, findet es keiner."
+  },
 
-    // 4. Developer (Analogy: The Restaurant Kitchen)
-    {
-        id: 'act2_role_4',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Die Höllen-Küche",
-        environment: "Restaurant Pass",
-        hint: "Ratte in der Suppe = Bug (Incident). Gast will vegane Option = Feature Request.",
-        description: "DM: 'Du bist der Chefkoch. Ein Gast reklamiert: 'Da ist eine Ratte in meiner Suppe!' (Bug/Incident). Ein anderer Gast fragt: 'Können Sie das Steak auch vegan zubereiten?' (Feature Request).'",
-        options: [
-            {
-                label: "Ratte entfernen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "RICHTIG. Hygienemangel ist ein Abweichung vom Soll-Zustand (Bug). Das hat Prio 1 vor Sonderwünschen.",
-                qualityChange: +20,
-                moraleChange: +10,
-                isCorrect: true
-            },
-            {
-                label: "Veganes Steak erfinden (CHANGE)",
-                type: 'CHANGE',
-                outcome: "FEHLER. Du entwickelst neue Rezepte, während das Gesundheitsamt den Laden wegen Rattenbefall schließt.",
-                qualityChange: -20,
-                moraleChange: -20,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Qualität gesichert. Essen serviert.",
-        failureMessage: "Restaurant geschlossen. Gäste vergiftet."
-    },
+  // 4. Developer
+  {
+    id: 'act2_role_4',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Palace Arcade – Der Phantom-Bug",
+    environment: "Arcade + Dev-Terminal in Hawkins",
+    hint: "Bug = das Spiel tut nicht, was die Spielregeln sagen. Kein Bug = das Spiel folgt den Regeln, die jemand schlecht definiert hat.",
+    description:
+      "Du sitzt zwischen Arcade-Automaten, dein Laptop ist an einen alten Automaten angeschlossen.\\n" +
+      "Neben 'Dragon\\'s Lair' läuft jetzt: 'Trading Test Environment'.\\n\\n" +
+      "Das Ticket 'Bug in Trading – Lieferant kann nicht bestellen' ist auf deinem Board.\\n" +
+      "Du spielst die Szene nach:\\n" +
+      "• Test-User mit Käufer-Rolle → Bestellung läuft wie durch Butter\\n" +
+      "• Test-User mit reiner Lieferanten-Rolle → 'Access denied' exakt an der Stelle, an der es im Code steht\\n\\n" +
+      "Du liest das Domain-Modell: 'Lieferant darf verkaufen, Käufer darf kaufen'.\\n" +
+      "Trading (Lieferant kauft bei Lieferant) war im ursprünglichen Design nie sauber als Doppelrolle beschrieben.\\n" +
+      "Das Spiel läuft nach seinen (begrenzten) Regeln.",
+    options: [
+      {
+        label: "Als Incident weiterführen: 'Bug in Trading – Lieferant muss kaufen können'",
+        type: 'INCIDENT',
+        outcome:
+          "DU NENNST ES BUG.\\n\\n" +
+          "Im Lab wird der Fall als Regression behandelt. Ihr sucht nach kaputten Commits, defekten Queries, Race Conditions.\\n" +
+          "Ihr findet nur eins: Der Code macht genau das, was im Modell steht.\\n\\n" +
+          "Das Monster sitzt nicht im Code, sondern in der Idee, wie Rollen definiert wurden.",
+        qualityChange: -20,
+        moraleChange: -15,
+        isCorrect: false
+      },
+      {
+        label: "Du klassifizierst es als 'kein Bug – Modell-/Rollenproblem, ggf. neue Anforderung'",
+        type: 'REQUEST',
+        outcome:
+          "DU SCHREIBST IN DEN TICKET-KOMMENTAR:\\n" +
+          "'Kein technischer Bug: System verhält sich gemäß Modell (Lieferant ≠ Käufer). Für \\'Lieferant kauft bei Lieferant\\' brauchen wir entweder zusätzliche Rolle oder ein erweitertes Modell (Change). Bitte als Request/Change behandeln, nicht als Incident.'\\n\\n" +
+          "Damit hörst du auf, Phantom-Demogorgons im Code zu jagen, und zeigst auf den Dungeon-Master: die Domänenmodellierung.",
+        qualityChange: +25,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du spielst nicht nur D&D, du erkennst auch, wenn das Regelbuch selbst Schrott ist.",
+    failureMessage: "Dein Backlog wird zur Schattenwelt: lauter 'Bugs', die eigentlich nur schlechte Regeln sind."
+  },
 
-    // 5. Licensing (Analogy: The Library Archive)
-    {
-        id: 'act2_role_5',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Die Verbotene Bibliothek",
-        environment: "Das Archiv",
-        hint: "Buch brennt = Incident. Nutzer will Leseausweis = Request.",
-        description: "DM: 'Du bist der Hüter der Bücher. Ein Regal steht in Flammen (Asset Damage / Incident). Ein Student steht am Tresen und möchte einen Bibliotheksausweis beantragen (Access Request).'",
-        options: [
-            {
-                label: "Feuer löschen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "ERFOLG. Assets geschützt. Ohne Bücher nützt auch der Ausweis nichts.",
-                qualityChange: +20,
-                moraleChange: +10,
-                isCorrect: true
-            },
-            {
-                label: "Ausweis ausstellen (REQUEST)",
-                type: 'REQUEST',
-                outcome: "FEHLER. Du füllst Formulare aus, während das Wissen der Welt verbrennt. Compliance hilft nicht gegen Asche.",
-                qualityChange: -25,
-                moraleChange: -15,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Wissen bewahrt. Archiv intakt.",
-        failureMessage: "Bibliothek niedergebrannt."
-    },
+  // 5. Licensing
+  {
+    id: 'act2_role_5',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Verbotene Bibliothek – Die stummen Lizenzen",
+    environment: "Lizenzarchiv unter dem Rathaus von Hawkins",
+    hint: "Brennender Lizenzserver = Incident. User ohne Lizenz = Request. Von außen sehen beide Szenen aus wie 'ich komme nicht an meine Bücher'.",
+    description:
+      "Tief unter dem Rathaus von Hawkins liegt die 'Verbotene Bibliothek'.\\n" +
+      "In einem Raum stehen alte Serverracks neben staubigen Regalen voller Lizenzverträge.\\n\\n" +
+      "Ein Pergament flattert vom Luftzug der Klimaanlage:\\n" +
+      "'Müller – kein Zugriff auf Trading – prüfen!'\\n\\n" +
+      "Du checkst das Lizenz-Orakel:\\n" +
+      "• Lizenzdienst: ONLINE\\n" +
+      "• Trading-Lizenz-Pool: nicht ausgeschöpft\\n" +
+      "• Müller: keine Trading-Lizenz zugewiesen\\n\\n" +
+      "Für Müller ist es 'Bibliothek zu, alles brennt'.\\n" +
+      "In deiner Welt ist die Tür offen – er hat nur keinen Ausweis.",
+    options: [
+      {
+        label: "Lizenz-Incident: 'Lizenzsystem defekt, Nutzer bekommt nichts'",
+        type: 'INCIDENT',
+        outcome:
+          "DU SCHREIBST: 'Lizenzsystem Trading defekt – Nutzer bekommt keinen Zugriff.'\\n\\n" +
+          "Admins untersuchen den Lizenzserver, Logs, Verbindungen – alles gesund.\\n" +
+          "Deine Incident-Liste wächst, aber kein Systemfehler ist in Sicht.\\n\\n" +
+          "Der Schatten wurde wieder zum Monster erklärt, nur weil jemand im Dunkeln stand.",
+        qualityChange: -20,
+        moraleChange: -15,
+        isCorrect: false
+      },
+      {
+        label: "Service Request: 'Trading-Lizenz für Müller zuweisen (Impact: kann nicht bestellen)'",
+        type: 'REQUEST',
+        outcome:
+          "DU LÖST EIN RITUAL AUS:\\n" +
+          "'User kann aktuell nicht arbeiten (kein Trading), Lizenzsystem stabil. Bitte Trading-Lizenz zuweisen.'\\n\\n" +
+          "Das ist genau die Art von Magie, die hier hingehört: provisioning, nicht firefighting.",
+        qualityChange: +25,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du unterscheidest verbrannte Bücher von fehlenden Ausweisen.",
+    failureMessage: "In deiner Chronik steht 'Lizenzsystem ständig kaputt', obwohl es nur auf klare Requests gewartet hat."
+  },
 
-    // 6. ERP (Analogy: The Alchemy Factory)
-    {
-        id: 'act2_role_6',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Die Alchemie-Fabrik",
-        environment: "Produktionsstraße",
-        hint: "Band steht still = Incident. Flaschenform ändern = Change/Request.",
-        description: "DM: 'Die Trank-Abfüllanlage steht still, weil ein Zahnrad klemmt (Process Stop / Incident). Der Meister will außerdem ab morgen eckige statt runde Flaschen verwenden (Process Change).'",
-        options: [
-            {
-                label: "Zahnrad lösen (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "ERFOLG. Der Fluss muss fließen. Incident Management stellt den Normalbetrieb wieder her.",
-                qualityChange: +20,
-                moraleChange: +10,
-                isCorrect: true
-            },
-            {
-                label: "Eckige Flaschen designen (CHANGE)",
-                type: 'REQUEST',
-                outcome: "FEHLER. Du designst neue Flaschen für eine Fabrik, die nichts produziert. Stillstand kostet Gold.",
-                qualityChange: -20,
-                moraleChange: -20,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Produktion läuft. Quote erfüllt.",
-        failureMessage: "Fabrik bankrott. Keine Tränke."
-    },
+  // 6. ERP
+  {
+    id: 'act2_role_6',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Hawkins Factory – Das Fließband ohne Aufträge",
+    environment: "Virtuelle Produktionshalle mit ERP-Jobs als Maschinen",
+    hint: "Ein gestopptes Band mit Fehlern im Log = Incident. Ein leeres Band, weil keiner etwas anliefert = Folgeproblem, kein ERP-Incident.",
+    description:
+      "Du stehst auf einer Plattform über der 'Hawkins Factory'.\\n" +
+      "Alle ERP-Jobs sind als Maschinen dargestellt, jede mit einem eigenen Takt.\\n\\n" +
+      "Du schaust auf den Bereich 'Trading-Aufträge':\\n" +
+      "• alle Jobs grün\\n" +
+      "• keine Fehlermeldungen\\n" +
+      "• Maschine wartet, aber es liegen einfach keine neuen Auftragskisten auf dem Band\\n\\n" +
+      "Müllers Meldung 'Produktion steht' hängt wie ein roter Fetzen an der Anzeigetafel.\\n" +
+      "Aus seiner Sicht: 'Die Fabrik macht nichts'.\\n" +
+      "Aus deiner Sicht: 'Die Fabrik wartet auf Material aus dem Shop.'",
+    options: [
+      {
+        label: "ERP-Incident: 'Jobfehler, Trading-Aufträge kommen nicht durch'",
+        type: 'INCIDENT',
+        outcome:
+          "DU ERÖFFNEST EINEN ERP-INCIDENT.\\n\\n" +
+          "Ihr checkt Logs, Tabellen, Schnittstellen – alles bereit, alles wartet.\\n" +
+          "Kein Fehler, nur Leere.\\n\\n" +
+          "Der Fehler sitzt nicht in der Fabrik, sondern in der Stadt, die nichts anliefert.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "Du meldest: 'ERP bereit – keine Trading-Aufträge angeliefert, Ursache Upstream'",
+        type: 'REQUEST',
+        outcome:
+          "DU SCHREIBST IN DAS TICKET:\\n" +
+          "'ERP-Jobs laufen einwandfrei, Schnittstelle vorbereitet. Es werden jedoch keine Trading-Aufträge angeliefert. Ursache liegt im vorgelagerten Prozess (Shop/Berechtigung). Kein ERP-Incident.'\\n\\n" +
+          "Die Factory ist damit offiziell aus der direkten Schusslinie, auch wenn sie die Folgen spürt.",
+        qualityChange: +20,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du weißt: Eine wartende Maschine ist nicht kaputt, nur hungrig.",
+    failureMessage: "In deinen KPI sieht es so aus, als würde die Fabrik ständig versagen – tatsächlich hungert sie nur."
+  },
 
-    // 7. Purchasing (Analogy: The Supply Convoy)
-    {
-        id: 'act2_role_7',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Der Versorgungskonvoi",
-        environment: "Supply Route 66",
-        hint: "Brücke eingestürzt = Incident. Neue LKW bestellen = Request.",
-        description: "DM: 'Du führst den Konvoi. Die Brücke vor euch ist eingestürzt (Supply Chain Break / Incident). Dein Funker fragt, ob wir für nächste Woche schnellere LKWs bestellen können (Procurement Request).'",
-        options: [
-            {
-                label: "Brücke reparieren (INCIDENT)",
-                type: 'INCIDENT',
-                outcome: "ERFOLG. Die Route ist der kritische Pfad. Ohne Weg keine Lieferung, egal wie schnell die LKWs sind.",
-                qualityChange: +25,
-                moraleChange: +15,
-                isCorrect: true
-            },
-            {
-                label: "Schnellere LKWs kaufen (REQUEST)",
-                type: 'REQUEST',
-                outcome: "FEHLER. Du kaufst Sportwagen, die dann vor der kaputten Brücke im Stau stehen. Logistik versagt.",
-                qualityChange: -25,
-                moraleChange: -20,
-                isCorrect: false
-            }
-        ],
-        successMessage: "Lieferung angekommen. Versorgung gesichert.",
-        failureMessage: "Konvoi gestrandet. Vorräte leer."
-    },
+  // 7. Purchasing
+  {
+    id: 'act2_role_7',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Route 66 – Der leere Konvoi",
+    environment: "Digitale Karte der Lieferwege rund um Hawkins",
+    hint: "Lieferweg zerstört = Incident. Keine Bestellung ausgelöst = nicht dein Incident, nur Folge-Impact.",
+    description:
+      "Auf einem großen Tisch liegt eine Karte von Hawkins und Umgebung.\\n" +
+      "Leuchtpunkte markieren Lager, Fabriken und Lieferwege.\\n\\n" +
+      "Beim Werk, in dem Müllers Material landen sollte, blinkt ein rotes Icon: 'Material fehlt'.\\n" +
+      "Du checkst die Route:\\n" +
+      "• Straße frei\\n" +
+      "• Spediteur verfügbar\\n" +
+      "• Lager hat Bestand\\n" +
+      "• Einzige Besonderheit: Keine Bestellung ins System eingelaufen\\n\\n" +
+      "Müller erlebt: 'Die Welt liefert nicht'.\\n" +
+      "Du siehst: Niemand hat den Konvoi überhaupt losgeschickt.",
+    options: [
+      {
+        label: "Incident: 'Lieferkette gestört, Route blockiert'",
+        type: 'INCIDENT',
+        outcome:
+          "DU MELDEST EINEN SUPPLY-CHAIN-INCIDENT.\\n\\n" +
+          "Logistik überprüft Straßen, Sperrungen, Lager – alles offen und bereit.\\n" +
+          "Die Route funktioniert, sie wurde nur nicht benutzt.\\n\\n" +
+          "Die Monsterkarte zeigt einen Angriff, der nie stattgefunden hat.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "Du meldest: 'Keine Bestellung ausgelöst – Lieferweg intakt, Ursache Upstream (Shop/Trading)'",
+        type: 'REQUEST',
+        outcome:
+          "DU PROTOKOLLIERST:\\n" +
+          "'Lieferfähigkeit vorhanden, Route frei, Bestand verfügbar. Es liegt keine Bestellung vor. Ursache liegt im vorgelagerten System (Shop/Trading). Kein Lieferketten-Incident, nur Folge-Impact.'\\n\\n" +
+          "Damit bleibt klar: Die Route ist nicht der Demogorgon, sie kriegt nur keinen Auftrag.",
+        qualityChange: +20,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du unterscheidest zwischen zerstörter Straße und nicht losgefahrenem LKW.",
+    failureMessage: "Offiziell ist bei dir ständig alles 'gestört', obwohl die LKW-Fahrer seit Tagen auf Start warten."
+  },
 
-    // ACT 2.1: ITIL Quiz
-    {
-        id: 'act2_1',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE', 
-        title: "Der ITIL Tempel",
-        environment: "Gedankenpalast",
-        hint: "Restoration = Zurück zum alten Zustand. Provisioning = Etwas Neues geben.",
-        description: "Was ist der fundamentale Unterschied für die interne Organisation?",
-        options: [
-            {
-                label: "User entscheidet was es ist.",
-                type: 'INCIDENT',
-                outcome: "FALSCH. Der User kennt den 'Soll-Zustand' nicht. Er sieht nur ein Problem. Die IT muss entscheiden, ob repariert (Incident) oder geliefert (Request) wird.",
-                qualityChange: -15,
-                moraleChange: -10,
-                isCorrect: false
-            },
-            {
-                label: "Incident = Kaputt. Request = Neu.",
-                type: 'REQUEST',
-                outcome: "KORREKT. Incident = Wiederherstellung des definierten Services (Repair/Restoration). Request = Bereitstellung von etwas Neuem/Zusätzlichem (Provide/Provisioning).",
-                qualityChange: +20,
-                moraleChange: +10,
-                isCorrect: true
-            }
-        ],
-        successMessage: "Konzept verstanden: Restoration vs. Provisioning.",
-        failureMessage: "Zurück auf Los. Du lässt den User die IT steuern."
-    },
-    // ACT 2.2: The Change Request
-    {
-        id: 'act2_2',
-        act: Act.ACT_2_PERSPECTIVE,
-        type: 'TRIAGE',
-        title: "Die fehlende Magie",
-        environment: "The Interface Void",
-        hint: "Wenn es nicht kaputt ist (Incident) und nicht im Katalog steht (Request), muss der Katalog/Service geändert werden (Change).",
-        description: "User: 'Ich finde den Eis-Wand-Button nicht! Repariert das!' (Soll-Zustand: Eis-Wand war nie Teil des Pakets). Was ist das?",
-        options: [
-            {
-                label: "Incident (Reparieren)",
-                type: 'INCIDENT',
-                outcome: "FALSCH. Man kann nichts reparieren, was nie da war. Das System funktioniert wie spezifiziert (ohne Eis-Wand). Es ist kein Ausfall.",
-                qualityChange: -15,
-                moraleChange: -10,
-                isCorrect: false
-            },
-            {
-                label: "Request (Standard)",
-                type: 'REQUEST',
-                outcome: "FALSCH. Ein Service Request bedient sich aus dem Katalog (Standard). 'Eis-Wand' steht nicht im Katalog. Es ist also kein Standard-Prozess.",
-                qualityChange: -5,
-                moraleChange: 0,
-                isCorrect: false
-            },
-            {
-                label: "Change Request (Requirement)",
-                type: 'CHANGE',
-                outcome: "RICHTIG. Wir müssen den 'Soll-Zustand' ändern. Das ist ein neues Requirement (Feature). Das erfordert Entwicklung, Testing und Deployment -> Change Management.",
-                qualityChange: +35,
-                moraleChange: +15,
-                isCorrect: true
-            }
-        ],
-        successMessage: "Requirement erkannt. Nicht als Bug an Dev gegeben.",
-        failureMessage: "Dev Team sucht Fehler im Code, der gar nicht existiert."
-    },
-    // ACT 3: Boss Fight
-    {
-        id: 'act3_1',
-        act: Act.ACT_3_BOSS,
-        type: 'MODEL_FIX',
-        title: "Der Modell-Endgegner",
-        environment: "Code Repository Core",
-        hint: "Ein valides Modell muss 'Ist' mit 'Soll' abgleichen. Prüfe die Knoten, die 'Wunsch' statt 'Fakt' prüfen.",
-        description: "Der Code prüft noch immer auf 'User sagt Incident'. Refactore das Modell auf 'Abgleich mit Soll-Zustand'!",
-        difficultyLevel: 2,
-        successMessage: "Refactoring erfolgreich! Automatische Triage aktiviert: Ist Soll == Ist? -> Request. Ist Soll != Ist? -> Incident.",
-        failureMessage: "Spaghetti-Code. User fluten die Incident-Queue mit Wünschen."
-    }
+  // ACT 2.1 – ITIL-Grundidee in Stranger-Things-Form
+  {
+    id: 'act2_1',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Klassenraum von Hawkins High – Drei Türen",
+    environment: "Leerer Klassenraum mit drei leuchtenden Türen",
+    hint: "Drei Türen, ein Problem: User erlebt Störung, du entscheidest die Tür.",
+    description:
+      "Du bist allein in einem Klassenraum von Hawkins High.\\n" +
+      "An der Tafel steht nur ein Satz:\\n" +
+      "'Es geht nicht.'\\n\\n" +
+      "Vor dir schweben drei leuchtende Türen:\\n" +
+      "• Tür 1: INCIDENT – dahinter Blaulicht, Sirenen, Hopper brüllt Befehle\\n" +
+      "• Tür 2: SERVICE REQUEST – dahinter ordentliche Regale, Formulare, Kataloge\\n" +
+      "• Tür 3: CHANGE – dahinter Whiteboards, Roadmaps, Release-Planung\\n\\n" +
+      "Über allem steht eine Projektion von Müllers Fall: 'Kann nicht bestellen. Für mich: alles kaputt.'\\n" +
+      "Welche Logik schreibst du an die Tafel?",
+    options: [
+      {
+        label: "'User entscheidet. Wenn er Incident schreit, ist es Incident.'",
+        type: 'INCIDENT',
+        outcome:
+          "DU SCHREIBST:\\n" +
+          "'User-Auswahl = Wahrheit.'\\n\\n" +
+          "Alle drei Türen beginnen zu flackern.\\n" +
+          "In Tür 1 staut sich alles: echte Ausfälle neben 'ich hätte gern noch einen Button'.\\n" +
+          "Tür 2 wird kaum genutzt, Tür 3 verstaubt.\\n\\n" +
+          "Das ist Hawkins, wenn man die Kinder den Sicherheitsplan schreiben lässt.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "'User beschreibt Impact. IT entscheidet intern: Incident = kaputt, Request = bereitstellen, Change = verändern.'",
+        type: 'REQUEST',
+        outcome:
+          "DU SCHREIBST:\\n" +
+          "'User = Impact, IT = Kategorie.'\\n\\n" +
+          "Die Türen stabilisieren sich.\\n" +
+          "• Incident-Tür: alles, was vom definierten Sollzustand abweicht\\n" +
+          "• Request-Tür: alles, wo der Dienst da ist, der Anschluss aber fehlt\\n" +
+          "• Change-Tür: alles, was der Dienst noch nie konnte\\n\\n" +
+          "Müllers Fall wird in deiner Projektion aufgeteilt:\\n" +
+          "Er erlebt Störung, du erkennst: wahrscheinlich Request oder Change, nicht zwingend Incident.",
+        qualityChange: +25,
+        moraleChange: +10,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du hast verstanden: Die Kinder dürfen panisch sein, der Erwachsene sortiert die Antworten.",
+    failureMessage: "Du hast Hawkins die Steuerung überlassen. Die Stadt klassifiziert ihre Monster selbst."
+  },
+
+  // ACT 2.2 – Change
+  {
+    id: 'act2_2',
+    act: Act.ACT_2_PERSPECTIVE,
+    type: 'TRIAGE',
+    title: "Das Void – Der Button aus einer anderen Dimension",
+    environment: "Leerraum zwischen Hawkins und dem Upside Down",
+    hint: "Wenn etwas weder kaputt noch je vorhanden war, versuchst du nicht zu reparieren, sondern zu erschaffen.",
+    description:
+      "Du schwebst in einem schwarzen Raum – dem Interface Void.\\n\\n" +
+      "Vor dir hängt ein Hologramm des Shops.\\n" +
+      "Ein User brüllt aus dem Nichts:\\n" +
+      "'Wo ist der \\'Mind-Flayer-Kill-Button\\'? Den hattet ihr doch mal! Repariert das!'\\n\\n" +
+      "Du lässt Release-Notizen, Commits und Katalogeinträge wie Polaroids an dir vorbeifliegen:\\n" +
+      "• Kein Eintrag zu diesem Button\\n" +
+      "• Kein Commit, der ihn einführt oder entfernt\\n" +
+      "• Kein Service-Katalog-Eintrag\\n\\n" +
+      "Der Button existiert nur in der Fantasie oder in irgendeinem anderen Universum.",
+    options: [
+      {
+        label: "Incident: 'Button weg, System kaputt'",
+        type: 'INCIDENT',
+        outcome:
+          "DU SCHREIBST EINEN INCIDENT: 'Feature verschwunden'.\\n\\n" +
+          "Dev jagt nach einem Commit, den es nie gab.\\n" +
+          "Infra sucht nach Config-Drift, die nicht existiert.\\n" +
+          "Am Ende bleibt nur Frust – das Universum war nie so gebaut.",
+        qualityChange: -15,
+        moraleChange: -10,
+        isCorrect: false
+      },
+      {
+        label: "Service Request: 'Bitte Mind-Flayer-Kill-Button bereitstellen'",
+        type: 'REQUEST',
+        outcome:
+          "DU WIRFST ES IN DIE REQUEST-KISTE.\\n\\n" +
+          "Dort liegen sonst Dinge, die es schon gibt: Accounts, Lizenzen, Standard-Optionen.\\n" +
+          "Niemand fühlt sich verantwortlich, weil der 'Button' in keinem Katalog definiert ist.\\n" +
+          "Das Ticket wird zum Geist im System.",
+        qualityChange: -5,
+        moraleChange: 0,
+        isCorrect: false
+      },
+      {
+        label: "Change: 'Neue Anforderung – Mind-Flayer-Kill-Button spezifizieren, bauen, ausrollen'",
+        type: 'CHANGE',
+        outcome:
+          "DU SCHREIBST SAUBER AUF:\\n" +
+          "'User wünscht neues Feature. System konnte das nie. Muss als Change geplant, spezifiziert, entwickelt, getestet und ausgerollt werden.'\\n\\n" +
+          "Das Void leuchtet kurz auf. Aus der Idee wird eine definierte Änderung – kein Phantom-Bug.",
+        qualityChange: +35,
+        moraleChange: +15,
+        isCorrect: true
+      }
+    ],
+    successMessage: "Du hörst die Schreie, aber du reparierst nicht, was nie da war – du designst es.",
+    failureMessage: "Dein Backlog besteht aus 'defekten' Features, die nie über ein D&D-Brainstorming hinauskamen."
+  },
+
+  // ACT 3 – Bossfight: Modell & Router
+  {
+    id: 'act3_1',
+    act: Act.ACT_3_BOSS,
+    type: 'MODEL_FIX',
+    title: "Hawkins Lab Core – Der Mind Router",
+    environment: "Unterstes Untergeschoss des Hawkins Lab",
+    hint: "Der eigentliche Endgegner ist nicht der Demogorgon, sondern das Ding, das entscheidet, welche Monster wohin geschickt werden.",
+    description:
+      "Ganz unten im Hawkins Lab, unter allen Ebenen, steht eine Maschine, die nicht in den offiziellen Plänen steht.\\n" +
+      "Auf dem Gehäuse steht nur: ROUTING ENGINE.\\n\\n" +
+      "Über Monitore siehst du, wie Tickets eingesogen werden:\\n" +
+      "'TRADING GEHT NICHT'\\n" +
+      "'BRAUCHE NEUES FEATURE'\\n" +
+      "'KEIN ZUGRIFF'\\n\\n" +
+      "Im Inneren läuft eine erbärmlich kurze Logik:\\n\\n" +
+      "```text\\n" +
+      "if user_selects == \\'Incident\\' then\\n" +
+      "    queue = INCIDENT\\n" +
+      "else\\n" +
+      "    queue = REQUEST\\n" +
+      "```\\n\\n" +
+      "Hinten fallen Incidents, Requests und Changes wild gemischt in falsche Queues.\\n" +
+      "In der Schattenwelt darüber wächst ein schwarzes Gebilde: ein Mind Flayer aus Fehlklassifikationen, Ticket-Ping-Pong und falschen Erwartungen.\\n\\n" +
+      "Du kennst inzwischen die Signale:\\n" +
+      "• kann_user_arbeiten (true/false)\\n" +
+      "• service_war_vorher_da (true/false)\\n" +
+      "• verhalten_weicht_vom_soll_ab (true/false)\\n" +
+      "• gewünschtes_feature_im_katalog (true/false)\\n\\n" +
+      "Der Mind Router muss refactored werden.",
+    difficultyLevel: 2,
+    successMessage:
+      "Du schreibst das innere Gesetz neu.\\n\\n" +
+      "Die neue Logik ähnelt eher einem D&D-Regelwerk als einer Teenager-Entscheidung:\\n\\n" +
+      "• Wenn Service vorher da war UND Verhalten jetzt vom Soll abweicht → Incident (Bug)\\n" +
+      "• Wenn Service da ist UND Verhalten korrekt, aber User nicht angeschlossen ist → Service Request (Rolle, Lizenz, Zugang)\\n" +
+      "• Wenn Service das noch nie konnte UND es nicht im Katalog steht → Change (neue Anforderung)\\n\\n" +
+      "User dürfen weiter 'Störung', 'Problem', 'Bug' rufen.\\n" +
+      "Der Mind Router übersetzt ihre Schreie in ein konsistentes Modell.\\n" +
+      "Der Schatten aus Fehlklassifikationen löst sich auf wie Staub im Licht von Elfi.",
+    failureMessage:
+      "Du lässt die Logik fast so, wie sie war.\\n\\n" +
+      "User-Auswahl bleibt Master Key.\\n" +
+      "Incidents, Requests und Changes landen weiter bunt gemischt in den falschen Dungeons.\\n" +
+      "Der Mind Flayer aus Ticket-Chaos wächst weiter – genährt von guter Absicht und schlechtem Modell."
+  }
 ];
