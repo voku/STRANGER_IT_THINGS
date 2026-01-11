@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Skill, Act, ItemInventory } from '../types';
 import { SKILLS } from '../constants';
 
@@ -11,6 +11,30 @@ interface SkillSelectProps {
 }
 
 const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds, selectedSkill, itemInventory, onSelectSkill }) => {
+  
+  // State to hold the randomized skills for this screen
+  const [displayedSkills, setDisplayedSkills] = useState<Skill[]>([]);
+  
+  // Randomize and select 4 skills when component mounts or act changes
+  useEffect(() => {
+    const availableSkills = SKILLS.filter(skill => {
+      const isUnlocked = unlockedSkillIds.includes(skill.id);
+      const hasItems = (itemInventory[skill.id] || 0) > 0;
+      const isNotSelected = selectedSkill?.id !== skill.id;
+      return isUnlocked && hasItems && isNotSelected;
+    });
+    
+    // Shuffle and pick 4 random skills
+    const shuffled = [...availableSkills].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, 4);
+    
+    // If already equipped skill exists and not in the 4, add it
+    if (selectedSkill && !selected.find(s => s.id === selectedSkill.id)) {
+      selected.push(selectedSkill);
+    }
+    
+    setDisplayedSkills(selected);
+  }, [currentAct, unlockedSkillIds, itemInventory, selectedSkill]);
   
   const getMissionBrief = () => {
       switch(currentAct) {
@@ -26,7 +50,7 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
   };
 
   // Find the single best recommended skill that is unlocked and not already selected
-  const recommendedSkillId = SKILLS.find(s => 
+  const recommendedSkillId = displayedSkills.find(s => 
     s.targetAct === currentAct && 
     unlockedSkillIds.includes(s.id) && 
     s.id !== selectedSkill?.id
@@ -41,12 +65,16 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
         AUSRÜSTUNGSPHASE
       </h2>
       
-      <p className="font-vt323 text-lg sm:text-xl text-yellow-400 mb-4 sm:mb-8 text-center max-w-2xl border-b border-gray-700 pb-4 px-2">
+      <p className="font-vt323 text-lg sm:text-xl text-yellow-400 mb-2 sm:mb-4 text-center max-w-2xl px-2">
         {getMissionBrief()}
+      </p>
+      
+      <p className="font-vt323 text-base sm:text-lg text-gray-400 mb-4 sm:mb-8 text-center max-w-2xl border-b border-gray-700 pb-4 px-2">
+        Wähle 1 von {displayedSkills.length} zufällig ausgewählten Items für diese Mission
       </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-6xl w-full px-2">
-        {SKILLS.map((skill) => {
+        {displayedSkills.map((skill) => {
           const isRecommended = skill.id === recommendedSkillId;
           const isUnlocked = unlockedSkillIds.includes(skill.id);
           const isAlreadyEquipped = selectedSkill?.id === skill.id;
