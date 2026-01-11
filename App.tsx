@@ -17,7 +17,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE } from './constants';
+import { CHARACTERS, STORY_SCENARIOS, SKILLS, ACT_2_CORE_SCENARIOS, SLA_DECAY_RATE, DETOUR_PENALTIES } from './constants';
 import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry, WrongAnswer } from './types';
 import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
@@ -197,6 +197,47 @@ const App: React.FC = () => {
   };
 
   /**
+   * Helper: Handle detour location visits (wrong moves with penalties)
+   * @returns true if location is a detour, false otherwise
+   */
+  const handleDetourLocation = (location: MapLocation): boolean => {
+    if (location.id === 'ARCADE') {
+        addLog(`Du betrittst das Palace Arcade...`, 'SYSTEM');
+        addLog(`Die blinkenden Automaten locken, aber das ist nicht der richtige Weg. Die Mission wartet woanders.`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.ARCADE_SLA_PENALTY} SLA (Zeitverschwendung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.ARCADE_SLA_PENALTY)
+        }));
+        return true;
+    }
+    
+    if (location.id === 'FOREST') {
+        addLog(`Du verirrst dich im Mirkwood Forest...`, 'SYSTEM');
+        addLog(`Die dunklen Pfade führen nirgendwohin. Du verlierst wertvolle Zeit. Kehre zurück zur Mission!`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.FOREST_SLA_PENALTY} SLA (Verirrt)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.FOREST_SLA_PENALTY)
+        }));
+        return true;
+    }
+    
+    if (location.id === 'UPSIDEDOWN') {
+        addLog(`Du versuchst, ins Upside Down vorzudringen...`, 'SYSTEM');
+        addLog(`Die Energie ist zu stark. Du bist noch nicht bereit für diesen Ort. Zugriff verweigert.`, 'GM');
+        addLog(`-${DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY} Moral (Überforderung)`, 'SYSTEM');
+        setGameState(prev => ({
+            ...prev,
+            teamMorale: clampStat(prev.teamMorale - DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY)
+        }));
+        return true;
+    }
+    
+    return false;
+  };
+
+  /**
    * Handler: Select location on map (loads appropriate scenario)
    * 
    * Handles scenario sequencing for Act 2:
@@ -209,41 +250,12 @@ const App: React.FC = () => {
   const handleLocationSelect = (location: MapLocation) => {
     setGameState(prev => ({ ...prev, selectedLocation: location }));
     
+    // Handle detour locations (no scenarios, just flavor text and penalties)
+    if (handleDetourLocation(location)) {
+        return;
+    }
+    
     let scenarioToLoad: Scenario | undefined;
-
-    // Handle detour locations (no scenarios, just flavor text)
-    if (location.id === 'ARCADE') {
-        addLog(`Du betrittst das Palace Arcade...`, 'SYSTEM');
-        addLog(`Die blinkenden Automaten locken, aber das ist nicht der richtige Weg. Die Mission wartet woanders.`, 'GM');
-        addLog(`-5 SLA (Zeitverschwendung)`, 'SYSTEM');
-        setGameState(prev => ({
-            ...prev,
-            slaTime: clampStat(prev.slaTime - 5)
-        }));
-        return;
-    }
-    
-    if (location.id === 'FOREST') {
-        addLog(`Du verirrst dich im Mirkwood Forest...`, 'SYSTEM');
-        addLog(`Die dunklen Pfade führen nirgendwohin. Du verlierst wertvolle Zeit. Kehre zurück zur Mission!`, 'GM');
-        addLog(`-10 SLA (Verirrt)`, 'SYSTEM');
-        setGameState(prev => ({
-            ...prev,
-            slaTime: clampStat(prev.slaTime - 10)
-        }));
-        return;
-    }
-    
-    if (location.id === 'UPSIDEDOWN') {
-        addLog(`Du versuchst, ins Upside Down vorzudringen...`, 'SYSTEM');
-        addLog(`Die Energie ist zu stark. Du bist noch nicht bereit für diesen Ort. Zugriff verweigert.`, 'GM');
-        addLog(`-5 Moral (Überforderung)`, 'SYSTEM');
-        setGameState(prev => ({
-            ...prev,
-            teamMorale: clampStat(prev.teamMorale - 5)
-        }));
-        return;
-    }
 
     // Scenario selection logic based on Act and Location
     if (gameState.currentAct === Act.ACT_1_TICKET && location.id === 'MALL') {

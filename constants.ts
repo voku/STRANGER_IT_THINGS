@@ -11,6 +11,13 @@ export const SLA_DECAY_INTERVAL = 30000; // 30 seconds in milliseconds
 // Kern-Szenarien in Akt 2, die vor dem Boss erledigt sein sollen
 export const ACT_2_CORE_SCENARIOS = ['act2_1', 'act2_2'];
 
+// Detour location penalties
+export const DETOUR_PENALTIES = {
+  ARCADE_SLA_PENALTY: 5,
+  FOREST_SLA_PENALTY: 10,
+  UPSIDEDOWN_MORALE_PENALTY: 5
+};
+
 export const MAP_LOCATIONS: MapLocation[] = [
   {
     id: 'MALL',
@@ -42,7 +49,7 @@ export const MAP_LOCATIONS: MapLocation[] = [
     description: 'Gaming Paradies - Hier kannst du dich entspannen.',
     coords: { x: 30, y: 75 },
     type: 'SAFE',
-    requiredAct: Act.ACT_1_TICKET  // Accessible from Act 1
+    requiredAct: Act.ACT_1_TICKET
   },
   {
     id: 'FOREST',
@@ -50,7 +57,7 @@ export const MAP_LOCATIONS: MapLocation[] = [
     description: 'Ein dunkler Wald - Könnte gefährlich sein...',
     coords: { x: 65, y: 50 },
     type: 'DANGER',
-    requiredAct: Act.ACT_1_TICKET  // Accessible from Act 1
+    requiredAct: Act.ACT_1_TICKET
   },
   {
     id: 'UPSIDEDOWN',
@@ -58,7 +65,7 @@ export const MAP_LOCATIONS: MapLocation[] = [
     description: 'Legacy Systems - Nur für Experten zugänglich.',
     coords: { x: 70, y: 80 },
     type: 'DANGER',
-    requiredAct: Act.ACT_3_BOSS  // Only accessible in Act 3
+    requiredAct: Act.ACT_3_BOSS
   }
 ];
 
