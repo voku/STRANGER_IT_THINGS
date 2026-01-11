@@ -369,16 +369,9 @@ const App: React.FC = () => {
                   // Advance to Act 2
                   nextAct = Act.ACT_2_PERSPECTIVE;
                   newUnlockedLocs.push('SCHOOL');
-                  newUnlockedSkills.push('COFFEE');
-                  
-                  // Add new items to inventory
-                  newInventory['COFFEE'] = (newInventory['COFFEE'] || 0) + 1;
-                  newInventory['EXPIRED_ENERGY_DRINK'] = (newInventory['EXPIRED_ENERGY_DRINK'] || 0) + 1;
                   
                   triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
                       addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
-                      addLog("Neues Item gesammelt: SCHWARZER KAFFEE x1", 'SYSTEM');
-                      addLog("Gefunden: ABGELAUFENER ENERGY DRINK x1 (⚠️ Vorsicht!)", 'SYSTEM');
                   });
                   newScreen = 'SKILL_SELECT';
               }
@@ -389,18 +382,9 @@ const App: React.FC = () => {
                        // Advance to Act 3
                        nextAct = Act.ACT_3_BOSS;
                        newUnlockedLocs.push('LAB');
-                       newUnlockedSkills.push('DEBUGGER');
-                       
-                       // Add new items to inventory
-                       newInventory['DEBUGGER'] = (newInventory['DEBUGGER'] || 0) + 1;
-                       newInventory['OUTDATED_DOCUMENTATION'] = (newInventory['OUTDATED_DOCUMENTATION'] || 0) + 1;
-                       newInventory['BUGGY_SCRIPT'] = (newInventory['BUGGY_SCRIPT'] || 0) + 1;
                        
                        triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
                           addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
-                          addLog("Bonus Item gesammelt: ROOT CAUSE ANALYZER x1", 'SYSTEM');
-                          addLog("Gefunden: VERALTETE DOKU x1 (⚠️ Vorsicht!)", 'SYSTEM');
-                          addLog("Gefunden: FEHLERHAFTES SCRIPT x1 (⚠️ Vorsicht!)", 'SYSTEM');
                        });
                        newScreen = 'SKILL_SELECT';
                    }
@@ -533,6 +517,7 @@ const App: React.FC = () => {
           character={gameState.selectedCharacter!}
           unlockedLocationIds={gameState.unlockedLocationIds}
           currentAct={gameState.currentAct}
+          completedScenarios={gameState.completedScenarios}
           onSelectLocation={handleLocationSelect}
         />
       );
@@ -540,6 +525,32 @@ const App: React.FC = () => {
 
     // Active game (scenario)
     if (gameState.currentScreen === 'GAME' && gameState.currentScenario) {
+      // Calculate location progress
+      const getScenarioProgress = () => {
+        if (gameState.selectedLocation) {
+          const locationScenarios = STORY_SCENARIOS.filter(scenario => {
+            if (gameState.selectedLocation!.id === 'MALL' && gameState.selectedLocation!.requiredAct === Act.ACT_1_TICKET) {
+              return scenario.id === 'act1_1';
+            }
+            if (gameState.selectedLocation!.id === 'SCHOOL' && gameState.selectedLocation!.requiredAct === Act.ACT_2_PERSPECTIVE) {
+              return scenario.id === `act2_role_${gameState.selectedCharacter?.id}` || scenario.id === 'act2_1' || scenario.id === 'act2_2';
+            }
+            if (gameState.selectedLocation!.id === 'LAB' && gameState.selectedLocation!.requiredAct === Act.ACT_3_BOSS) {
+              return scenario.id === 'act3_1';
+            }
+            return false;
+          });
+          
+          const total = locationScenarios.length;
+          const completed = locationScenarios.filter(s => gameState.completedScenarios.includes(s.id)).length;
+          
+          return { completed, total, locationName: gameState.selectedLocation.name };
+        }
+        return null;
+      };
+      
+      const progress = getScenarioProgress();
+      
       return (
         <div className="flex flex-col items-center w-full h-full p-4 animate-fade-in overflow-y-auto">
           <div className="max-w-4xl w-full bg-gray-900/80 p-6 rounded-lg border-2 border-gray-700 mb-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
@@ -547,6 +558,11 @@ const App: React.FC = () => {
                <div>
                   <h3 className="text-yellow-500 font-press-start text-sm md:text-lg mb-1">{gameState.currentScenario.title}</h3>
                   <span className="text-gray-400 font-vt323 text-xl">{gameState.currentScenario.environment}</span>
+                  {progress && (
+                    <div className="mt-2 font-mono text-xs text-cyan-400">
+                      📍 {progress.locationName} | Fortschritt: {progress.completed}/{progress.total}
+                    </div>
+                  )}
                </div>
                <div className="bg-red-900/40 text-red-400 px-3 py-1 rounded font-mono text-xs border border-red-800 animate-pulse">
                   PRIORITY: HIGH

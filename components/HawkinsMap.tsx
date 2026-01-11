@@ -1,20 +1,44 @@
 import React from 'react';
 import { MapLocation, Character, Act } from '../types';
-import { MAP_LOCATIONS } from '../constants';
+import { MAP_LOCATIONS, STORY_SCENARIOS } from '../constants';
 
 interface HawkinsMapProps {
   playerName: string;
   character: Character;
   unlockedLocationIds: string[];
   currentAct: Act;
+  completedScenarios: string[];
   onSelectLocation: (location: MapLocation) => void;
 }
 
-const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlockedLocationIds, currentAct, onSelectLocation }) => {
+const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlockedLocationIds, currentAct, completedScenarios, onSelectLocation }) => {
   
   const isUnlocked = (loc: MapLocation) => {
       if (loc.requiredAct && loc.requiredAct !== currentAct) return false;
       return unlockedLocationIds.includes(loc.id);
+  };
+
+  // Calculate scenario progress for each location
+  const getLocationProgress = (location: MapLocation) => {
+    // Find scenarios for this location based on act and location mapping
+    const locationScenarios = STORY_SCENARIOS.filter(scenario => {
+      if (location.id === 'MALL' && location.requiredAct === Act.ACT_1_TICKET) {
+        return scenario.id === 'act1_1';
+      }
+      if (location.id === 'SCHOOL' && location.requiredAct === Act.ACT_2_PERSPECTIVE) {
+        // Include role-specific and core Act 2 scenarios
+        return scenario.id === `act2_role_${character.id}` || scenario.id === 'act2_1' || scenario.id === 'act2_2';
+      }
+      if (location.id === 'LAB' && location.requiredAct === Act.ACT_3_BOSS) {
+        return scenario.id === 'act3_1';
+      }
+      return false;
+    });
+    
+    const total = locationScenarios.length;
+    const completed = locationScenarios.filter(s => completedScenarios.includes(s.id)).length;
+    
+    return { completed, total };
   };
 
   const getActHint = () => {
@@ -46,6 +70,9 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
       <div className="sm:hidden w-full max-w-md space-y-3 px-2">
         {MAP_LOCATIONS.map((loc) => {
           const unlocked = isUnlocked(loc);
+          const progress = getLocationProgress(loc);
+          const showProgress = unlocked && progress.total > 0;
+          
           return (
             <button
               key={loc.id}
@@ -74,7 +101,14 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
               <div className="flex-1 text-left">
                 <div className="font-press-start text-xs sm:text-sm">{loc.name}</div>
                 {unlocked && (
-                  <div className="font-vt323 text-sm text-gray-400 mt-1">{loc.description}</div>
+                  <>
+                    <div className="font-vt323 text-sm text-gray-400 mt-1">{loc.description}</div>
+                    {showProgress && (
+                      <div className="font-mono text-xs text-yellow-400 mt-1">
+                        [{progress.completed}/{progress.total} abgeschlossen]
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
               {unlocked && (
@@ -105,6 +139,9 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
         {/* Locations */}
         {MAP_LOCATIONS.map((loc) => {
             const unlocked = isUnlocked(loc);
+            const progress = getLocationProgress(loc);
+            const showProgress = unlocked && progress.total > 0;
+            
             return (
                 <button
                     key={loc.id}
@@ -117,6 +154,13 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
                     `}
                     style={{ left: `${loc.coords.x}%`, top: `${loc.coords.y}%` }}
                 >
+                    {/* Progress Badge */}
+                    {showProgress && (
+                        <div className={`absolute -top-2 -right-2 ${progress.completed === progress.total ? 'bg-green-600' : 'bg-yellow-600'} text-white font-bold font-mono text-[10px] px-1.5 py-0.5 rounded-full shadow-lg z-10`}>
+                            {progress.completed}/{progress.total}
+                        </div>
+                    )}
+                    
                     {/* Pin Icon */}
                     <div className={`
                         w-8 h-8 rounded-full border-2 mb-2 flex items-center justify-center transition-all

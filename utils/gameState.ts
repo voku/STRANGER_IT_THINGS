@@ -8,7 +8,7 @@
  */
 
 import { GameState, Act } from '../types';
-import { INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY } from '../constants';
+import { INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY, SKILLS } from '../constants';
 
 /**
  * Initial game state configuration
@@ -17,9 +17,22 @@ import { INITIAL_SLA, INITIAL_MORALE, INITIAL_QUALITY } from '../constants';
  * - Starting screen (INTRO)
  * - Default stats (SLA, Morale, Quality)
  * - Unlocked initial locations (Mall)
- * - Unlocked initial skills (Rubber Duck, ITIL Book)
- * - Starting inventory with 1 of each unlocked item
+ * - ALL skills unlocked from the start
+ * - Starting inventory with 1 of each item
  */
+
+// Create initial inventory with all items
+const createInitialInventory = () => {
+  const inventory: { [key: string]: number } = {};
+  SKILLS.forEach(skill => {
+    inventory[skill.id] = 1; // Start with 1 of each item
+  });
+  return inventory;
+};
+
+// Get all skill IDs for unlocking
+const getAllSkillIds = () => SKILLS.map(skill => skill.id);
+
 export const initialGameState: GameState = {
   currentScreen: 'INTRO',
   currentAct: Act.ACT_1_TICKET,
@@ -28,16 +41,13 @@ export const initialGameState: GameState = {
   playerName: '',
   selectedLocation: null,
   unlockedLocationIds: ['MALL'], // Start with Mall unlocked
-  unlockedSkillIds: ['RUBBER_DUCK', 'ITIL_BOOK'], // Start with Rubber Duck and ITIL Book
+  unlockedSkillIds: getAllSkillIds(), // All skills unlocked from the start
   completedScenarios: [],
   wrongAnswers: [], // Track wrong answers for end screen
   slaTime: INITIAL_SLA,
   teamMorale: INITIAL_MORALE,
   ticketQuality: INITIAL_QUALITY,
-  itemInventory: { 
-    'RUBBER_DUCK': 1, 
-    'ITIL_BOOK': 1 
-  }, // Start with 1 of each initial item
+  itemInventory: createInitialInventory(), // Start with 1 of each item
   turnCount: 0,
   history: [],
   currentScenario: null,
