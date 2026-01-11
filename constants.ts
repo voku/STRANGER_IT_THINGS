@@ -73,71 +73,71 @@ export const CHARACTERS: Character[] = [
   {
     id: '1',
     role: CharacterRole.SERVICE_DESK,
-    name: "The Operator",
-    description: "Der Filter. Weiß: User kennen keine SLAs oder Servicegrenzen.",
-    specialAbility: "Deep Inquiry (Nachhaken)",
+    name: "Chief Hopper",
+    description: "Sheriff von Hawkins. Der erste Ansprechpartner. Weiß: User schreien 'Demogorgon', oft ist es nur eine kaputte Glühbirne.",
+    specialAbility: "Tief Nachfragen (wie Joyce mit den Lichterketten)",
     stats: { sla: 60, quality: 90, morale: 80 },
-    portraitEmoji: "🎧",
+    portraitEmoji: "👮",
     themeColor: "text-pink-400 border-pink-500"
   },
   {
     id: '2',
     role: CharacterRole.IAM,
-    name: "The Gatekeeper",
-    description: "Verwaltet Zugänge. Weiß: Kein Zugriff ≠ System kaputt.",
-    specialAbility: "Access Matrix Vision",
+    name: "Dr. Brenner",
+    description: "Torwächter des Hawkins Lab. Verwaltet Zugänge und Keycards. Weiß: Keine Keycard ≠ Tor kaputt.",
+    specialAbility: "Keycard-Rituale & Clearance-Level",
     stats: { sla: 80, quality: 70, morale: 90 },
-    portraitEmoji: "🔐",
+    portraitEmoji: "🔬",
     themeColor: "text-yellow-400 border-yellow-500"
   },
   {
     id: '3',
     role: CharacterRole.INFRASTRUCTURE,
-    name: "The Guardian",
-    description: "Hüter der Stabilität. Incident = Ausfall. Request = Config.",
-    specialAbility: "Uptime Shield",
+    name: "Bob Newby (Superheld)",
+    description: "RadioShack-Manager und Tech-Experte. Hüter der Systeme. Incident = Stromausfall. Request = Neue Verkabelung.",
+    specialAbility: "Uptime Shield & Nerve Center Überwachung",
     stats: { sla: 90, quality: 60, morale: 70 },
-    portraitEmoji: "🛡️",
+    portraitEmoji: "⚡",
     themeColor: "text-blue-400 border-blue-500"
   },
   {
     id: '4',
     role: CharacterRole.DEVELOPER,
-    name: "The Coder",
-    description: "Code-Architekt. Unterscheidet Regression (Bug) von Requirement (Feature).",
-    specialAbility: "Refactoring Beam",
+    name: "Dustin Henderson",
+    description: "Der kluge Stratege der Gang. Code-Architekt. Unterscheidet Bug (Demogorgon) von Feature (neue D&D-Regel).",
+    specialAbility: "Cerebro-Refactoring & D&D-Logik",
     stats: { sla: 50, quality: 100, morale: 60 },
-    portraitEmoji: "💻",
+    portraitEmoji: "🎲",
     themeColor: "text-green-400 border-green-500"
   },
   {
     id: '5',
     role: CharacterRole.LICENSING,
-    name: "The Auditor",
-    description: "Lizenz-Wächter. Incident = Server down. Request = Neues Abo.",
-    specialAbility: "Fine Print Vision",
+    name: "Murray Bauman",
+    description: "Verschwörungstheoretiker und Detektiv. Lizenz-Wächter. Incident = Überwachungssystem down. Request = Neue Abhörlizenz.",
+    specialAbility: "Kleingedrucktes-Vision & Paranoia-Protokoll",
     stats: { sla: 40, quality: 80, morale: 50 },
-    portraitEmoji: "📋",
+    portraitEmoji: "🕵️",
     themeColor: "text-purple-400 border-purple-500"
   },
   {
     id: '6',
     role: CharacterRole.ERP,
-    name: "The Architect",
-    description: "Prozess-Eigner. Datenfehler = Incident. Neuer Report = Request.",
-    specialAbility: "Workflow Bind",
+    name: "Joyce Byers",
+    description: "Organisatorin und Problemlöserin. Prozess-Eignerin. Datenfehler = Incident. Neuer Workflow = Request.",
+    specialAbility: "Lichterketten-Kommunikation & Mutter-Instinkt",
     stats: { sla: 70, quality: 80, morale: 70 },
-    portraitEmoji: "🏛️",
+    portraitEmoji: "💡",
     themeColor: "text-cyan-400 border-cyan-500"
   },
   {
     id: '7',
     role: CharacterRole.PURCHASING,
-    name: "The Ranger",
-    description: "Logistik-Chef. Lieferstopp = Incident. Bestellanforderung = Request.",
-    specialAbility: "Supply Chain Mastery",
+    name: "Steve Harrington",
+    description: "Scoops Ahoy Manager. Logistik-Chef. Lieferstopp = Incident. Bestellanforderung = Request.",
+    specialAbility: "Ice Cream Supply Chain & Kundendienst",
     stats: { sla: 75, quality: 60, morale: 100 },
-    portraitEmoji: "📦",
+    portraitEmoji: "🍦",
     themeColor: "text-emerald-400 border-emerald-500"
   }
 ];
@@ -146,9 +146,9 @@ export const SKILLS: Skill[] = [
     // Good Items
     {
         id: 'RUBBER_DUCK',
-        name: "Rubber Duck",
-        description: "Der stille Zuhörer. Hilft beim Nachdenken. (Einmalig)",
-        icon: "🦆",
+        name: "Dart (Baby Demogorgon)",
+        description: "Dustins Haustier. Der stille Begleiter. Hilft beim Nachdenken. (Einmalig)",
+        icon: "🦎",
         color: "bg-yellow-600 border-yellow-400",
         targetAct: Act.ACT_1_TICKET,
         slaPenalty: 5, // Small penalty if used in wrong Act
@@ -156,9 +156,9 @@ export const SKILLS: Skill[] = [
     },
     {
         id: 'ITIL_BOOK',
-        name: "ITIL V4 Codex",
-        description: "Enthüllt Hinweise in Act 1 & 2. (Einmalig)",
-        icon: "📘",
+        name: "D&D Regelwerk",
+        description: "Dungeons & Dragons Handbuch. Enthüllt Hinweise in Act 1 & 2. (Einmalig)",
+        icon: "🎲",
         color: "bg-blue-800 border-blue-600",
         targetAct: Act.ACT_1_TICKET,
         slaPenalty: 5,
@@ -166,9 +166,9 @@ export const SKILLS: Skill[] = [
     },
     {
         id: 'COFFEE',
-        name: "Schwarzer Kaffee",
-        description: "Universeller Fokus. Gibt kleine Hinweise überall. (Einmalig)",
-        icon: "☕",
+        name: "Scoops Ahoy Eiskaffee",
+        description: "Steves Spezialität. Universeller Fokus. Gibt kleine Hinweise überall. (Einmalig)",
+        icon: "🍨",
         color: "bg-orange-900 border-orange-700",
         targetAct: Act.ACT_2_PERSPECTIVE,
         slaPenalty: 3, // Lower penalty - more universal
@@ -176,9 +176,9 @@ export const SKILLS: Skill[] = [
     },
     {
         id: 'DEBUGGER',
-        name: "Root Cause Analyzer",
-        description: "Enthüllt Logik-Fehler im Boss-Kampf. (Einmalig)",
-        icon: "🐞",
+        name: "Cerebro",
+        description: "Dustins Hochleistungs-Radio. Enthüllt Logik-Fehler im Boss-Kampf. (Einmalig)",
+        icon: "📡",
         color: "bg-green-800 border-green-600",
         targetAct: Act.ACT_3_BOSS,
         slaPenalty: 10, // Higher penalty if used outside boss fight
@@ -187,9 +187,9 @@ export const SKILLS: Skill[] = [
     // Bad Items (negative effects)
     {
         id: 'EXPIRED_ENERGY_DRINK',
-        name: "Abgelaufener Energy Drink",
-        description: "Macht wach, aber schadet der Moral. -10 Moral beim Nutzen. (Einmalig)",
-        icon: "🥤",
+        name: "Verseuchtes Wasser",
+        description: "Aus dem Hawkins Pool. Macht wach, aber schadet der Moral. -10 Moral beim Nutzen. (Einmalig)",
+        icon: "☣️",
         color: "bg-red-900 border-red-700",
         targetAct: Act.ACT_1_TICKET,
         slaPenalty: 3,
@@ -198,9 +198,9 @@ export const SKILLS: Skill[] = [
     },
     {
         id: 'OUTDATED_DOCUMENTATION',
-        name: "Veraltete Doku",
-        description: "Führt in die Irre. -5 Qualität beim Nutzen. (Einmalig)",
-        icon: "📜",
+        name: "Brenners alte Notizen",
+        description: "Veraltete Lab-Protokolle. Führen in die Irre. -5 Qualität beim Nutzen. (Einmalig)",
+        icon: "📋",
         color: "bg-gray-800 border-gray-600",
         targetAct: Act.ACT_2_PERSPECTIVE,
         slaPenalty: 8,
@@ -209,9 +209,9 @@ export const SKILLS: Skill[] = [
     },
     {
         id: 'BUGGY_SCRIPT',
-        name: "Fehlerhaftes Script",
-        description: "Automatisierung mit Nebenwirkungen. -5 Qualität, -5 Moral. (Einmalig)",
-        icon: "⚠️",
+        name: "Mind Flayer Fragment",
+        description: "Dunkle Macht aus dem Upside Down. Automatisierung mit Nebenwirkungen. -5 Qualität, -5 Moral. (Einmalig)",
+        icon: "🕷️",
         color: "bg-orange-900 border-orange-700",
         targetAct: Act.ACT_3_BOSS,
         slaPenalty: 15,
@@ -224,26 +224,26 @@ export const SKILLS: Skill[] = [
 // Pre-defined System Messages for "AI" Flavor
 export const SYSTEM_MESSAGES = {
     LOADING: [
-        "Analysiere Soll-Zustand...",
-        "Prüfe Legacy-Definitionen...",
-        "Scanne nach Regressionen...",
-        "Validiere User-Kontext...",
-        "Lade Service-Katalog...",
-        "Berechne SLA-Auswirkung..."
+        "Scanne Upside Down Portal...",
+        "Prüfe Demogorgon-Signatur...",
+        "Validiere Mind Flayer Muster...",
+        "Analysiere Lichterketten-Code...",
+        "Lade Lab-Protokolle...",
+        "Berechne Hawkins-Timeline..."
     ],
     SUCCESS: [
-        "Klassifizierung: GÜLTIG.",
-        "SLA Geschützt.",
-        "Workflow Optimiert.",
-        "Ursache Identifiziert.",
-        "Prozess-Einhaltung: 100%."
+        "Portal geschlossen.",
+        "Hawkins gesichert.",
+        "Kommunikation wiederhergestellt.",
+        "Monster identifiziert.",
+        "Timeline stabil: 100%."
     ],
     FAILURE: [
-        "PROZESSVERLETZUNG.",
-        "SLA VERLETZT.",
-        "FALSCHE WARTESCHLANGE.",
-        "UNDEFINIERTER ZUSTAND.",
-        "RESSOURCEN VERSCHWENDET."
+        "DIMENSIONSRISS ERKANNT.",
+        "HAWKINS IN GEFAHR.",
+        "FALSCHE DIMENSION.",
+        "UNBEKANNTES WESEN.",
+        "ENERGIEVERLUST KRITISCH."
     ]
 };
 
