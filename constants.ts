@@ -177,7 +177,6 @@ export const SKILLS: Skill[] = [
         targetAct: Act.ACT_1_TICKET,
         slaPenalty: 3,
         isBadItem: true,
-        qualityEffect: 0,
         moraleEffect: -10
     },
     {
@@ -189,8 +188,7 @@ export const SKILLS: Skill[] = [
         targetAct: Act.ACT_2_PERSPECTIVE,
         slaPenalty: 8,
         isBadItem: true,
-        qualityEffect: -5,
-        moraleEffect: 0
+        qualityEffect: -5
     },
     {
         id: 'BUGGY_SCRIPT',
