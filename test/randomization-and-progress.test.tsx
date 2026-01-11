@@ -203,7 +203,7 @@ describe('Randomization and Progress Indicators', () => {
       
       // Wait for scenario to load
       await waitFor(() => {
-        expect(screen.getByText(/Der User-Nebel/i)).toBeInTheDocument();
+        expect(screen.getByText(/Flackernde Lichter/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Verify in-scenario progress indicator
@@ -294,11 +294,11 @@ describe('Randomization and Progress Indicators', () => {
       await user.click(mallButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/Der User-Nebel/i)).toBeInTheDocument();
+        expect(screen.getByText(/Flackernde Lichter/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
-      // Select correct answer (option 3: NACHFRAGEN)
-      const correctOption = screen.getByText(/NACHFRAGEN.*Soll-Zustand/i);
+      // Select correct answer (option 3: Joyce bei den Lichterketten)
+      const correctOption = screen.getByText(/Joyce bei den Lichterketten/i);
       await user.click(correctOption.closest('button')!);
       
       // Submit answer
