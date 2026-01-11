@@ -66,7 +66,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
                 
                 return (
                     <button 
-                        key={idx}
+                        key={`${scenario.id}-option-${idx}`}
                         onClick={() => handleSelect(idx)}
                         disabled={selectedOption !== null}
                         className={`
@@ -102,7 +102,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, on
       )}
 
       {/* Skill / Hint Button */}
-      {!showDiagram && canUseHint && !hintRevealed && scenario.hint && (
+      {!showDiagram && canUseHint && !hintRevealed && scenario.hint && skill && (
           <button 
             onClick={() => setHintRevealed(true)}
             className="mb-4 sm:mb-6 px-3 sm:px-4 py-2 bg-indigo-900 border border-indigo-400 text-indigo-300 font-press-start text-[10px] sm:text-xs rounded shadow-[0_0_10px_rgba(99,102,241,0.5)] hover:bg-indigo-800 animate-pulse"

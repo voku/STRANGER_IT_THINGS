@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { GameState, CharacterRole, WrongAnswer } from '../types';
 import { ACT_2_CORE_SCENARIOS } from '../constants';
 
@@ -8,12 +8,15 @@ interface EndScreenProps {
 }
 
 const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
-  const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers } = gameState;
+  const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers = [] } = gameState;
   const victory = gameStatus === 'won';
   const charName = selectedCharacter?.name || "Unbekannter Agent";
   const skillName = selectedSkill?.name || "Standard-Ausrüstung";
   const completed = gameState.completedScenarios || [];
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
+  
+  // Memoize report number to prevent changes on re-render
+  const reportNumber = useMemo(() => Math.floor(1000 + Math.random() * 9000), []);
   
   // Grade Calculation (Weighted)
   const score = (ticketQuality * 0.4) + (teamMorale * 0.3) + (slaTime * 0.3);
@@ -110,7 +113,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
     if (score > 90) lines.push("BELOBIGUNG: Hervorragende Leistung in allen Metriken.");
     
     // 4. Wrong answers summary
-    if (wrongAnswers && wrongAnswers.length > 0) {
+    if (wrongAnswers.length > 0) {
         lines.push(`FEHLERANALYSE: ${wrongAnswers.length} falsche Entscheidung(en) getroffen.`);
     }
 
@@ -119,32 +122,34 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
 
   // Render wrong answers section
   const renderWrongAnswersSection = () => {
-    if (!wrongAnswers || wrongAnswers.length === 0) return null;
+    if (wrongAnswers.length === 0) return null;
     
     return (
       <div className="mt-6">
         <button
           onClick={() => setShowWrongAnswers(!showWrongAnswers)}
           className="w-full px-4 py-2 bg-orange-900/50 border border-orange-600 text-orange-400 font-vt323 text-lg rounded hover:bg-orange-800/50 transition-all flex items-center justify-between"
+          aria-expanded={showWrongAnswers}
+          aria-controls="wrong-answers-list"
         >
           <span>⚠️ FEHLERANALYSE ({wrongAnswers.length} Fehler)</span>
-          <span className="text-xl">{showWrongAnswers ? '▲' : '▼'}</span>
+          <span className="text-xl" aria-hidden="true">{showWrongAnswers ? '▲' : '▼'}</span>
         </button>
         
         {showWrongAnswers && (
-          <div className="mt-4 space-y-4 animate-fade-in">
-            {wrongAnswers.map((wa, idx) => (
-              <div key={idx} className="bg-black/60 border border-orange-700/50 rounded-lg p-4 text-left">
+          <div id="wrong-answers-list" className="mt-4 space-y-4 animate-fade-in" role="list">
+            {wrongAnswers.map((wa) => (
+              <div key={wa.scenarioId} className="bg-black/60 border border-orange-700/50 rounded-lg p-4 text-left" role="listitem">
                 <div className="font-press-start text-xs text-orange-400 mb-2">
                   {wa.scenarioTitle}
                 </div>
                 <div className="font-vt323 text-base space-y-2">
                   <div className="flex items-start gap-2">
-                    <span className="text-red-500 font-bold">✗</span>
+                    <span className="text-red-500 font-bold" aria-hidden="true">✗</span>
                     <span className="text-red-300">Deine Wahl: {wa.selectedOption}</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500 font-bold">✓</span>
+                    <span className="text-green-500 font-bold" aria-hidden="true">✓</span>
                     <span className="text-green-300">Richtig wäre: {wa.correctOption}</span>
                   </div>
                   <div className="mt-2 text-gray-400 text-sm border-t border-gray-700 pt-2">
@@ -175,7 +180,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
 
              <div className="text-left font-mono space-y-3 sm:space-y-4 text-gray-300">
                 <div className="border-b border-gray-600 pb-2 mb-3 sm:mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
-                    <span className="text-base sm:text-xl font-bold text-white tracking-wider">VORFALLSBERICHT #{Math.floor(1000 + Math.random() * 9000)}</span>
+                    <span className="text-base sm:text-xl font-bold text-white tracking-wider">VORFALLSBERICHT #{reportNumber}</span>
                     <span className={`text-xs px-2 py-1 text-white rounded font-bold ${victory ? 'bg-green-800' : 'bg-red-800'}`}>
                         {victory ? 'GELÖST' : 'KRITISCH'}
                     </span>
