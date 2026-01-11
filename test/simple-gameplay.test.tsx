@@ -91,15 +91,20 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Step 6: Verify initial unlocked skills (Rubber Duck and ITIL Book should be available)
-    expect(screen.getByText(/Rubber Duck/i)).toBeInTheDocument();
-    expect(screen.getByText(/ITIL V4 Codex/i)).toBeInTheDocument();
+    // Step 6: Verify skill selection screen shows randomized items
+    // Since we now show 4 random items, we can't guarantee specific items will appear
+    // Just verify that some skills are displayed and at least one is selectable
+    const skillButtons = screen.getAllByRole('button').filter(btn => 
+      btn.textContent?.includes('Klicken zum Ausrüsten')
+    );
+    expect(skillButtons.length).toBeGreaterThan(0);
+    expect(skillButtons.length).toBeLessThanOrEqual(4); // Should show max 4 items
     
-    // Step 7: Select the first available skill (Rubber Duck)
-    const rubberDuckButton = screen.getByText(/Rubber Duck/i).closest('button');
-    expect(rubberDuckButton).not.toBeNull();
-    expect(rubberDuckButton).not.toBeDisabled();
-    await user.click(rubberDuckButton!);
+    // Step 7: Select the first available skill (any of the randomized ones)
+    const firstSkillButton = skillButtons[0];
+    expect(firstSkillButton).not.toBeNull();
+    expect(firstSkillButton).not.toBeDisabled();
+    await user.click(firstSkillButton);
     
     // Step 8: Wait for transition to next screen (AKT 1)
     await waitFor(() => {
@@ -140,8 +145,12 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    const rubberDuckButton = screen.getByText(/Rubber Duck/i).closest('button');
-    await user.click(rubberDuckButton!);
+    // Select any available skill (now randomized, so we can't guarantee Rubber Duck)
+    const skillButtons = screen.getAllByRole('button').filter(btn => 
+      btn.textContent?.includes('Klicken zum Ausrüsten')
+    );
+    expect(skillButtons.length).toBeGreaterThan(0);
+    await user.click(skillButtons[0]);
     
     await waitFor(() => {
       // Look for transition-specific text "Das verzerrte Ticket"
