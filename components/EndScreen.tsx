@@ -5,7 +5,6 @@ import { ACT_2_CORE_SCENARIOS } from '../constants';
 interface EndScreenProps {
   gameState: GameState;
   onReplay: () => void;
-  onFullReset: () => void;
 }
 
 const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {

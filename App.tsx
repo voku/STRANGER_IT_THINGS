@@ -590,7 +590,6 @@ const App: React.FC = () => {
         <EndScreen 
           gameState={gameState}
           onReplay={handleReplay}
-          onFullReset={() => setGameState(initialGameState)}
         />
       );
     }
