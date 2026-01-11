@@ -25,24 +25,68 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4 relative z-20">
-      <div className="text-center mb-6 bg-black/70 p-4 rounded-lg border border-red-900/50 backdrop-blur-sm animate-fade-in-up shadow-[0_0_20px_rgba(220,38,38,0.3)]">
+    <div className="w-full min-h-full flex flex-col items-center justify-center p-2 sm:p-4 relative z-20 overflow-y-auto">
+      <div className="text-center mb-4 sm:mb-6 bg-black/70 p-3 sm:p-4 rounded-lg border border-red-900/50 backdrop-blur-sm animate-fade-in-up shadow-[0_0_20px_rgba(220,38,38,0.3)]">
         <h2 
             data-text="EINSATZKARTE"
-            className="text-4xl md:text-5xl stranger-heading tracking-widest mb-2"
+            className="text-2xl sm:text-4xl md:text-5xl stranger-heading tracking-widest mb-2"
         >
             EINSATZKARTE
         </h2>
-        <p className="font-vt323 text-xl text-yellow-400 mb-2 blink">
+        <p className="font-vt323 text-base sm:text-xl text-yellow-400 mb-2 blink">
             {getActHint()}
         </p>
-        <p className="font-vt323 text-lg text-gray-300">
+        <p className="font-vt323 text-sm sm:text-lg text-gray-300">
             AGENT: <span className="text-blue-400 uppercase">{playerName || 'UNBEKANNT'}</span> | 
             ROLLE: <span className={`${character.themeColor.split(' ')[0]} uppercase`}>{character.name}</span>
         </p>
       </div>
 
-      <div className="relative w-full max-w-4xl aspect-[16/9] bg-[#0f1014] border-4 border-gray-800 rounded-xl shadow-2xl overflow-hidden group">
+      {/* Mobile: List View */}
+      <div className="sm:hidden w-full max-w-md space-y-3 px-2">
+        {MAP_LOCATIONS.map((loc) => {
+          const unlocked = isUnlocked(loc);
+          return (
+            <button
+              key={loc.id}
+              onClick={() => unlocked && onSelectLocation(loc)}
+              disabled={!unlocked}
+              className={`
+                w-full p-4 rounded-lg border-2 transition-all flex items-center gap-4
+                ${unlocked 
+                  ? (loc.type === 'DANGER' ? 'bg-red-900/30 border-red-500 text-red-400' : 
+                     loc.type === 'SAFE' ? 'bg-green-900/30 border-green-500 text-green-400' : 
+                     'bg-blue-900/30 border-blue-500 text-blue-400')
+                  : 'bg-gray-900/50 border-gray-700 text-gray-500 opacity-50'}
+                ${unlocked ? 'active:scale-95' : 'cursor-not-allowed'}
+              `}
+            >
+              <div className={`
+                w-10 h-10 rounded-full border-2 flex items-center justify-center
+                ${unlocked 
+                  ? (loc.type === 'DANGER' ? 'bg-red-900 border-red-500 animate-pulse' : 
+                     loc.type === 'SAFE' ? 'bg-green-900 border-green-500 animate-pulse' : 
+                     'bg-blue-900 border-blue-500 animate-pulse')
+                  : 'bg-gray-800 border-gray-600'}
+              `}>
+                {unlocked ? <div className="w-2 h-2 bg-white rounded-full"></div> : <span>🔒</span>}
+              </div>
+              <div className="flex-1 text-left">
+                <div className="font-press-start text-xs sm:text-sm">{loc.name}</div>
+                {unlocked && (
+                  <div className="font-vt323 text-sm text-gray-400 mt-1">{loc.description}</div>
+                )}
+              </div>
+              {unlocked && (
+                <span className="text-2xl">→</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Desktop: Map View */}
+      <div className="hidden sm:block relative w-full max-w-4xl aspect-[16/9] bg-[#0f1014] border-4 border-gray-800 rounded-xl shadow-2xl overflow-hidden group">
         
         {/* Map Background Grid */}
         <div className="absolute inset-0 opacity-20 pointer-events-none" 

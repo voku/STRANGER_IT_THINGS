@@ -81,6 +81,14 @@ export interface LogEntry {
   timestamp: Date;
 }
 
+export interface WrongAnswer {
+  scenarioId: string;
+  scenarioTitle: string;
+  selectedOption: string;
+  correctOption: string;
+  explanation: string;
+}
+
 export interface GameState {
   currentScreen: 'INTRO' | 'CHAR_SELECT' | 'SKILL_SELECT' | 'MAP_SELECT' | 'GAME' | 'VICTORY' | 'GAME_OVER';
   currentAct: Act;
@@ -93,6 +101,7 @@ export interface GameState {
   unlockedLocationIds: string[];
   unlockedSkillIds: string[];
   completedScenarios: string[];
+  wrongAnswers: WrongAnswer[]; // Track wrong answers for end screen
 
   // Resources
   slaTime: number; // Represents remaining time/SLA buffer

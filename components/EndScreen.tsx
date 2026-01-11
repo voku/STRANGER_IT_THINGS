@@ -1,5 +1,5 @@
-import React from 'react';
-import { GameState, CharacterRole } from '../types';
+import React, { useState } from 'react';
+import { GameState, CharacterRole, WrongAnswer } from '../types';
 import { ACT_2_CORE_SCENARIOS } from '../constants';
 
 interface EndScreenProps {
@@ -8,12 +8,13 @@ interface EndScreenProps {
   onFullReset: () => void;
 }
 
-const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset }) => {
-  const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus } = gameState;
+const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
+  const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers } = gameState;
   const victory = gameStatus === 'won';
   const charName = selectedCharacter?.name || "Unbekannter Agent";
   const skillName = selectedSkill?.name || "Standard-Ausrüstung";
   const completed = gameState.completedScenarios || [];
+  const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   
   // Grade Calculation (Weighted)
   const score = (ticketQuality * 0.4) + (teamMorale * 0.3) + (slaTime * 0.3);
@@ -108,33 +109,80 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
         if (ticketQuality <= 0) lines.push("Grund für Niederlage: Ticket-Qualität bei 0 – falsche Klassifikation dominierte.");
     }
     if (score > 90) lines.push("BELOBIGUNG: Hervorragende Leistung in allen Metriken.");
+    
+    // 4. Wrong answers summary
+    if (wrongAnswers && wrongAnswers.length > 0) {
+        lines.push(`FEHLERANALYSE: ${wrongAnswers.length} falsche Entscheidung(en) getroffen.`);
+    }
 
     return lines.join(" ");
   };
 
+  // Render wrong answers section
+  const renderWrongAnswersSection = () => {
+    if (!wrongAnswers || wrongAnswers.length === 0) return null;
+    
+    return (
+      <div className="mt-6">
+        <button
+          onClick={() => setShowWrongAnswers(!showWrongAnswers)}
+          className="w-full px-4 py-2 bg-orange-900/50 border border-orange-600 text-orange-400 font-vt323 text-lg rounded hover:bg-orange-800/50 transition-all flex items-center justify-between"
+        >
+          <span>⚠️ FEHLERANALYSE ({wrongAnswers.length} Fehler)</span>
+          <span className="text-xl">{showWrongAnswers ? '▲' : '▼'}</span>
+        </button>
+        
+        {showWrongAnswers && (
+          <div className="mt-4 space-y-4 animate-fade-in">
+            {wrongAnswers.map((wa, idx) => (
+              <div key={idx} className="bg-black/60 border border-orange-700/50 rounded-lg p-4 text-left">
+                <div className="font-press-start text-xs text-orange-400 mb-2">
+                  {wa.scenarioTitle}
+                </div>
+                <div className="font-vt323 text-base space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-red-500 font-bold">✗</span>
+                    <span className="text-red-300">Deine Wahl: {wa.selectedOption}</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span className="text-green-300">Richtig wäre: {wa.correctOption}</span>
+                  </div>
+                  <div className="mt-2 text-gray-400 text-sm border-t border-gray-700 pt-2">
+                    {wa.explanation}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center px-4 relative z-20 overflow-y-auto py-8 animate-fade-in">
-        <h1 className={`text-4xl md:text-7xl font-stranger mb-6 drop-shadow-lg ${themeColor} animate-pulse tracking-widest`}>
+    <div className="flex flex-col items-center justify-center min-h-full text-center px-2 sm:px-4 relative z-20 overflow-y-auto py-4 sm:py-8 animate-fade-in">
+        <h1 className={`text-3xl sm:text-4xl md:text-7xl font-stranger mb-4 sm:mb-6 drop-shadow-lg ${themeColor} animate-pulse tracking-widest`}>
             {title}
         </h1>
         
         {/* REPORT CARD */}
-        <div className={`w-full max-w-2xl bg-gray-900 border-4 ${borderColor} p-6 rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] relative`}>
+        <div className={`w-full max-w-2xl bg-gray-900 border-2 sm:border-4 ${borderColor} p-3 sm:p-6 rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] relative`}>
              
              {/* Dynamic Grade Stamp */}
-             <div className={`absolute top-4 right-4 border-4 rounded-full w-24 h-24 flex items-center justify-center transform backdrop-blur-sm z-10 ${stampStyle} shadow-lg`}>
-                <span className="font-press-start text-5xl">{grade}</span>
+             <div className={`absolute top-2 right-2 sm:top-4 sm:right-4 border-2 sm:border-4 rounded-full w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center transform backdrop-blur-sm z-10 ${stampStyle} shadow-lg`}>
+                <span className="font-press-start text-3xl sm:text-5xl">{grade}</span>
              </div>
 
-             <div className="text-left font-mono space-y-4 text-gray-300">
-                <div className="border-b border-gray-600 pb-2 mb-4 flex justify-between items-end">
-                    <span className="text-xl font-bold text-white tracking-wider">VORFALLSBERICHT #{Math.floor(1000 + Math.random() * 9000)}</span>
+             <div className="text-left font-mono space-y-3 sm:space-y-4 text-gray-300">
+                <div className="border-b border-gray-600 pb-2 mb-3 sm:mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
+                    <span className="text-base sm:text-xl font-bold text-white tracking-wider">VORFALLSBERICHT #{Math.floor(1000 + Math.random() * 9000)}</span>
                     <span className={`text-xs px-2 py-1 text-white rounded font-bold ${victory ? 'bg-green-800' : 'bg-red-800'}`}>
                         {victory ? 'GELÖST' : 'KRITISCH'}
                     </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-y-6 gap-x-4 text-sm font-vt323 text-xl">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 sm:gap-y-6 gap-x-4 text-sm font-vt323 text-lg sm:text-xl">
                     <div className="border-l-2 border-gray-700 pl-3">
                         <span className="block text-gray-500 text-xs font-mono">AGENT</span>
                         <span className="text-white uppercase tracking-widest">{playerName || 'UNBEKANNT'}</span>
@@ -157,46 +205,44 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay, onFullReset 
                     </div>
                 </div>
 
-                <div className="bg-black/50 p-4 rounded border border-gray-700 mt-6 shadow-inner relative overflow-hidden">
+                <div className="bg-black/50 p-3 sm:p-4 rounded border border-gray-700 mt-4 sm:mt-6 shadow-inner relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                    <p className="font-vt323 text-xl leading-relaxed text-gray-300 text-justify">
+                    <p className="font-vt323 text-base sm:text-xl leading-relaxed text-gray-300 text-justify">
                         {generateNarrative()}
                     </p>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-                    <div className="bg-gray-800 p-3 rounded border border-gray-700 group">
-                        <div className="text-[10px] text-gray-500 mb-1 group-hover:text-yellow-400 transition-colors">QUALITÄT</div>
-                        <div className={`font-bold text-2xl ${ticketQuality > 70 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-3 sm:mt-4 text-center">
+                    <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-yellow-400 transition-colors">QUALITÄT</div>
+                        <div className={`font-bold text-lg sm:text-2xl ${ticketQuality > 70 ? 'text-green-400' : 'text-red-400'}`}>
                             {Math.round(ticketQuality)}%
                         </div>
                     </div>
-                    <div className="bg-gray-800 p-3 rounded border border-gray-700 group">
-                        <div className="text-[10px] text-gray-500 mb-1 group-hover:text-blue-400 transition-colors">MORAL</div>
-                        <div className={`font-bold text-2xl ${teamMorale > 70 ? 'text-blue-400' : 'text-red-400'}`}>
+                    <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-blue-400 transition-colors">MORAL</div>
+                        <div className={`font-bold text-lg sm:text-2xl ${teamMorale > 70 ? 'text-blue-400' : 'text-red-400'}`}>
                             {Math.round(teamMorale)}%
                         </div>
                     </div>
-                    <div className="bg-gray-800 p-3 rounded border border-gray-700 group">
-                        <div className="text-[10px] text-gray-500 mb-1 group-hover:text-purple-400 transition-colors">SLA</div>
-                        <div className={`font-bold text-2xl ${slaTime > 50 ? 'text-purple-400' : 'text-red-400'}`}>
+                    <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-purple-400 transition-colors">SLA</div>
+                        <div className={`font-bold text-lg sm:text-2xl ${slaTime > 50 ? 'text-purple-400' : 'text-red-400'}`}>
                             {Math.round(slaTime)}%
                         </div>
                     </div>
                 </div>
 
-                 <div className="flex flex-col md:flex-row gap-4 mt-8 w-full">
+                {/* Wrong Answers Section */}
+                {renderWrongAnswersSection()}
+
+                 {/* Single Replay Button */}
+                 <div className="mt-6 sm:mt-8 w-full">
                     <button 
                         onClick={onReplay}
-                        className="flex-1 px-6 py-3 bg-gray-800 border-2 border-yellow-600 text-yellow-500 hover:bg-yellow-600 hover:text-black font-press-start rounded transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_25px_rgba(234,179,8,0.6)]"
+                        className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-800 border-2 border-yellow-600 text-yellow-500 hover:bg-yellow-600 hover:text-black font-press-start text-xs sm:text-sm rounded transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_25px_rgba(234,179,8,0.6)] active:scale-95"
                     >
-                        NEUSTART
-                    </button>
-                    <button 
-                        onClick={onFullReset}
-                        className="flex-1 px-6 py-3 bg-gray-900 border-2 border-red-600 text-red-500 hover:bg-red-600 hover:text-white font-press-start rounded transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] hover:shadow-[0_0_25px_rgba(220,38,38,0.6)]"
-                    >
-                        RESET
+                        🎮 NEU STARTEN
                     </button>
                 </div>
 

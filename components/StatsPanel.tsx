@@ -23,12 +23,12 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   
   // Helper for progress bars
   const renderBar = (label: string, value: number, colorClass: string, statusText: string | null = null) => (
-    <div className="mb-2 group">
-        <div className="flex justify-between text-xs font-vt323 mb-1 text-gray-300">
-            <div className="flex items-center gap-2">
+    <div className="mb-1 sm:mb-2 group">
+        <div className="flex justify-between text-[10px] sm:text-xs font-vt323 mb-0.5 sm:mb-1 text-gray-300">
+            <div className="flex items-center gap-1 sm:gap-2">
                 <span>{label}</span>
                 {statusText && (
-                    <span className={`px-1.5 py-0.5 rounded text-[10px] tracking-wider font-bold transition-colors duration-300 ${
+                    <span className={`px-1 py-0.5 rounded text-[8px] sm:text-[10px] tracking-wider font-bold transition-colors duration-300 ${
                         value < 33 ? 'bg-red-900/80 text-red-100 animate-pulse border border-red-500 shadow-[0_0_5px_red]' : 
                         value < 66 ? 'bg-yellow-900/80 text-yellow-100 border border-yellow-500' : 
                         'bg-green-900/80 text-green-100 border border-green-500'
@@ -41,7 +41,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
                 {Math.round(value)}%
             </span>
         </div>
-        <div className="w-full h-4 bg-gray-900 border border-gray-600 rounded overflow-hidden relative shadow-inner">
+        <div className="w-full h-2 sm:h-4 bg-gray-900 border border-gray-600 rounded overflow-hidden relative shadow-inner">
             {/* Retro grid pattern overlay */}
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.5)_1px,transparent_1px)] bg-[size:10%_100%] z-10 pointer-events-none opacity-30"></div>
             
@@ -50,7 +50,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
                 style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
             >
                 {/* Shine effect */}
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-white/30"></div>
+                <div className="absolute top-0 left-0 w-full h-[1px] sm:h-[2px] bg-white/30"></div>
             </div>
         </div>
     </div>
@@ -67,28 +67,39 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   const slaConfig = getSLAConfig(slaTime);
 
   return (
-    <div className={`border-2 p-4 bg-gray-900/95 backdrop-blur rounded flex flex-col md:flex-row gap-6 items-center justify-between ${character.themeColor} shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-colors duration-500`}>
+    <div className={`border sm:border-2 p-2 sm:p-4 bg-gray-900/95 backdrop-blur rounded flex flex-col sm:flex-row gap-2 sm:gap-6 items-start sm:items-center justify-between ${character.themeColor} shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-colors duration-500`}>
       
-      {/* Character Info */}
-      <div className="flex items-center gap-4 min-w-[200px]">
-        <div className="text-5xl filter drop-shadow-[0_0_8px_currentColor] animate-pulse transition-transform hover:scale-110 duration-300 cursor-help" title={character.specialAbility}>
+      {/* Character Info - Compact on mobile */}
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0 sm:min-w-[200px] w-full sm:w-auto">
+        <div className="text-2xl sm:text-5xl filter drop-shadow-[0_0_8px_currentColor] animate-pulse transition-transform hover:scale-110 duration-300 cursor-help flex-shrink-0" title={character.specialAbility}>
             {character.portraitEmoji}
         </div>
-        <div>
-            <h3 className="text-lg font-bold font-press-start uppercase tracking-widest leading-snug">{character.name}</h3>
-            <p className="text-xs opacity-80 font-vt323 mt-1 text-yellow-200">{character.role}</p>
+        <div className="min-w-0 flex-1 sm:flex-initial">
+            <h3 className="text-xs sm:text-lg font-bold font-press-start uppercase tracking-widest leading-snug truncate">{character.name}</h3>
+            <p className="text-[10px] sm:text-xs opacity-80 font-vt323 mt-0.5 sm:mt-1 text-yellow-200 truncate">{character.role}</p>
+        </div>
+        
+        {/* Mobile: Show item inline */}
+        <div className="flex sm:hidden items-center gap-1 bg-black/40 px-2 py-1 rounded border border-gray-600 flex-shrink-0">
+            {skill ? (
+                <span className="text-sm text-yellow-400" title={skill.description}>
+                    {skill.icon}
+                </span>
+            ) : (
+                <span className="text-[10px] text-gray-600">-</span>
+            )}
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-3 gap-4">
-        {renderBar("SLA BUFFER", slaTime, slaConfig.color, slaConfig.text)}
-        {renderBar("TEAM MORAL", teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
-        {renderBar("TICKET QUALITÄT", ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
+      {/* Stats Grid - Full width on mobile */}
+      <div className="flex-grow w-full grid grid-cols-3 sm:grid-cols-3 gap-1 sm:gap-4">
+        {renderBar("SLA", slaTime, slaConfig.color, slaConfig.text)}
+        {renderBar("MORAL", teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
+        {renderBar("QUALITÄT", ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
       </div>
 
-      {/* Act Info & Inventory */}
-      <div className="flex flex-col items-end gap-2 min-w-[150px] border-l border-gray-700 pl-4 hidden md:flex">
+      {/* Act Info & Inventory - Hidden on mobile, shown on desktop */}
+      <div className="hidden md:flex flex-col items-end gap-2 min-w-[150px] border-l border-gray-700 pl-4">
         <div className="font-vt323 text-right">
             <div className="text-xl text-green-400 mb-1 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">{currentAct.split(':')[0]}</div>
             <div className={`text-xs uppercase tracking-widest ${gameStatus === 'active' ? 'text-gray-400' : gameStatus === 'won' ? 'text-green-400' : 'text-red-500'}`}>
