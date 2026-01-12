@@ -21,9 +21,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate to skill selection
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -62,9 +60,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate to skill selection
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -95,8 +91,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // No name input
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -121,9 +116,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate to map
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate to map (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -166,9 +159,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate to active scenario
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate to active scenario (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -218,9 +209,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate to skill selection
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
@@ -255,9 +244,7 @@ describe('Randomization and Progress Indicators', () => {
       const user = userEvent.setup();
       render(<App />);
       
-      // Navigate through to scenario completion
-      const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-      await user.type(nameInput, 'TestAgent');
+      // Navigate through to scenario completion (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
