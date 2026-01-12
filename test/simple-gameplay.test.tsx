@@ -17,7 +17,7 @@ describe('Simple Gameplay Test', () => {
     expect(screen.getByText(/STRANGER/i)).toBeInTheDocument();
     
     // Enter name
-    const nameInput = screen.getByPlaceholderText(/AGENT NAME EINGEBEN/i);
+    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
     await user.type(nameInput, 'TestAgent');
     
     // Start game
@@ -35,7 +35,7 @@ describe('Simple Gameplay Test', () => {
     render(<App />);
     
     // Navigate to character selection
-    const nameInput = screen.getByPlaceholderText(/AGENT NAME EINGEBEN/i);
+    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
     await user.type(nameInput, 'TestAgent');
     await user.click(screen.getByText(/INSERT COIN/i));
     
@@ -67,7 +67,7 @@ describe('Simple Gameplay Test', () => {
     render(<App />);
     
     // Step 1: Enter name and start game
-    const nameInput = screen.getByPlaceholderText(/AGENT NAME EINGEBEN/i);
+    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
     await user.type(nameInput, 'TestAgent');
     await user.click(screen.getByText(/INSERT COIN/i));
     
@@ -128,7 +128,7 @@ describe('Simple Gameplay Test', () => {
     render(<App />);
     
     // ========== ACT 0: INTRO ==========
-    const nameInput = screen.getByPlaceholderText(/AGENT NAME EINGEBEN/i);
+    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
     await user.type(nameInput, 'GoldenPathAgent');
     await user.click(screen.getByText(/INSERT COIN/i));
     

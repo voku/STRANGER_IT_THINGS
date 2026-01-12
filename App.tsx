@@ -143,8 +143,10 @@ const App: React.FC = () => {
       return;
     }
     setNameError(false);
-    setGameState(prev => ({ ...prev, playerName: name, currentScreen: 'CHAR_SELECT' }));
-    triggerTransition("DIE AUSWAHL", "Wähle deine Rolle");
+    setGameState(prev => ({ ...prev, playerName: name }));
+    triggerTransition("DIE AUSWAHL", "Wähle deine Rolle", () => {
+      setGameState(prev => ({ ...prev, currentScreen: 'CHAR_SELECT' }));
+    });
   };
 
   /**
@@ -515,7 +517,7 @@ const App: React.FC = () => {
           <div className="flex flex-col gap-4 w-full max-w-md">
             <input 
               type="text" 
-              placeholder="AGENT NAME EINGEBEN..."
+              placeholder="DEIN NAME EINGEBEN..."
               maxLength={20}
               onChange={(e) => setGameState(prev => ({ ...prev, playerName: e.target.value }))}
               onKeyDown={(e) => e.key === 'Enter' && handleStartGame(gameState.playerName)}
