@@ -256,19 +256,16 @@ export const STORY_SCENARIOS: Scenario[] = [
     type: 'TRIAGE',
     title: "Flackernde Lichter in der Starcourt Mall",
     environment: "Service-Desk-Ecke in der Starcourt Mall",
-    hint: "Die Lichter flackern immer zuerst in der Mall, nie im Lab. User beschreiben nur das Flackern – du musst herausfinden, ob wirklich etwas durchgebrannt ist.",
+    hint: "Die Lichter flackern zuerst in der Mall. User beschreiben nur das Flackern – du musst herausfinden, ob wirklich etwas durchgebrannt ist.",
     description:
-      "Später Abend in der Starcourt Mall. Die Neon-Schrift des neuen Trading-Shops flackert wie eine schlecht gelaunte Weihnachtkette.\n\n" +
-      "Über deiner kleinen Service-Desk-Station hängt ein alter Pager.\n" +
-      "Er explodiert fast vor Vibration:\n\n" +
-      "TICKET AUS DEM NICHTS:\n" +
+      "Später Abend in der Starcourt Mall. Die Neon-Schrift des Trading-Shops flackert.\n\n" +
+      "Dein Pager explodiert:\n\n" +
+      "TICKET:\n" +
       "Von: mueller.trading@hawkins-corp.example\n" +
       "Betreff: 'TRADING TOT!!! PRODUKTION STEHT!!!'\n\n" +
-      "Nachricht:\n" +
-      "'Im neuen Trading-Bereich kann ich NICHTS bestellen! Für mich steht alles still! Sofort fixen!!!'\n\n" +
-      "Du siehst auf die Mall: Andere Bildschirme leuchten ruhig.\n" +
-      "Müller spürt eine Störung – wie wenn in Hawkins plötzlich alle Lichter gleichzeitig flackern.\n" +
-      "Für ihn ist das 'der Demogorgon'. Für dich ist es erstmal nur ein Signal.\n\n" +
+      "'Im neuen Trading-Bereich kann ich NICHTS bestellen! Sofort fixen!!!'\n\n" +
+      "Andere Bildschirme leuchten ruhig. Müller spürt eine Störung.\n" +
+      "Für ihn ist das 'der Demogorgon'. Für dich erstmal nur ein Signal.\n\n" +
       "Du musst entscheiden, wie du reagierst.",
     options: [
       {
@@ -276,11 +273,11 @@ export const STORY_SCENARIOS: Scenario[] = [
         type: 'INCIDENT',
         outcome:
           "DU ZIEHST DEN HEBEL.\n\n" +
-          "Im Hawkins Rechenzentrum springen Infra und Dev aus ihren Stühlen, im Lab gehen die Notlichter an, in der Factory heulen Sirenen.\n" +
-          "Monitoring zeigt: Shop grün, Trading-Instanzen gesund, andere Nutzer bestellen fröhlich vor sich hin.\n\n" +
-          "Stunden später stellst du fest:\n" +
-          "Nur Müller ist blockiert. Der 'Demogorgon' war nur sein persönliches Dunkel, kein weltweiter Stromausfall.\n\n" +
-          "Du hast die Stadt geweckt, obwohl nur eine Glühbirne im Kopf eines Users flackerte.",
+          "Infra und Dev springen auf, im Lab gehen Notlichter an.\n" +
+          "Monitoring zeigt: Shop grün, andere Nutzer bestellen fröhlich.\n\n" +
+          "Stunden später: Nur Müller ist blockiert.\n" +
+          "Der 'Demogorgon' war nur seine persönliche Blockade.\n\n" +
+          "Du hast die Stadt geweckt für eine einzelne Glühbirne.",
         qualityChange: -20,
         moraleChange: -20,
         isCorrect: false
@@ -290,12 +287,9 @@ export const STORY_SCENARIOS: Scenario[] = [
         type: 'REQUEST',
         outcome:
           "DU TIPPST: 'Service Request – Trading-Zugang für Müller'.\n\n" +
-          "Auf der Wandkarte erscheint ein kleines blaues Lämpchen in der Kategorie 'Requests'.\n" +
-          "Problem: Du weißt nicht, ob nicht doch irgendwo ein echtes Monster im System lauert:\n" +
-          "• Bug? (Incident)\n" +
-          "• fehlende Rolle? (Request)\n" +
-          "• Feature, das nie gebaut wurde? (Change)\n\n" +
-          "Deine Klassifikation ist geraten. In Hawkins nennen sie das: 'In den Wald gehen, ohne zu schauen, ob es Nacht ist.'",
+          "Ein blaues Lämpchen in der Kategorie 'Requests'.\n" +
+          "Problem: Ist es ein Bug, fehlende Rolle oder nie gebautes Feature?\n\n" +
+          "Deine Klassifikation ist geraten.",
         qualityChange: +5,
         moraleChange: 0,
         isCorrect: false
@@ -304,16 +298,15 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Wie Joyce bei den Lichterketten: erst alles genau fragen, bevor du schreiend losrennst",
         type: 'INQUIRY',
         outcome:
-          "DU ATMEST DURCH UND WIRST ZUM JOYCE-DER-IT.\n\n" +
+          "DU ATMEST DURCH.\n\n" +
           "Du fragst zurück:\n" +
-          "'Welchen Button klickst du? Welche Meldung steht GENAU da? Seit wann? Können andere im Trading bestellen?'\n\n" +
-          "Antwort:\n" +
-          "'Ich bin als Lieferant drin. Gehe auf Trading, klicke \'In den Warenkorb\', bekomme \'Access denied\'. Kollegen können bestellen.'\n\n" +
+          "'Welchen Button? Welche Meldung? Seit wann? Können andere im Trading bestellen?'\n\n" +
+          "Antwort: 'Access denied'. Kollegen können bestellen.\n\n" +
           "Jetzt hast du:\n" +
-          "• Impact: Für Müller steht die Welt (für ihn: Horrorfolge mit Cliffhanger)\n" +
-          "• Systembild: andere Accounts okay, Trading nicht komplett tot\n" +
-          "• Verdacht: Das Monster sitzt eher bei Rollen/Berechtigungen als im ganzen Shop\n\n" +
-          "Du trennst zum ersten Mal: User-Störung ≠ automatisch System-Incident.",
+          "• Impact: Für Müller steht die Welt\n" +
+          "• Systembild: andere okay, Trading nicht tot\n" +
+          "• Verdacht: Rollen/Berechtigungen, nicht System-Incident\n\n" +
+          "Du trennst zum ersten Mal: User-Störung ≠ System-Incident.",
         qualityChange: +30,
         moraleChange: +10,
         isCorrect: true
@@ -332,28 +325,25 @@ export const STORY_SCENARIOS: Scenario[] = [
     type: 'TRIAGE',
     title: "War Room unter der Mall – Die Incident-Lawine",
     environment: "Provisorischer Kontrollraum im Keller unter der Starcourt Mall",
-    hint: "Du bist die erste Verteidigungslinie. Wie Hopper: Du entscheidest, ob die Stadt geweckt wird – oder ob es nur ein genervter Teenager war.",
+    hint: "Du bist die erste Verteidigungslinie. Wie Hopper: Du entscheidest, ob die Stadt geweckt wird.",
     description:
-      "Unter der Starcourt Mall hat jemand einen War Room eingerichtet.\n" +
-      "Röhrenmonitore zeigen eingehende Tickets wie flackernde Weihnachtslichter.\n\n" +
+      "War Room unter der Mall. Röhrenmonitore zeigen eingehende Tickets.\n\n" +
       "Eine Wand zeigt die letzten Wochen:\n" +
-      "• 'Shop kaputt' → später als Berechtigungsproblem enttarnt\n" +
-      "• 'Mail-Server down' → war nur Passwort abgelaufen\n" +
-      "• 'Lizenzsystem tot' → User hatte nie eine Lizenz\n\n" +
-      "Müllers Trading-Case blinkt wieder auf – diesmal in deiner persönlichen Tafel.\n" +
-      "Du weißt:\n" +
-      "• Für ihn ist es eine Störung\n" +
-      "• Für die Organisation entscheidet deine Klassifikation, ob Dev/Infra/IAM in den Kampf müssen\n\n" +
-      "Denk dran: In Stranger Things sind nicht alle Geräusche ein Demogorgon. Manchmal ist es nur eine lockere Tür.",
+      "• 'Shop kaputt' → Berechtigungsproblem\n" +
+      "• 'Mail-Server down' → Passwort abgelaufen\n" +
+      "• 'Lizenzsystem tot' → User hatte nie Lizenz\n\n" +
+      "Müllers Trading-Case blinkt wieder auf.\n" +
+      "Für ihn Störung. Für die Organisation entscheidet deine Klassifikation.\n\n" +
+      "Nicht alle Geräusche sind ein Demogorgon. Manchmal nur eine lockere Tür.",
     options: [
       {
         label: "Alles, was nach Panik klingt, direkt als Incident markieren – sicher ist sicher",
         type: 'INCIDENT',
         outcome:
           "DU LÄSST DIE SIRENEN HEULEN.\n\n" +
-          "Die Incident-Wand färbt sich rot. Infra und Dev sehen wieder 'Shop-Incident Trading'.\n" +
-          "Später stellt sich raus: System war stabil, es fehlte nur eine Rolle.\n\n" +
-          "Du hast wieder einen 'Demogorgon' gerufen, wo nur eine verschlossene Tür war.",
+          "Die Incident-Wand färbt sich rot. Infra und Dev sehen 'Shop-Incident Trading'.\n" +
+          "Später: System war stabil, fehlte nur eine Rolle.\n\n" +
+          "Wieder ein 'Demogorgon' gerufen, wo nur eine verschlossene Tür war.",
         qualityChange: -15,
         moraleChange: -10,
         isCorrect: false
@@ -363,9 +353,9 @@ export const STORY_SCENARIOS: Scenario[] = [
         type: 'REQUEST',
         outcome:
           "DU SCHREIBST:\n" +
-          "'User kann aktuell nicht bestellen (für ihn Produktionsstillstand), andere Accounts OK, Fehlermeldung \'Access denied\'. Bitte Trading-Rolle prüfen/setzen.'\n\n" +
-          "Auf deinem Board wird daraus ein sauber beschriebener Request mit hohem Impact.\n" +
-          "Müller bleibt subjektiv im Horror – aber du schickst das Ding nicht durch den falschen Tunnel.",
+          "'User kann nicht bestellen (für ihn Produktionsstillstand), andere OK, Fehlermeldung \'Access denied\'. Trading-Rolle prüfen.'\n\n" +
+          "Ein sauber beschriebener Request mit hohem Impact.\n" +
+          "Müller bleibt subjektiv im Horror – aber du schickst es durch den richtigen Tunnel.",
         qualityChange: +25,
         moraleChange: +10,
         isCorrect: true
@@ -382,26 +372,25 @@ export const STORY_SCENARIOS: Scenario[] = [
     type: 'TRIAGE',
     title: "Tor zum Lab – Die Keycard-Rituale",
     environment: "Sicherheitsschleuse am Hawkins Lab",
-    hint: "Für den, der vor der Tür steht, fühlt sich alles gleich an: 'Ich komme nicht rein'. Für dich ist wichtig: Tür tot oder Keycard falsch.",
+    hint: "Für den vor der Tür fühlt sich alles gleich an: 'Ich komme nicht rein'. Für dich: Tür tot oder Keycard falsch.",
     description:
-      "Du stehst vor dem Haupteingang des Hawkins Lab. Ein riesiges Stahltor, darüber eine rote Anzeige: ACCESS CONTROL ONLINE.\n\n" +
-      "Müllers Trading-Fall ist als Access-Problem bei dir gelandet.\n" +
-      "Du siehst in deiner 'Keycard-Konsole':\n" +
+      "Haupteingang des Hawkins Lab. Stahltor, rote Anzeige: ACCESS CONTROL ONLINE.\n\n" +
+      "Müllers Trading-Fall als Access-Problem bei dir.\n" +
+      "Keycard-Konsole:\n" +
       "• System 'TRADING' → ONLINE\n" +
       "• Rolle 'TRADING_BUYER' → existiert\n" +
-      "• Andere User mit dieser Rolle → können bestellen\n" +
+      "• Andere User mit Rolle → können bestellen\n" +
       "• Müller → hat nur 'SUPPLIER_SELLER'\n\n" +
-      "Er steht also vor einer funktionierenden Tür mit einem Schlüssel für den falschen Flur.\n" +
-      "Von außen fühlt sich das aber an wie 'Tor zum Upside Down ist blockiert'.",
+      "Funktionierende Tür mit Schlüssel für den falschen Flur.\n" +
+      "Von außen fühlt sich das an wie 'Tor zum Upside Down blockiert'.",
     options: [
       {
         label: "Du meldest: 'Tor defekt' – Incident auf Tür und Schloss",
         type: 'INCIDENT',
         outcome:
-          "DU TRÄGST EIN: 'Haupttor Hawkins Lab defekt, berechtigte Person kommt nicht hinein'.\n\n" +
-          "Später überprüft Infra das Tor: alles okay.\n" +
-          "Dev checkt die Türlogik: arbeitet exakt nach Rollenmodell.\n\n" +
-          "Ihr habt einen Incident auf ein System gelegt, das genau das tut, was ihr ihm beigebracht habt.",
+          "DU TRÄGST EIN: 'Haupttor defekt, berechtigte Person kommt nicht hinein'.\n\n" +
+          "Später: Infra prüft Tor – alles okay. Dev checkt Türlogik – arbeitet exakt nach Rollenmodell.\n\n" +
+          "Incident auf ein System, das genau das tut, was ihr ihm beigebracht habt.",
         qualityChange: -15,
         moraleChange: -10,
         isCorrect: false
@@ -410,9 +399,9 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Du meldest: 'Keycard-Erweiterung' – Request auf neue Rolle",
         type: 'REQUEST',
         outcome:
-          "DU SCHREIBST IN DEN RITUAL-KANAL:\n" +
-          "'User Müller hat aktuell nur Lieferanten-Rolle. Für Trading benötigt er zusätzlich Käufer-Rolle. System verweigert zu Recht. Bitte Rolle ergänzen.'\n\n" +
-          "Damit behandelst du Müllers Horror-Szene fachlich korrekt: kein Portal-Defekt, sondern fehlendes Ritual (Rolle).",
+          "DU SCHREIBST:\n" +
+          "'User Müller hat nur Lieferanten-Rolle. Für Trading benötigt er Käufer-Rolle. System verweigert zu Recht. Bitte Rolle ergänzen.'\n\n" +
+          "Müllers Horror-Szene fachlich korrekt: kein Portal-Defekt, sondern fehlendes Ritual (Rolle).",
         qualityChange: +25,
         moraleChange: +10,
         isCorrect: true

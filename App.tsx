@@ -46,7 +46,6 @@ import { getRandomSystemMessage } from './services/systemService';
  */
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
-  const [nameError, setNameError] = useState(false);
   
   // Transition state for screen animations
   const [transition, setTransition] = useState<{ 
@@ -135,27 +134,22 @@ const App: React.FC = () => {
   };
 
   /**
-   * Handler: Start game with player name
+   * Handler: Start game (no name input needed)
    */
-  const handleStartGame = (name: string) => {
-    if (!name || name.trim().length < 2) {
-      setNameError(true);
-      return;
-    }
-    setNameError(false);
-    setGameState(prev => ({ ...prev, playerName: name }));
+  const handleStartGame = () => {
     triggerTransition("DIE AUSWAHL", "Wähle deine Rolle", () => {
       setGameState(prev => ({ ...prev, currentScreen: 'CHAR_SELECT' }));
     });
   };
 
   /**
-   * Handler: Select character (sets initial stats)
+   * Handler: Select character (sets initial stats and name)
    */
   const handleCharacterSelect = (char: Character) => {
     setGameState(prev => ({ 
         ...prev, 
         selectedCharacter: char,
+        playerName: char.name, // Set player name to character name
         slaTime: char.stats.sla,
         teamMorale: char.stats.morale,
         ticketQuality: char.stats.quality
@@ -489,7 +483,7 @@ const App: React.FC = () => {
    * Handler: Replay game with same character
    */
   const handleReplay = () => {
-    setGameState({ ...initialGameState, playerName: gameState.playerName });
+    setGameState({ ...initialGameState });
   };
 
   /**
@@ -507,25 +501,16 @@ const App: React.FC = () => {
           <div className="max-w-2xl mb-8 space-y-4">
             <p className="font-vt323 text-2xl text-red-500">HAWKINS INCIDENT CENTER</p>
             <p className="font-mono text-lg text-gray-300">
-              1986. Eine Störung aus dem Upside Down bedroht die Infrastruktur. 
-              Ist es ein Incident? Ein Request? Oder etwas viel Dunkleres?
+              Eine Störung aus dem Upside Down bedroht die Infrastruktur. 
+              Ist es ein Incident oder ein Request?
             </p>
             <p className="font-vt323 text-xl text-yellow-400">
               Wähle deine Rolle. Rette den Service.
             </p>
           </div>
           <div className="flex flex-col gap-4 w-full max-w-md">
-            <input 
-              type="text" 
-              placeholder="DEIN NAME EINGEBEN..."
-              maxLength={20}
-              onChange={(e) => setGameState(prev => ({ ...prev, playerName: e.target.value }))}
-              onKeyDown={(e) => e.key === 'Enter' && handleStartGame(gameState.playerName)}
-              className={`px-4 py-3 bg-black border-2 ${nameError ? 'border-red-500 animate-shake' : 'border-green-600'} text-green-500 font-vt323 text-xl focus:outline-none focus:border-green-400 placeholder-green-800`}
-            />
-            {nameError && <p className="text-red-500 font-mono text-sm">Name zu kurz (min. 2 Zeichen)</p>}
             <button 
-              onClick={() => handleStartGame(gameState.playerName)}
+              onClick={handleStartGame}
               className="px-8 py-4 bg-red-700 border-2 border-red-500 text-white font-press-start hover:bg-red-600 hover:scale-105 transition-all text-sm shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse"
             >
               INSERT COIN (START)

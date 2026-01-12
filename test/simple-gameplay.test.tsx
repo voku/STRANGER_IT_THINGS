@@ -16,11 +16,7 @@ describe('Simple Gameplay Test', () => {
     // Verify intro screen
     expect(screen.getByText(/STRANGER/i)).toBeInTheDocument();
     
-    // Enter name
-    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-    await user.type(nameInput, 'TestAgent');
-    
-    // Start game
+    // Start game (no name input needed)
     const startButton = screen.getByText(/INSERT COIN/i);
     await user.click(startButton);
     
@@ -34,9 +30,7 @@ describe('Simple Gameplay Test', () => {
     const user = userEvent.setup();
     render(<App />);
     
-    // Navigate to character selection
-    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-    await user.type(nameInput, 'TestAgent');
+    // Navigate to character selection (no name input)
     await user.click(screen.getByText(/INSERT COIN/i));
     
     await waitFor(() => {
@@ -66,9 +60,7 @@ describe('Simple Gameplay Test', () => {
     const user = userEvent.setup();
     render(<App />);
     
-    // Step 1: Enter name and start game
-    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-    await user.type(nameInput, 'TestAgent');
+    // Step 1: Start game (no name input)
     await user.click(screen.getByText(/INSERT COIN/i));
     
     // Step 2: Wait for and verify character selection screen (faster transitions)
@@ -127,9 +119,7 @@ describe('Simple Gameplay Test', () => {
     const user = userEvent.setup();
     render(<App />);
     
-    // ========== ACT 0: INTRO ==========
-    const nameInput = screen.getByPlaceholderText(/DEIN NAME EINGEBEN/i);
-    await user.type(nameInput, 'GoldenPathAgent');
+    // ========== ACT 0: INTRO (no name input) ==========
     await user.click(screen.getByText(/INSERT COIN/i));
     
     await waitFor(() => {
@@ -235,7 +225,9 @@ describe('Simple Gameplay Test', () => {
     
     // ========== ACT 2: ROLE SCENARIO - War Room unter der Mall (for Service Desk) ==========
     await waitFor(() => {
-      expect(screen.getByText(/War Room unter der Mall/i)).toBeInTheDocument();
+      // Use getAllByText since the title appears in multiple places
+      const elements = screen.getAllByText(/War Room unter der Mall/i);
+      expect(elements.length).toBeGreaterThan(0);
     }, { timeout: 5000 });
     
     // Select correct option: "Du übersetzt Müllers Schrei" (REQUEST) - this will show diagram
