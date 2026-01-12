@@ -262,7 +262,7 @@ export const STORY_SCENARIOS: Scenario[] = [
       "Über deiner kleinen Service-Desk-Station hängt ein alter Pager.\n" +
       "Er explodiert fast vor Vibration:\n\n" +
       "TICKET AUS DEM NICHTS:\n" +
-      "Von: mueller.trading@remondis.example\n" +
+      "Von: mueller.trading@hawkins-corp.example\n" +
       "Betreff: 'TRADING TOT!!! PRODUKTION STEHT!!!'\n\n" +
       "Nachricht:\n" +
       "'Im neuen Trading-Bereich kann ich NICHTS bestellen! Für mich steht alles still! Sofort fixen!!!'\n\n" +
@@ -384,23 +384,23 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Sicherheitsschleuse am Hawkins Lab",
     hint: "Für den, der vor der Tür steht, fühlt sich alles gleich an: 'Ich komme nicht rein'. Für dich ist wichtig: Tür tot oder Keycard falsch.",
     description:
-      "Du stehst vor dem Haupteingang des Hawkins Lab. Ein riesiges Stahltor, darüber eine rote Anzeige: ACCESS CONTROL ONLINE.\\n\\n" +
-      "Müllers Trading-Fall ist als Access-Problem bei dir gelandet.\\n" +
-      "Du siehst in deiner 'Keycard-Konsole':\\n" +
-      "• System 'TRADING' → ONLINE\\n" +
-      "• Rolle 'TRADING_BUYER' → existiert\\n" +
-      "• Andere User mit dieser Rolle → können bestellen\\n" +
-      "• Müller → hat nur 'SUPPLIER_SELLER'\\n\\n" +
-      "Er steht also vor einer funktionierenden Tür mit einem Schlüssel für den falschen Flur.\\n" +
+      "Du stehst vor dem Haupteingang des Hawkins Lab. Ein riesiges Stahltor, darüber eine rote Anzeige: ACCESS CONTROL ONLINE.\n\n" +
+      "Müllers Trading-Fall ist als Access-Problem bei dir gelandet.\n" +
+      "Du siehst in deiner 'Keycard-Konsole':\n" +
+      "• System 'TRADING' → ONLINE\n" +
+      "• Rolle 'TRADING_BUYER' → existiert\n" +
+      "• Andere User mit dieser Rolle → können bestellen\n" +
+      "• Müller → hat nur 'SUPPLIER_SELLER'\n\n" +
+      "Er steht also vor einer funktionierenden Tür mit einem Schlüssel für den falschen Flur.\n" +
       "Von außen fühlt sich das aber an wie 'Tor zum Upside Down ist blockiert'.",
     options: [
       {
         label: "Du meldest: 'Tor defekt' – Incident auf Tür und Schloss",
         type: 'INCIDENT',
         outcome:
-          "DU TRÄGST EIN: 'Haupttor Hawkins Lab defekt, berechtigte Person kommt nicht hinein'.\\n\\n" +
-          "Später überprüft Infra das Tor: alles okay.\\n" +
-          "Dev checkt die Türlogik: arbeitet exakt nach Rollenmodell.\\n\\n" +
+          "DU TRÄGST EIN: 'Haupttor Hawkins Lab defekt, berechtigte Person kommt nicht hinein'.\n\n" +
+          "Später überprüft Infra das Tor: alles okay.\n" +
+          "Dev checkt die Türlogik: arbeitet exakt nach Rollenmodell.\n\n" +
           "Ihr habt einen Incident auf ein System gelegt, das genau das tut, was ihr ihm beigebracht habt.",
         qualityChange: -15,
         moraleChange: -10,
@@ -410,8 +410,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Du meldest: 'Keycard-Erweiterung' – Request auf neue Rolle",
         type: 'REQUEST',
         outcome:
-          "DU SCHREIBST IN DEN RITUAL-KANAL:\\n" +
-          "'User Müller hat aktuell nur Lieferanten-Rolle. Für Trading benötigt er zusätzlich Käufer-Rolle. System verweigert zu Recht. Bitte Rolle ergänzen.'\\n\\n" +
+          "DU SCHREIBST IN DEN RITUAL-KANAL:\n" +
+          "'User Müller hat aktuell nur Lieferanten-Rolle. Für Trading benötigt er zusätzlich Käufer-Rolle. System verweigert zu Recht. Bitte Rolle ergänzen.'\n\n" +
           "Damit behandelst du Müllers Horror-Szene fachlich korrekt: kein Portal-Defekt, sondern fehlendes Ritual (Rolle).",
         qualityChange: +25,
         moraleChange: +10,
@@ -431,27 +431,27 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Monitoringraum unter Hawkins",
     hint: "In deiner Welt sind Demogorgons: CPU bei 100 %, Cluster down, Latency-Explosion. Ein einzelner panischer Schrei ist kein globaler Ausfall.",
     description:
-      "Du sitzt im 'Nerve Center' unter Hawkins. Wand voller Monitore:\\n" +
-      "• Cluster-Status\\n" +
-      "• Latenzen\\n" +
-      "• Error-Rates\\n" +
-      "• Uptime-Grafen\\n\\n" +
-      "Ein Alert vom Service Desk blinkt: 'TRADING KAPUTT – PRODUKTION STEHT'.\\n\\n" +
-      "Du checkst:\\n" +
-      "• Trading-Cluster: grün\\n" +
-      "• Datenbank: stabil\\n" +
-      "• Error-Rates: normale Spitze, wenn alle gleichzeitig klicken\\n" +
-      "• Testbestellung mit System-Account: läuft sauber durch\\n\\n" +
+      "Du sitzt im 'Nerve Center' unter Hawkins. Wand voller Monitore:\n" +
+      "• Cluster-Status\n" +
+      "• Latenzen\n" +
+      "• Error-Rates\n" +
+      "• Uptime-Grafen\n\n" +
+      "Ein Alert vom Service Desk blinkt: 'TRADING KAPUTT – PRODUKTION STEHT'.\n\n" +
+      "Du checkst:\n" +
+      "• Trading-Cluster: grün\n" +
+      "• Datenbank: stabil\n" +
+      "• Error-Rates: normale Spitze, wenn alle gleichzeitig klicken\n" +
+      "• Testbestellung mit System-Account: läuft sauber durch\n\n" +
       "Auf deinen Bildschirmen sieht die Welt verdächtig unspektakulär aus – kein Mind Flayer, nur etwas Rauschen.",
     options: [
       {
         label: "Incident: 'Trading-Infrastruktur instabil' – man weiß ja nie",
         type: 'INCIDENT',
         outcome:
-          "DU SCHREIBST EINEN INFRA-INCIDENT:\\n" +
-          "'Trading-Instanzen verdächtig, User meldet Totalausfall.'\\n\\n" +
-          "Die halbe Nacht lang werden Cluster gedreht, Pods gerestartet, Logs gewälzt – und alles ist gesund.\\n" +
-          "Deine Welt ist wie eine geglättete EKG-Linie ohne Alarm.\\n\\n" +
+          "DU SCHREIBST EINEN INFRA-INCIDENT:\n" +
+          "'Trading-Instanzen verdächtig, User meldet Totalausfall.'\n\n" +
+          "Die halbe Nacht lang werden Cluster gedreht, Pods gerestartet, Logs gewälzt – und alles ist gesund.\n" +
+          "Deine Welt ist wie eine geglättete EKG-Linie ohne Alarm.\n\n" +
           "Du hast versucht, einen Schatten im Mall-Fernsehen mit einem Stromausfall im ganzen Land zu erklären.",
         qualityChange: -20,
         moraleChange: -15,
@@ -461,8 +461,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Du antwortest: 'Aus Infra-Sicht kein Incident – Cluster ok, Problem wohl user-/rollenbezogen'",
         type: 'REQUEST',
         outcome:
-          "DU FUNKST ZURÜCK:\\n" +
-          "'Infra-Checks grün, andere Trading-Bestellungen laufen. Kein Hinweis auf Infra-Incident. Vermutlich Berechtigung/Lizenz/Business-Logik. Bitte bei IAM/Dev prüfen.'\\n\\n" +
+          "DU FUNKST ZURÜCK:\n" +
+          "'Infra-Checks grün, andere Trading-Bestellungen laufen. Kein Hinweis auf Infra-Incident. Vermutlich Berechtigung/Lizenz/Business-Logik. Bitte bei IAM/Dev prüfen.'\n\n" +
           "Damit bleibt der Nerve Center für echte Monster reserviert: CPU-Stürme, Netzspikes, Storage-Kollaps.",
         qualityChange: +20,
         moraleChange: +10,
@@ -482,34 +482,34 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Arcade + Dev-Terminal in Hawkins",
     hint: "Bug = das Spiel tut nicht, was die Spielregeln sagen. Kein Bug = das Spiel folgt den Regeln, die jemand schlecht definiert hat.",
     description:
-      "Du sitzt zwischen Arcade-Automaten, dein Laptop ist an einen alten Automaten angeschlossen.\\n" +
-      "Neben 'Dragon\\'s Lair' läuft jetzt: 'Trading Test Environment'.\\n\\n" +
-      "Das Ticket 'Bug in Trading – Lieferant kann nicht bestellen' ist auf deinem Board.\\n" +
-      "Du spielst die Szene nach:\\n" +
-      "• Test-User mit Käufer-Rolle → Bestellung läuft wie durch Butter\\n" +
-      "• Test-User mit reiner Lieferanten-Rolle → 'Access denied' exakt an der Stelle, an der es im Code steht\\n\\n" +
-      "Du liest das Domain-Modell: 'Lieferant darf verkaufen, Käufer darf kaufen'.\\n" +
-      "Trading (Lieferant kauft bei Lieferant) war im ursprünglichen Design nie sauber als Doppelrolle beschrieben.\\n" +
+      "Du sitzt zwischen Arcade-Automaten, dein Laptop ist an einen alten Automaten angeschlossen.\n" +
+      "Neben 'Dragon\\'s Lair' läuft jetzt: 'Trading Test Environment'.\n\n" +
+      "Das Ticket 'Bug in Trading – Lieferant kann nicht bestellen' ist auf deinem Board.\n" +
+      "Du spielst die Szene nach:\n" +
+      "• Test-User mit Käufer-Rolle → Bestellung läuft wie durch Butter\n" +
+      "• Test-User mit reiner Lieferanten-Rolle → 'Access denied' exakt an der Stelle, an der es im Code steht\n\n" +
+      "Du liest das Domain-Modell: 'Lieferant darf verkaufen, Käufer darf kaufen'.\n" +
+      "Trading (Lieferant kauft bei Lieferant) war im ursprünglichen Design nie sauber als Doppelrolle beschrieben.\n" +
       "Das Spiel läuft nach seinen (begrenzten) Regeln.",
     options: [
       {
         label: "Als Incident weiterführen: 'Bug in Trading – Lieferant muss kaufen können'",
         type: 'INCIDENT',
         outcome:
-          "DU NENNST ES BUG.\\n\\n" +
-          "Im Lab wird der Fall als Regression behandelt. Ihr sucht nach kaputten Commits, defekten Queries, Race Conditions.\\n" +
-          "Ihr findet nur eins: Der Code macht genau das, was im Modell steht.\\n\\n" +
+          "DU NENNST ES BUG.\n\n" +
+          "Im Lab wird der Fall als Regression behandelt. Ihr sucht nach kaputten Commits, defekten Queries, Race Conditions.\n" +
+          "Ihr findet nur eins: Der Code macht genau das, was im Modell steht.\n\n" +
           "Das Monster sitzt nicht im Code, sondern in der Idee, wie Rollen definiert wurden.",
         qualityChange: -20,
         moraleChange: -15,
         isCorrect: false
       },
       {
-        label: "Du klassifizierst es als 'kein Bug – Modell-/Rollenproblem, ggf. neue Anforderung'",
+        label: "Kein Bug – System arbeitet nach Modell. Rollenproblem oder neue Anforderung",
         type: 'REQUEST',
         outcome:
-          "DU SCHREIBST IN DEN TICKET-KOMMENTAR:\\n" +
-          "'Kein technischer Bug: System verhält sich gemäß Modell (Lieferant ≠ Käufer). Für \\'Lieferant kauft bei Lieferant\\' brauchen wir entweder zusätzliche Rolle oder ein erweitertes Modell (Change). Bitte als Request/Change behandeln, nicht als Incident.'\\n\\n" +
+          "DU SCHREIBST IN DEN TICKET-KOMMENTAR:\n\n" +
+          "'Kein technischer Bug: System verhält sich gemäß Modell (Lieferant ≠ Käufer). Für 'Lieferant kauft bei Lieferant' brauchen wir entweder zusätzliche Rolle oder ein erweitertes Modell (Change). Bitte als Request/Change behandeln, nicht als Incident.'\n\n" +
           "Damit hörst du auf, Phantom-Demogorgons im Code zu jagen, und zeigst auf den Dungeon-Master: die Domänenmodellierung.",
         qualityChange: +25,
         moraleChange: +10,
@@ -529,24 +529,24 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Lizenzarchiv unter dem Rathaus von Hawkins",
     hint: "Brennender Lizenzserver = Incident. User ohne Lizenz = Request. Von außen sehen beide Szenen aus wie 'ich komme nicht an meine Bücher'.",
     description:
-      "Tief unter dem Rathaus von Hawkins liegt die 'Verbotene Bibliothek'.\\n" +
-      "In einem Raum stehen alte Serverracks neben staubigen Regalen voller Lizenzverträge.\\n\\n" +
-      "Ein Pergament flattert vom Luftzug der Klimaanlage:\\n" +
-      "'Müller – kein Zugriff auf Trading – prüfen!'\\n\\n" +
-      "Du checkst das Lizenz-Orakel:\\n" +
-      "• Lizenzdienst: ONLINE\\n" +
-      "• Trading-Lizenz-Pool: nicht ausgeschöpft\\n" +
-      "• Müller: keine Trading-Lizenz zugewiesen\\n\\n" +
-      "Für Müller ist es 'Bibliothek zu, alles brennt'.\\n" +
+      "Tief unter dem Rathaus von Hawkins liegt die 'Verbotene Bibliothek'.\n" +
+      "In einem Raum stehen alte Serverracks neben staubigen Regalen voller Lizenzverträge.\n\n" +
+      "Ein Pergament flattert vom Luftzug der Klimaanlage:\n" +
+      "'Müller – kein Zugriff auf Trading – prüfen!'\n\n" +
+      "Du checkst das Lizenz-Orakel:\n" +
+      "• Lizenzdienst: ONLINE\n" +
+      "• Trading-Lizenz-Pool: nicht ausgeschöpft\n" +
+      "• Müller: keine Trading-Lizenz zugewiesen\n\n" +
+      "Für Müller ist es 'Bibliothek zu, alles brennt'.\n" +
       "In deiner Welt ist die Tür offen – er hat nur keinen Ausweis.",
     options: [
       {
         label: "Lizenz-Incident: 'Lizenzsystem defekt, Nutzer bekommt nichts'",
         type: 'INCIDENT',
         outcome:
-          "DU SCHREIBST: 'Lizenzsystem Trading defekt – Nutzer bekommt keinen Zugriff.'\\n\\n" +
-          "Admins untersuchen den Lizenzserver, Logs, Verbindungen – alles gesund.\\n" +
-          "Deine Incident-Liste wächst, aber kein Systemfehler ist in Sicht.\\n\\n" +
+          "DU SCHREIBST: 'Lizenzsystem Trading defekt – Nutzer bekommt keinen Zugriff.'\n\n" +
+          "Admins untersuchen den Lizenzserver, Logs, Verbindungen – alles gesund.\n" +
+          "Deine Incident-Liste wächst, aber kein Systemfehler ist in Sicht.\n\n" +
           "Der Schatten wurde wieder zum Monster erklärt, nur weil jemand im Dunkeln stand.",
         qualityChange: -20,
         moraleChange: -15,
@@ -556,8 +556,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Service Request: 'Trading-Lizenz für Müller zuweisen (Impact: kann nicht bestellen)'",
         type: 'REQUEST',
         outcome:
-          "DU LÖST EIN RITUAL AUS:\\n" +
-          "'User kann aktuell nicht arbeiten (kein Trading), Lizenzsystem stabil. Bitte Trading-Lizenz zuweisen.'\\n\\n" +
+          "DU LÖST EIN RITUAL AUS:\n" +
+          "'User kann aktuell nicht arbeiten (kein Trading), Lizenzsystem stabil. Bitte Trading-Lizenz zuweisen.'\n\n" +
           "Das ist genau die Art von Magie, die hier hingehört: provisioning, nicht firefighting.",
         qualityChange: +25,
         moraleChange: +10,
@@ -577,23 +577,23 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Virtuelle Produktionshalle mit ERP-Jobs als Maschinen",
     hint: "Ein gestopptes Band mit Fehlern im Log = Incident. Ein leeres Band, weil keiner etwas anliefert = Folgeproblem, kein ERP-Incident.",
     description:
-      "Du stehst auf einer Plattform über der 'Hawkins Factory'.\\n" +
-      "Alle ERP-Jobs sind als Maschinen dargestellt, jede mit einem eigenen Takt.\\n\\n" +
-      "Du schaust auf den Bereich 'Trading-Aufträge':\\n" +
-      "• alle Jobs grün\\n" +
-      "• keine Fehlermeldungen\\n" +
-      "• Maschine wartet, aber es liegen einfach keine neuen Auftragskisten auf dem Band\\n\\n" +
-      "Müllers Meldung 'Produktion steht' hängt wie ein roter Fetzen an der Anzeigetafel.\\n" +
-      "Aus seiner Sicht: 'Die Fabrik macht nichts'.\\n" +
+      "Du stehst auf einer Plattform über der 'Hawkins Factory'.\n" +
+      "Alle ERP-Jobs sind als Maschinen dargestellt, jede mit einem eigenen Takt.\n\n" +
+      "Du schaust auf den Bereich 'Trading-Aufträge':\n" +
+      "• alle Jobs grün\n" +
+      "• keine Fehlermeldungen\n" +
+      "• Maschine wartet, aber es liegen einfach keine neuen Auftragskisten auf dem Band\n\n" +
+      "Müllers Meldung 'Produktion steht' hängt wie ein roter Fetzen an der Anzeigetafel.\n" +
+      "Aus seiner Sicht: 'Die Fabrik macht nichts'.\n" +
       "Aus deiner Sicht: 'Die Fabrik wartet auf Material aus dem Shop.'",
     options: [
       {
         label: "ERP-Incident: 'Jobfehler, Trading-Aufträge kommen nicht durch'",
         type: 'INCIDENT',
         outcome:
-          "DU ERÖFFNEST EINEN ERP-INCIDENT.\\n\\n" +
-          "Ihr checkt Logs, Tabellen, Schnittstellen – alles bereit, alles wartet.\\n" +
-          "Kein Fehler, nur Leere.\\n\\n" +
+          "DU ERÖFFNEST EINEN ERP-INCIDENT.\n\n" +
+          "Ihr checkt Logs, Tabellen, Schnittstellen – alles bereit, alles wartet.\n" +
+          "Kein Fehler, nur Leere.\n\n" +
           "Der Fehler sitzt nicht in der Fabrik, sondern in der Stadt, die nichts anliefert.",
         qualityChange: -15,
         moraleChange: -10,
@@ -603,8 +603,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Du meldest: 'ERP bereit – keine Trading-Aufträge angeliefert, Ursache Upstream'",
         type: 'REQUEST',
         outcome:
-          "DU SCHREIBST IN DAS TICKET:\\n" +
-          "'ERP-Jobs laufen einwandfrei, Schnittstelle vorbereitet. Es werden jedoch keine Trading-Aufträge angeliefert. Ursache liegt im vorgelagerten Prozess (Shop/Berechtigung). Kein ERP-Incident.'\\n\\n" +
+          "DU SCHREIBST IN DAS TICKET:\n" +
+          "'ERP-Jobs laufen einwandfrei, Schnittstelle vorbereitet. Es werden jedoch keine Trading-Aufträge angeliefert. Ursache liegt im vorgelagerten Prozess (Shop/Berechtigung). Kein ERP-Incident.'\n\n" +
           "Die Factory ist damit offiziell aus der direkten Schusslinie, auch wenn sie die Folgen spürt.",
         qualityChange: +20,
         moraleChange: +10,
@@ -624,24 +624,24 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Digitale Karte der Lieferwege rund um Hawkins",
     hint: "Lieferweg zerstört = Incident. Keine Bestellung ausgelöst = nicht dein Incident, nur Folge-Impact.",
     description:
-      "Auf einem großen Tisch liegt eine Karte von Hawkins und Umgebung.\\n" +
-      "Leuchtpunkte markieren Lager, Fabriken und Lieferwege.\\n\\n" +
-      "Beim Werk, in dem Müllers Material landen sollte, blinkt ein rotes Icon: 'Material fehlt'.\\n" +
-      "Du checkst die Route:\\n" +
-      "• Straße frei\\n" +
-      "• Spediteur verfügbar\\n" +
-      "• Lager hat Bestand\\n" +
-      "• Einzige Besonderheit: Keine Bestellung ins System eingelaufen\\n\\n" +
-      "Müller erlebt: 'Die Welt liefert nicht'.\\n" +
+      "Auf einem großen Tisch liegt eine Karte von Hawkins und Umgebung.\n" +
+      "Leuchtpunkte markieren Lager, Fabriken und Lieferwege.\n\n" +
+      "Beim Werk, in dem Müllers Material landen sollte, blinkt ein rotes Icon: 'Material fehlt'.\n" +
+      "Du checkst die Route:\n" +
+      "• Straße frei\n" +
+      "• Spediteur verfügbar\n" +
+      "• Lager hat Bestand\n" +
+      "• Einzige Besonderheit: Keine Bestellung ins System eingelaufen\n\n" +
+      "Müller erlebt: 'Die Welt liefert nicht'.\n" +
       "Du siehst: Niemand hat den Konvoi überhaupt losgeschickt.",
     options: [
       {
         label: "Incident: 'Lieferkette gestört, Route blockiert'",
         type: 'INCIDENT',
         outcome:
-          "DU MELDEST EINEN SUPPLY-CHAIN-INCIDENT.\\n\\n" +
-          "Logistik überprüft Straßen, Sperrungen, Lager – alles offen und bereit.\\n" +
-          "Die Route funktioniert, sie wurde nur nicht benutzt.\\n\\n" +
+          "DU MELDEST EINEN SUPPLY-CHAIN-INCIDENT.\n\n" +
+          "Logistik überprüft Straßen, Sperrungen, Lager – alles offen und bereit.\n" +
+          "Die Route funktioniert, sie wurde nur nicht benutzt.\n\n" +
           "Die Monsterkarte zeigt einen Angriff, der nie stattgefunden hat.",
         qualityChange: -15,
         moraleChange: -10,
@@ -651,8 +651,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Du meldest: 'Keine Bestellung ausgelöst – Lieferweg intakt, Ursache Upstream (Shop/Trading)'",
         type: 'REQUEST',
         outcome:
-          "DU PROTOKOLLIERST:\\n" +
-          "'Lieferfähigkeit vorhanden, Route frei, Bestand verfügbar. Es liegt keine Bestellung vor. Ursache liegt im vorgelagerten System (Shop/Trading). Kein Lieferketten-Incident, nur Folge-Impact.'\\n\\n" +
+          "DU PROTOKOLLIERST:\n" +
+          "'Lieferfähigkeit vorhanden, Route frei, Bestand verfügbar. Es liegt keine Bestellung vor. Ursache liegt im vorgelagerten System (Shop/Trading). Kein Lieferketten-Incident, nur Folge-Impact.'\n\n" +
           "Damit bleibt klar: Die Route ist nicht der Demogorgon, sie kriegt nur keinen Auftrag.",
         qualityChange: +20,
         moraleChange: +10,
@@ -672,25 +672,25 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Leerer Klassenraum mit drei leuchtenden Türen",
     hint: "Drei Türen, ein Problem: User erlebt Störung, du entscheidest die Tür.",
     description:
-      "Du bist allein in einem Klassenraum von Hawkins High.\\n" +
-      "An der Tafel steht nur ein Satz:\\n" +
-      "'Es geht nicht.'\\n\\n" +
-      "Vor dir schweben drei leuchtende Türen:\\n" +
-      "• Tür 1: INCIDENT – dahinter Blaulicht, Sirenen, Hopper brüllt Befehle\\n" +
-      "• Tür 2: SERVICE REQUEST – dahinter ordentliche Regale, Formulare, Kataloge\\n" +
-      "• Tür 3: CHANGE – dahinter Whiteboards, Roadmaps, Release-Planung\\n\\n" +
-      "Über allem steht eine Projektion von Müllers Fall: 'Kann nicht bestellen. Für mich: alles kaputt.'\\n" +
+      "Du bist allein in einem Klassenraum von Hawkins High.\n" +
+      "An der Tafel steht nur ein Satz:\n" +
+      "'Es geht nicht.'\n\n" +
+      "Vor dir schweben drei leuchtende Türen:\n" +
+      "• Tür 1: INCIDENT – dahinter Blaulicht, Sirenen, Hopper brüllt Befehle\n" +
+      "• Tür 2: SERVICE REQUEST – dahinter ordentliche Regale, Formulare, Kataloge\n" +
+      "• Tür 3: CHANGE – dahinter Whiteboards, Roadmaps, Release-Planung\n\n" +
+      "Über allem steht eine Projektion von Müllers Fall: 'Kann nicht bestellen. Für mich: alles kaputt.'\n" +
       "Welche Logik schreibst du an die Tafel?",
     options: [
       {
         label: "'User entscheidet. Wenn er Incident schreit, ist es Incident.'",
         type: 'INCIDENT',
         outcome:
-          "DU SCHREIBST:\\n" +
-          "'User-Auswahl = Wahrheit.'\\n\\n" +
-          "Alle drei Türen beginnen zu flackern.\\n" +
-          "In Tür 1 staut sich alles: echte Ausfälle neben 'ich hätte gern noch einen Button'.\\n" +
-          "Tür 2 wird kaum genutzt, Tür 3 verstaubt.\\n\\n" +
+          "DU SCHREIBST:\n" +
+          "'User-Auswahl = Wahrheit.'\n\n" +
+          "Alle drei Türen beginnen zu flackern.\n" +
+          "In Tür 1 staut sich alles: echte Ausfälle neben 'ich hätte gern noch einen Button'.\n" +
+          "Tür 2 wird kaum genutzt, Tür 3 verstaubt.\n\n" +
           "Das ist Hawkins, wenn man die Kinder den Sicherheitsplan schreiben lässt.",
         qualityChange: -15,
         moraleChange: -10,
@@ -700,13 +700,13 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "'User beschreibt Impact. IT entscheidet intern: Incident = kaputt, Request = bereitstellen, Change = verändern.'",
         type: 'REQUEST',
         outcome:
-          "DU SCHREIBST:\\n" +
-          "'User = Impact, IT = Kategorie.'\\n\\n" +
-          "Die Türen stabilisieren sich.\\n" +
-          "• Incident-Tür: alles, was vom definierten Sollzustand abweicht\\n" +
-          "• Request-Tür: alles, wo der Dienst da ist, der Anschluss aber fehlt\\n" +
-          "• Change-Tür: alles, was der Dienst noch nie konnte\\n\\n" +
-          "Müllers Fall wird in deiner Projektion aufgeteilt:\\n" +
+          "DU SCHREIBST:\n" +
+          "'User = Impact, IT = Kategorie.'\n\n" +
+          "Die Türen stabilisieren sich.\n" +
+          "• Incident-Tür: alles, was vom definierten Sollzustand abweicht\n" +
+          "• Request-Tür: alles, wo der Dienst da ist, der Anschluss aber fehlt\n" +
+          "• Change-Tür: alles, was der Dienst noch nie konnte\n\n" +
+          "Müllers Fall wird in deiner Projektion aufgeteilt:\n" +
           "Er erlebt Störung, du erkennst: wahrscheinlich Request oder Change, nicht zwingend Incident.",
         qualityChange: +25,
         moraleChange: +10,
@@ -726,23 +726,23 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Leerraum zwischen Hawkins und dem Upside Down",
     hint: "Wenn etwas weder kaputt noch je vorhanden war, versuchst du nicht zu reparieren, sondern zu erschaffen.",
     description:
-      "Du schwebst in einem schwarzen Raum – dem Interface Void.\\n\\n" +
-      "Vor dir hängt ein Hologramm des Shops.\\n" +
-      "Ein User brüllt aus dem Nichts:\\n" +
-      "'Wo ist der \\'Mind-Flayer-Kill-Button\\'? Den hattet ihr doch mal! Repariert das!'\\n\\n" +
-      "Du lässt Release-Notizen, Commits und Katalogeinträge wie Polaroids an dir vorbeifliegen:\\n" +
-      "• Kein Eintrag zu diesem Button\\n" +
-      "• Kein Commit, der ihn einführt oder entfernt\\n" +
-      "• Kein Service-Katalog-Eintrag\\n\\n" +
+      "Du schwebst in einem schwarzen Raum – dem Interface Void.\n\n" +
+      "Vor dir hängt ein Hologramm des Shops.\n" +
+      "Ein User brüllt aus dem Nichts:\n" +
+      "'Wo ist der \\'Mind-Flayer-Kill-Button\\'? Den hattet ihr doch mal! Repariert das!'\n\n" +
+      "Du lässt Release-Notizen, Commits und Katalogeinträge wie Polaroids an dir vorbeifliegen:\n" +
+      "• Kein Eintrag zu diesem Button\n" +
+      "• Kein Commit, der ihn einführt oder entfernt\n" +
+      "• Kein Service-Katalog-Eintrag\n\n" +
       "Der Button existiert nur in der Fantasie oder in irgendeinem anderen Universum.",
     options: [
       {
         label: "Incident: 'Button weg, System kaputt'",
         type: 'INCIDENT',
         outcome:
-          "DU SCHREIBST EINEN INCIDENT: 'Feature verschwunden'.\\n\\n" +
-          "Dev jagt nach einem Commit, den es nie gab.\\n" +
-          "Infra sucht nach Config-Drift, die nicht existiert.\\n" +
+          "DU SCHREIBST EINEN INCIDENT: 'Feature verschwunden'.\n\n" +
+          "Dev jagt nach einem Commit, den es nie gab.\n" +
+          "Infra sucht nach Config-Drift, die nicht existiert.\n" +
           "Am Ende bleibt nur Frust – das Universum war nie so gebaut.",
         qualityChange: -15,
         moraleChange: -10,
@@ -752,9 +752,9 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Service Request: 'Bitte Mind-Flayer-Kill-Button bereitstellen'",
         type: 'REQUEST',
         outcome:
-          "DU WIRFST ES IN DIE REQUEST-KISTE.\\n\\n" +
-          "Dort liegen sonst Dinge, die es schon gibt: Accounts, Lizenzen, Standard-Optionen.\\n" +
-          "Niemand fühlt sich verantwortlich, weil der 'Button' in keinem Katalog definiert ist.\\n" +
+          "DU WIRFST ES IN DIE REQUEST-KISTE.\n\n" +
+          "Dort liegen sonst Dinge, die es schon gibt: Accounts, Lizenzen, Standard-Optionen.\n" +
+          "Niemand fühlt sich verantwortlich, weil der 'Button' in keinem Katalog definiert ist.\n" +
           "Das Ticket wird zum Geist im System.",
         qualityChange: -5,
         moraleChange: 0,
@@ -764,8 +764,8 @@ export const STORY_SCENARIOS: Scenario[] = [
         label: "Change: 'Neue Anforderung – Mind-Flayer-Kill-Button spezifizieren, bauen, ausrollen'",
         type: 'CHANGE',
         outcome:
-          "DU SCHREIBST SAUBER AUF:\\n" +
-          "'User wünscht neues Feature. System konnte das nie. Muss als Change geplant, spezifiziert, entwickelt, getestet und ausgerollt werden.'\\n\\n" +
+          "DU SCHREIBST SAUBER AUF:\n" +
+          "'User wünscht neues Feature. System konnte das nie. Muss als Change geplant, spezifiziert, entwickelt, getestet und ausgerollt werden.'\n\n" +
           "Das Void leuchtet kurz auf. Aus der Idee wird eine definierte Änderung – kein Phantom-Bug.",
         qualityChange: +35,
         moraleChange: +15,
@@ -785,41 +785,41 @@ export const STORY_SCENARIOS: Scenario[] = [
     environment: "Unterstes Untergeschoss des Hawkins Lab",
     hint: "Der eigentliche Endgegner ist nicht der Demogorgon, sondern das Ding, das entscheidet, welche Monster wohin geschickt werden.",
     description:
-      "Ganz unten im Hawkins Lab, unter allen Ebenen, steht eine Maschine, die nicht in den offiziellen Plänen steht.\\n" +
-      "Auf dem Gehäuse steht nur: ROUTING ENGINE.\\n\\n" +
-      "Über Monitore siehst du, wie Tickets eingesogen werden:\\n" +
-      "'TRADING GEHT NICHT'\\n" +
-      "'BRAUCHE NEUES FEATURE'\\n" +
-      "'KEIN ZUGRIFF'\\n\\n" +
-      "Im Inneren läuft eine erbärmlich kurze Logik:\\n\\n" +
-      "```text\\n" +
-      "if user_selects == \\'Incident\\' then\\n" +
-      "    queue = INCIDENT\\n" +
-      "else\\n" +
-      "    queue = REQUEST\\n" +
-      "```\\n\\n" +
-      "Hinten fallen Incidents, Requests und Changes wild gemischt in falsche Queues.\\n" +
-      "In der Schattenwelt darüber wächst ein schwarzes Gebilde: ein Mind Flayer aus Fehlklassifikationen, Ticket-Ping-Pong und falschen Erwartungen.\\n\\n" +
-      "Du kennst inzwischen die Signale:\\n" +
-      "• kann_user_arbeiten (true/false)\\n" +
-      "• service_war_vorher_da (true/false)\\n" +
-      "• verhalten_weicht_vom_soll_ab (true/false)\\n" +
-      "• gewünschtes_feature_im_katalog (true/false)\\n\\n" +
+      "Ganz unten im Hawkins Lab, unter allen Ebenen, steht eine Maschine, die nicht in den offiziellen Plänen steht.\n" +
+      "Auf dem Gehäuse steht nur: ROUTING ENGINE.\n\n" +
+      "Über Monitore siehst du, wie Tickets eingesogen werden:\n" +
+      "'TRADING GEHT NICHT'\n" +
+      "'BRAUCHE NEUES FEATURE'\n" +
+      "'KEIN ZUGRIFF'\n\n" +
+      "Im Inneren läuft eine erbärmlich kurze Logik:\n\n" +
+      "```text\n" +
+      "if user_selects == \\'Incident\\' then\n" +
+      "    queue = INCIDENT\n" +
+      "else\n" +
+      "    queue = REQUEST\n" +
+      "```\n\n" +
+      "Hinten fallen Incidents, Requests und Changes wild gemischt in falsche Queues.\n" +
+      "In der Schattenwelt darüber wächst ein schwarzes Gebilde: ein Mind Flayer aus Fehlklassifikationen, Ticket-Ping-Pong und falschen Erwartungen.\n\n" +
+      "Du kennst inzwischen die Signale:\n" +
+      "• kann_user_arbeiten (true/false)\n" +
+      "• service_war_vorher_da (true/false)\n" +
+      "• verhalten_weicht_vom_soll_ab (true/false)\n" +
+      "• gewünschtes_feature_im_katalog (true/false)\n\n" +
       "Der Mind Router muss refactored werden.",
     difficultyLevel: 2,
     successMessage:
-      "Du schreibst das innere Gesetz neu.\\n\\n" +
-      "Die neue Logik ähnelt eher einem D&D-Regelwerk als einer Teenager-Entscheidung:\\n\\n" +
-      "• Wenn Service vorher da war UND Verhalten jetzt vom Soll abweicht → Incident (Bug)\\n" +
-      "• Wenn Service da ist UND Verhalten korrekt, aber User nicht angeschlossen ist → Service Request (Rolle, Lizenz, Zugang)\\n" +
-      "• Wenn Service das noch nie konnte UND es nicht im Katalog steht → Change (neue Anforderung)\\n\\n" +
-      "User dürfen weiter 'Störung', 'Problem', 'Bug' rufen.\\n" +
-      "Der Mind Router übersetzt ihre Schreie in ein konsistentes Modell.\\n" +
+      "Du schreibst das innere Gesetz neu.\n\n" +
+      "Die neue Logik ähnelt eher einem D&D-Regelwerk als einer Teenager-Entscheidung:\n\n" +
+      "• Wenn Service vorher da war UND Verhalten jetzt vom Soll abweicht → Incident (Bug)\n" +
+      "• Wenn Service da ist UND Verhalten korrekt, aber User nicht angeschlossen ist → Service Request (Rolle, Lizenz, Zugang)\n" +
+      "• Wenn Service das noch nie konnte UND es nicht im Katalog steht → Change (neue Anforderung)\n\n" +
+      "User dürfen weiter 'Störung', 'Problem', 'Bug' rufen.\n" +
+      "Der Mind Router übersetzt ihre Schreie in ein konsistentes Modell.\n" +
       "Der Schatten aus Fehlklassifikationen löst sich auf wie Staub im Licht von Elfi.",
     failureMessage:
-      "Du lässt die Logik fast so, wie sie war.\\n\\n" +
-      "User-Auswahl bleibt Master Key.\\n" +
-      "Incidents, Requests und Changes landen weiter bunt gemischt in den falschen Dungeons.\\n" +
+      "Du lässt die Logik fast so, wie sie war.\n\n" +
+      "User-Auswahl bleibt Master Key.\n" +
+      "Incidents, Requests und Changes landen weiter bunt gemischt in den falschen Dungeons.\n" +
       "Der Mind Flayer aus Ticket-Chaos wächst weiter – genährt von guter Absicht und schlechtem Modell."
   }
 ];

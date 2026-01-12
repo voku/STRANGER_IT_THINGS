@@ -61,8 +61,7 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
             {getActHint()}
         </p>
         <p className="font-vt323 text-sm sm:text-lg text-gray-300">
-            AGENT: <span className="text-blue-400 uppercase">{playerName || 'UNBEKANNT'}</span> | 
-            ROLLE: <span className={`${character.themeColor.split(' ')[0]} uppercase`}>{character.name}</span>
+            {character.name.toUpperCase()}: <span className="text-blue-400 uppercase">{playerName || 'UNBEKANNT'}</span>
         </p>
       </div>
 

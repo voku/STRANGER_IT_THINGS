@@ -188,7 +188,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 sm:gap-y-6 gap-x-4 text-sm font-vt323 text-lg sm:text-xl">
                     <div className="border-l-2 border-gray-700 pl-3">
-                        <span className="block text-gray-500 text-xs font-mono">AGENT</span>
+                        <span className="block text-gray-500 text-xs font-mono uppercase">{selectedCharacter?.name || 'AGENT'}</span>
                         <span className="text-white uppercase tracking-widest">{playerName || 'UNBEKANNT'}</span>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-3">
