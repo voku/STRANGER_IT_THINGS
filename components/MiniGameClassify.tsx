@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Scenario, Skill, ItemInventory } from '../types';
 import LifecycleDiagram from './LifecycleDiagram';
-import { useTranslation } from '../translations';
+import { useTranslation, formatMessage } from '../translations';
 
 interface MiniGameClassifyProps {
   scenario: Scenario;
@@ -86,7 +86,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                     >
                         {isRecommended && (
                             <div className="absolute top-0 right-0 bg-green-600 text-black text-[8px] sm:text-[10px] font-bold px-1 sm:px-2 py-0.5 sm:py-1 font-press-start animate-pulse">
-                                EMPFOHLEN
+                                {t.miniGame.recommended}
                             </div>
                         )}
 
@@ -117,7 +117,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                   : 'bg-gray-900 border-gray-600 text-gray-600 cursor-not-allowed opacity-50'
                 }`}
             >
-              {skill.icon} NUTZE {skill.name} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : '(LEER)'}
+              {formatMessage(t.miniGame.useItem, { item: skill.name })} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : `(${t.miniGame.empty})`}
             </button>
             {!hasItemInInventory && (
               <p className="text-red-400 text-xs font-mono">⚠️ Kein Item verfügbar!</p>

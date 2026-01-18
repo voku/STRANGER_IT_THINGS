@@ -272,7 +272,10 @@ export const en = {
     back: "BACK",
     confirm: "CONFIRM >>",
     submitRequest: "SUBMIT REQUEST >>",
-    chooseWisely: "Choose wisely. Your decision affects Team Morale and SLA."
+    chooseWisely: "Choose wisely. Your decision affects Team Morale and SLA.",
+    recommended: "RECOMMENDED",
+    useItem: "USE {item}",
+    empty: "EMPTY"
   },
 
   // End screen

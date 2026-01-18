@@ -23,6 +23,7 @@ import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
 import { useGameMechanics } from './hooks/useGameMechanics';
 import { useTranslation, formatMessage } from './translations';
+import { getTranslatedScenario } from './utils/scenarioTranslation';
 
 // UI Components
 import RetroContainer from './components/RetroContainer';
@@ -297,11 +298,14 @@ const App: React.FC = () => {
             return;
         }
         
+        // Translate the scenario before using it
+        const translatedScenario = getTranslatedScenario(scenarioToLoad, t);
+        
         addLog(formatMessage(t.ui.travelTo, { location: location.name }), 'SYSTEM');
-        addLog(scenarioToLoad.description, 'GM');
+        addLog(translatedScenario.description, 'GM');
         setGameState(prev => ({
             ...prev,
-            currentScenario: scenarioToLoad || null,
+            currentScenario: translatedScenario,
             currentScreen: 'GAME'
         }));
     } else {

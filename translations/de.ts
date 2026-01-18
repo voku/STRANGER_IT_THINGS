@@ -274,7 +274,10 @@ export const de: TranslationKey = {
     back: "ZURÜCK",
     confirm: "BESTÄTIGEN >>",
     submitRequest: "ANFRAGE SENDEN >>",
-    chooseWisely: "Wähle weise. Deine Entscheidung beeinflusst die Team-Moral und die SLA."
+    chooseWisely: "Wähle weise. Deine Entscheidung beeinflusst die Team-Moral und die SLA.",
+    recommended: "EMPFOHLEN",
+    useItem: "NUTZE {item}",
+    empty: "LEER"
   },
 
   // End screen
