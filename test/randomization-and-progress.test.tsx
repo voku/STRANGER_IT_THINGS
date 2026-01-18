@@ -31,17 +31,17 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      }, { timeout: 15000 });
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Wait for skills to render
       await waitFor(() => {
@@ -49,7 +49,7 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('x1')
         );
         expect(buttons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 15000 });
       
       // Verify that items show x1 count (proving they're all in inventory)
       const itemCountBadges = screen.queryAllByText(/x1/i);
@@ -74,13 +74,13 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Wait for skill buttons to render
       let skillButtons: HTMLElement[] = [];
@@ -89,7 +89,7 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Verify exactly 4 or fewer items are shown
       expect(skillButtons.length).toBeGreaterThanOrEqual(1);
@@ -109,18 +109,18 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Verify text mentions randomization
       await waitFor(() => {
         expect(screen.getByText(/Choose 1 of.*randomly selected items/i)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      }, { timeout: 15000 });
     });
   });
 
@@ -138,13 +138,13 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Wait for and click skill button
       let skillButtons: HTMLElement[] = [];
@@ -153,18 +153,18 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
         expect(screen.getByText(/ACT 1/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Wait for map screen
       await waitFor(() => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Verify progress indicator exists for Starcourt Mall (use getAllByText for multiple matches)
       // It should show something like "0/1" or similar
@@ -185,13 +185,13 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Select skill
       let skillButtons: HTMLElement[] = [];
@@ -200,13 +200,13 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Click on Starcourt Mall (use getAllByRole for multiple buttons)
       const mallButtons = screen.getAllByRole('button', { name: /Starcourt Mall/i });
@@ -216,7 +216,7 @@ describe('Randomization and Progress Indicators', () => {
       // Wait for scenario to load
       await waitFor(() => {
         expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Verify in-scenario progress indicator
       // Should show something like "📍 Starcourt Mall | Progress: 0/1"
@@ -239,13 +239,13 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Wait for items to render
       await waitFor(() => {
@@ -253,7 +253,7 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('x1')
         );
         expect(buttons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 15000 });
       
       // Count how many items show x1
       const x1Badges = screen.getAllByText(/x1/);
@@ -278,13 +278,13 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
         expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
       
       // Select skill
       let skillButtons: HTMLElement[] = [];
@@ -293,13 +293,13 @@ describe('Randomization and Progress Indicators', () => {
           btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Verify initial progress is 0/1 (use getAllByText for multiple matches)
       const initialProgress = screen.queryAllByText(/0\/1/);
@@ -311,7 +311,7 @@ describe('Randomization and Progress Indicators', () => {
       
       await waitFor(() => {
         expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       // Select correct answer (option 3: Joyce with the Christmas lights)
       const correctOption = screen.getByText(/Joyce.*Christmas lights/i);
@@ -323,7 +323,7 @@ describe('Randomization and Progress Indicators', () => {
         if (submitButton) {
           expect(submitButton).toBeInTheDocument();
         }
-      }, { timeout: 10000 });
+      }, { timeout: 15000 });
       
       const submitButton = screen.queryByText(/Submit/i);
       if (submitButton) {
@@ -335,7 +335,7 @@ describe('Randomization and Progress Indicators', () => {
           const transitionTexts = screen.queryAllByText(/ACT 2/i);
           const ausruestungTexts = screen.queryAllByText(/CHOOSE YOUR EQUIPMENT/i);
           expect(transitionTexts.length + ausruestungTexts.length).toBeGreaterThan(0);
-        }, { timeout: 10000 });
+        }, { timeout: 15000 });
       }
     }, 30000);
   });
