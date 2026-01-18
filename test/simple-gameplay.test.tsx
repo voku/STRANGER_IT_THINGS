@@ -123,7 +123,7 @@ describe('Simple Gameplay Test', () => {
     // Step 9: Verify we reach the map selection screen after transition
     await waitFor(() => {
       // Look for map-related text or terminal messages
-      const terminalText = screen.queryByText(/SYSTEM NEUSTART/i) || screen.queryByText(/Willkommen/i);
+      const terminalText = screen.queryByText(/SYSTEM RESTART/i) || screen.queryByText(/Welcome/i);
       expect(terminalText).toBeInTheDocument();
     }, { timeout: 5000 });
   }, 20000); // Reduced timeout due to faster transitions
@@ -168,13 +168,13 @@ describe('Simple Gameplay Test', () => {
     await user.click(skillButtons[0]);
     
     await waitFor(() => {
-      // Look for transition-specific text "Das verzerrte Ticket"
-      expect(screen.getByText(/verzerrte Ticket/i)).toBeInTheDocument();
+      // Look for transition-specific text "The Distorted Ticket"
+      expect(screen.getByText(/Distorted Ticket/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
     // ========== ACT 1: MAP SELECTION ==========
     await waitFor(() => {
-      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+      expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Click on Starcourt Mall location - use getAllByText to get the button specifically

@@ -158,12 +158,12 @@ describe('Randomization and Progress Indicators', () => {
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/AKT 1/i)).toBeInTheDocument();
+        expect(screen.getByText(/ACT 1/i)).toBeInTheDocument();
       }, { timeout: 3000 });
       
       // Wait for map screen
       await waitFor(() => {
-        expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
+        expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Verify progress indicator exists for Starcourt Mall (use getAllByText for multiple matches)
@@ -219,8 +219,8 @@ describe('Randomization and Progress Indicators', () => {
       }, { timeout: 5000 });
       
       // Verify in-scenario progress indicator
-      // Should show something like "📍 Starcourt Mall | Fortschritt: 0/1"
-      const progressIndicator = screen.queryByText(/📍.*Starcourt Mall.*Fortschritt/i);
+      // Should show something like "📍 Starcourt Mall | Progress: 0/1"
+      const progressIndicator = screen.queryByText(/📍.*Starcourt Mall.*Progress/i);
       expect(progressIndicator).toBeInTheDocument();
     });
   });
