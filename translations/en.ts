@@ -341,7 +341,7 @@ export const en = {
         },
         inquiry: {
           label: "Like Joyce with the Christmas lights: first ask everything carefully before running around screaming",
-          outcome: "YOU PAUSE.\n\n" +
+          outcome: "YOU BREATHE.\n\n" +
             "You ask back:\n" +
             "'Which button? What error message? Since when? Can others order in Trading?'\n\n" +
             "Answer: 'Access denied'. Colleagues can order.\n\n" +
