@@ -117,7 +117,7 @@ describe('Simple Gameplay Test', () => {
     
     // Step 8: Wait for transition to next screen (ACT 1)
     await waitFor(() => {
-      expect(screen.getByText(/ACT 1/i)).toBeInTheDocument();
+      expect(screen.getByText(/ACT 1|AKT 1/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
     // Step 9: Verify we reach the map selection screen after transition
@@ -225,7 +225,7 @@ describe('Simple Gameplay Test', () => {
     await user.click(skillButtons2[0]);
     
     await waitFor(() => {
-      expect(screen.getByText(/ACT 2/i)).toBeInTheDocument();
+      expect(screen.getByText(/ACT 2|AKT 2/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
     // ========== ACT 2: MAP SELECTION ==========

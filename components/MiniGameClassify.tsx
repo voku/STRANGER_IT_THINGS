@@ -190,7 +190,11 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
 
       {!showDiagram && !hintRevealed && (
         <p className="mt-4 text-gray-400 font-vt323 text-base sm:text-xl text-center max-w-2xl animate-pulse px-2">
-            {t.miniGame.chooseWisely}
+            {t.miniGame.chooseWisely.split('Team Morale')[0]}
+            <span className="text-yellow-400">Team Morale</span>
+            {t.miniGame.chooseWisely.split('Team Morale')[1]?.split('SLA')[0]}
+            <span className="text-yellow-400">SLA</span>
+            {t.miniGame.chooseWisely.split('SLA')[1]}
         </p>
       )}
     </div>
