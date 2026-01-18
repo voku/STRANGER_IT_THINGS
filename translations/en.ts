@@ -256,7 +256,14 @@ export const en = {
     title: "HAWKINS MAP",
     selectLocation: "Select your destination",
     locked: "LOCKED",
-    completed: "COMPLETED"
+    completed: "COMPLETED",
+    unknown: "UNKNOWN",
+    completedProgress: "completed",
+    actHints: {
+      act1: "TARGET: TRIAGE AT STARCOURT MALL",
+      act2: "TARGET: TRAINING AT HAWKINS HIGH",
+      act3: "TARGET: CONFRONTATION AT HAWKINS LAB"
+    }
   },
 
   // End screen

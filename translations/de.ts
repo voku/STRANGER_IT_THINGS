@@ -255,10 +255,17 @@ export const de: TranslationKey = {
 
   // Map screen
   mapScreen: {
-    title: "HAWKINS KARTE",
+    title: "EINSATZKARTE",
     selectLocation: "Wähle dein Ziel",
     locked: "GESPERRT",
-    completed: "ABGESCHLOSSEN"
+    completed: "ABGESCHLOSSEN",
+    unknown: "UNBEKANNT",
+    completedProgress: "abgeschlossen",
+    actHints: {
+      act1: "ZIEL: TRIAGE IN DER STARCOURT MALL",
+      act2: "ZIEL: TRAINING AN DER HAWKINS HIGH",
+      act3: "ZIEL: KONFRONTATION IM HAWKINS LAB"
+    }
   },
 
   // End screen
