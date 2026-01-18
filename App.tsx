@@ -38,6 +38,7 @@ import SkillSelect from './components/SkillSelect';
 import EndScreen from './components/EndScreen';
 import SceneTransition from './components/SceneTransition';
 import LanguageSelector from './components/LanguageSelector';
+import CharacterCard from './components/CharacterCard';
 import { getRandomSystemMessage } from './services/systemService';
 
 /**
@@ -543,21 +544,11 @@ const App: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
             {CHARACTERS.map((char) => (
-              <button
+              <CharacterCard 
                 key={char.id}
-                onClick={() => handleCharacterSelect(char)}
-                className={`p-6 bg-gray-900 border-4 ${char.themeColor} hover:scale-105 transition-all rounded-lg shadow-lg flex flex-col items-center gap-4 font-press-start`}
-              >
-                <div className="text-6xl">{char.portraitEmoji}</div>
-                <h3 className="text-xl">{char.name}</h3>
-                <div className="text-xs text-gray-400">{char.role.split('(')[0]}</div>
-                <p className="text-xs text-center leading-relaxed text-gray-300">{char.description}</p>
-                <div className="flex gap-4 text-xs">
-                  <div>{t.ui.stats.speed}: {char.stats.sla}</div>
-                  <div>{t.ui.stats.accuracy}: {char.stats.quality}</div>
-                  <div>{t.ui.stats.hp}: {char.stats.morale}</div>
-                </div>
-              </button>
+                character={char}
+                onSelect={handleCharacterSelect}
+              />
             ))}
           </div>
         </div>

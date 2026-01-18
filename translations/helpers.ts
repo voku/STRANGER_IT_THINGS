@@ -47,6 +47,25 @@ export const useCharacterTranslation = (characterId: string) => {
 };
 
 /**
+ * Get translated character role display name
+ */
+export const useRoleTranslation = (role: string) => {
+  const { t } = useTranslation();
+  
+  const roleMap: Record<string, string> = {
+    'service_desk': t.characterSelect.roles.SERVICE_DESK,
+    'iam': t.characterSelect.roles.IAM,
+    'infrastructure': t.characterSelect.roles.INFRASTRUCTURE,
+    'developer': t.characterSelect.roles.DEVELOPER,
+    'licensing': t.characterSelect.roles.LICENSING,
+    'erp': t.characterSelect.roles.ERP,
+    'purchasing': t.characterSelect.roles.PURCHASING
+  };
+  
+  return roleMap[role] || role;
+};
+
+/**
  * Get translated skill data
  */
 export const useSkillTranslation = (skillId: string) => {
