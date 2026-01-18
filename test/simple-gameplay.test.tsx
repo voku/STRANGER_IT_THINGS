@@ -7,11 +7,16 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { CHARACTERS } from '../constants';
+import { TranslationProvider } from '../translations';
 
 describe('Simple Gameplay Test', () => {
   it('should start the game and reach character selection', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <TranslationProvider>
+        <App />
+      </TranslationProvider>
+    );
     
     // Verify intro screen
     expect(screen.getByText(/STRANGER/i)).toBeInTheDocument();
@@ -22,19 +27,23 @@ describe('Simple Gameplay Test', () => {
     
     // Should reach character selection (faster transitions now ~1.7s)
     await waitFor(() => {
-      expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
     }, { timeout: 5000 });
   });
 
   it('should select character without fake timers', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <TranslationProvider>
+        <App />
+      </TranslationProvider>
+    );
     
     // Navigate to character selection (no name input)
     await user.click(screen.getByText(/INSERT COIN/i));
     
     await waitFor(() => {
-      expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Select first character
@@ -44,28 +53,32 @@ describe('Simple Gameplay Test', () => {
     
     // Wait for transition to show
     await waitFor(() => {
-      expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
+      expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
     // Wait for skill selection screen (faster transitions now ~1.7s)
     await waitFor(() => {
-      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Verify we're on skill selection and can see content
-    expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+    expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
   });
 
   it('golden path: should complete full flow from intro to skill selection and select a skill', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <TranslationProvider>
+        <App />
+      </TranslationProvider>
+    );
     
     // Step 1: Start game (no name input)
     await user.click(screen.getByText(/INSERT COIN/i));
     
     // Step 2: Wait for and verify character selection screen (faster transitions)
     await waitFor(() => {
-      expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Step 3: Select first character (The Operator)
@@ -75,12 +88,12 @@ describe('Simple Gameplay Test', () => {
     
     // Step 4: Wait for transition animation
     await waitFor(() => {
-      expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
+      expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
     // Step 5: Wait for skill selection screen (AUSRÜSTUNGSPHASE)
     await waitFor(() => {
-      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Step 6: Wait for skill buttons to be rendered (after transition completes)
@@ -89,7 +102,7 @@ describe('Simple Gameplay Test', () => {
     let skillButtons: HTMLElement[] = [];
     await waitFor(() => {
       skillButtons = screen.queryAllByRole('button').filter(btn => 
-        btn.textContent?.includes('Klicken zum Ausrüsten')
+        btn.textContent?.includes('Click to Equip') || btn.textContent?.includes('Klicken zum Ausrüsten')
       );
       expect(skillButtons.length).toBeGreaterThan(0);
     }, { timeout: 3000 });
@@ -102,9 +115,9 @@ describe('Simple Gameplay Test', () => {
     expect(firstSkillButton).not.toBeDisabled();
     await user.click(firstSkillButton);
     
-    // Step 8: Wait for transition to next screen (AKT 1)
+    // Step 8: Wait for transition to next screen (ACT 1)
     await waitFor(() => {
-      expect(screen.getByText(/AKT 1/i)).toBeInTheDocument();
+      expect(screen.getByText(/ACT 1/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
     // Step 9: Verify we reach the map selection screen after transition
@@ -117,13 +130,17 @@ describe('Simple Gameplay Test', () => {
 
   it('golden path: complete game from start to finish', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <TranslationProvider>
+        <App />
+      </TranslationProvider>
+    );
     
     // ========== ACT 0: INTRO (no name input) ==========
     await user.click(screen.getByText(/INSERT COIN/i));
     
     await waitFor(() => {
-      expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // ========== CHARACTER SELECTION ==========
@@ -131,19 +148,19 @@ describe('Simple Gameplay Test', () => {
     await user.click(operatorButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
+      expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
     // ========== ACT 1: SKILL SELECTION ==========
     await waitFor(() => {
-      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+      expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
     // Wait for skill buttons to be rendered (after transition completes)
     let skillButtons: HTMLElement[] = [];
     await waitFor(() => {
       skillButtons = screen.queryAllByRole('button').filter(btn => 
-        btn.textContent?.includes('Klicken zum Ausrüsten')
+        btn.textContent?.includes('Click to Equip') || btn.textContent?.includes('Klicken zum Ausrüsten')
       );
       expect(skillButtons.length).toBeGreaterThan(0);
     }, { timeout: 3000 });

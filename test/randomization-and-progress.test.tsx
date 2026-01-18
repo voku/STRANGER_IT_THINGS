@@ -13,29 +13,34 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { CHARACTERS, SKILLS } from '../constants';
+import { TranslationProvider } from '../translations';
 
 describe('Randomization and Progress Indicators', () => {
   
   describe('Item Unlocking', () => {
     it('should start with all items unlocked and in inventory', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/DAS WERKZEUG/i)).toBeInTheDocument();
+        expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
       }, { timeout: 3000 });
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Wait for skills to render
@@ -58,19 +63,23 @@ describe('Randomization and Progress Indicators', () => {
   describe('Randomized 4-Item Display', () => {
     it('should display exactly 4 or fewer items on skill selection screen', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Wait for skill buttons to render
@@ -89,19 +98,23 @@ describe('Randomization and Progress Indicators', () => {
     
     it('should show randomization text on skill selection', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // No name input
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Verify text mentions randomization
@@ -114,19 +127,23 @@ describe('Randomization and Progress Indicators', () => {
   describe('Location Progress Indicators', () => {
     it('should show progress indicator on map location', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate to map (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Wait for and click skill button
@@ -157,19 +174,23 @@ describe('Randomization and Progress Indicators', () => {
     
     it('should show location name and progress in active scenario', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate to active scenario (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Select skill
@@ -207,19 +228,23 @@ describe('Randomization and Progress Indicators', () => {
   describe('Item Count Display', () => {
     it('should show x1 count for all available items', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate to skill selection (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Wait for items to render
@@ -242,19 +267,23 @@ describe('Randomization and Progress Indicators', () => {
   describe('Progress Updates', () => {
     it('should update progress after completing a scenario', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(
+        <TranslationProvider>
+          <App />
+        </TranslationProvider>
+      );
       
       // Navigate through to scenario completion (no name input)
       await user.click(screen.getByText(/INSERT COIN/i));
       
       await waitFor(() => {
-        expect(screen.getByText(/WÄHLE DEINEN CHARAKTER/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR CHARACTER/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       await user.click(screen.getByText(CHARACTERS[0].name));
       
       await waitFor(() => {
-        expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
+        expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
       }, { timeout: 5000 });
       
       // Select skill
@@ -304,7 +333,7 @@ describe('Randomization and Progress Indicators', () => {
         // Just verify no crash and transition happens
         await waitFor(() => {
           const transitionTexts = screen.queryAllByText(/AKT 2/i);
-          const ausruestungTexts = screen.queryAllByText(/AUSRÜSTUNGSPHASE/i);
+          const ausruestungTexts = screen.queryAllByText(/CHOOSE YOUR EQUIPMENT/i);
           expect(transitionTexts.length + ausruestungTexts.length).toBeGreaterThan(0);
         }, { timeout: 5000 });
       }
