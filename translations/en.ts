@@ -342,14 +342,16 @@ export const en = {
         inquiry: {
           label: "Like Joyce with the Christmas lights: first ask everything carefully before running around screaming",
           outcome: "YOU BREATHE.\n\n" +
-            "You ask back:\n" +
-            "'Which button? What error message? Since when? Can others order in Trading?'\n\n" +
-            "Answer: 'Access denied'. Colleagues can order.\n\n" +
-            "Now you have:\n" +
-            "• Impact: For Mueller the world is ending\n" +
-            "• System picture: others okay, Trading not dead\n" +
-            "• Suspicion: Roles/permissions, not system incident\n\n" +
-            "You separate for the first time: User disruption ≠ System incident."
+            "QUESTION 1: 'Can you access other systems?'\n" +
+            "Mueller: 'Yes, everything else works.'\n\n" +
+            "QUESTION 2: 'Did Trading work before?'\n" +
+            "Mueller: 'I never used it. It's new.'\n\n" +
+            "QUESTION 3: 'Do colleagues have access?'\n" +
+            "Mueller (checks): 'Yes, Anna can order.'\n\n" +
+            "AH-HA: It's not a system failure (Incident), not a general feature request (Change Request), but: USER NEEDS TRADING ROLE.\n\n" +
+            "Service Request: Assign trading role.\n\n" +
+            "20 minutes. Problem solved. No alarm. No panic.\n" +
+            "Mueller is happy. Team can sleep. You're like Joyce: CALM, but THOROUGH."
         }
       },
       successMessage: "You worked like Joyce with the Christmas lights: first understand, then scream.",
