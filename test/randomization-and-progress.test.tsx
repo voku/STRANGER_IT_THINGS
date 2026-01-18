@@ -56,7 +56,7 @@ describe('Randomization and Progress Indicators', () => {
       expect(itemCountBadges.length).toBeGreaterThan(0);
       
       // Verify text mentions randomization
-      expect(screen.getByText(/Wähle 1 von 4 zufällig ausgewählten Items/i)).toBeInTheDocument();
+      expect(screen.getByText(/Choose 1 of.*randomly selected items/i)).toBeInTheDocument();
     });
   });
 
@@ -119,7 +119,7 @@ describe('Randomization and Progress Indicators', () => {
       
       // Verify text mentions randomization
       await waitFor(() => {
-        expect(screen.getByText(/Wähle 1 von.*zufällig ausgewählten Items/i)).toBeInTheDocument();
+        expect(screen.getByText(/Choose 1 of.*randomly selected items/i)).toBeInTheDocument();
       }, { timeout: 3000 });
     });
   });
