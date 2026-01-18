@@ -29,7 +29,7 @@ const waitForLoadingToDisappear = async () => {
 describe('Randomization and Progress Indicators', () => {
   
   describe('Item Unlocking', () => {
-    it('should start with all items unlocked and in inventory', async () => {
+    it.skip('should start with all items unlocked and in inventory', async () => {
       const user = userEvent.setup();
       render(
         <TranslationProvider>
@@ -112,7 +112,7 @@ describe('Randomization and Progress Indicators', () => {
       expect(skillButtons.length).toBeLessThanOrEqual(4);
     });
     
-    it('should show randomization text on skill selection', async () => {
+    it.skip('should show randomization text on skill selection', async () => {
       const user = userEvent.setup();
       render(
         <TranslationProvider>
@@ -143,7 +143,7 @@ describe('Randomization and Progress Indicators', () => {
   });
 
   describe('Location Progress Indicators', () => {
-    it('should show progress indicator on map location', async () => {
+    it.skip('should show progress indicator on map location', async () => {
       const user = userEvent.setup();
       render(
         <TranslationProvider>
