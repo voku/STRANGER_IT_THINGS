@@ -215,7 +215,7 @@ describe('Randomization and Progress Indicators', () => {
       
       // Wait for scenario to load
       await waitFor(() => {
-        expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
+        expect(screen.getByText(/Flackernde Lichter|Flickering Lights/i)).toBeInTheDocument();
       }, { timeout: 15000 });
       
       // Verify in-scenario progress indicator
@@ -310,11 +310,11 @@ describe('Randomization and Progress Indicators', () => {
       await user.click(mallButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
+        expect(screen.getByText(/Flackernde Lichter|Flickering Lights/i)).toBeInTheDocument();
       }, { timeout: 15000 });
       
       // Select correct answer (option 3: Joyce with the Christmas lights)
-      const correctOption = screen.getByText(/Joyce.*Christmas lights/i);
+      const correctOption = screen.getByText(/Joyce.*Lichterketten|Joyce.*Christmas lights/i);
       await user.click(correctOption.closest('button')!);
       
       // Submit answer

@@ -187,11 +187,11 @@ describe('Simple Gameplay Test', () => {
     
     // ========== ACT 1: SCENARIO - Flickering Lights in Starcourt Mall ==========
     await waitFor(() => {
-      expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
+      expect(screen.getByText(/Flackernde Lichter|Flickering Lights/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
     // Select the correct option: "Like Joyce with the Christmas lights..." (INQUIRY type)
-    const inquiryButton = screen.getByText(/Joyce.*Christmas lights/i).closest('button');
+    const inquiryButton = screen.getByText(/Joyce.*Lichterketten|Joyce.*Christmas lights/i).closest('button');
     await user.click(inquiryButton!);
     
     // For INQUIRY type, it shows "Submit" button directly (no diagram)
@@ -205,7 +205,7 @@ describe('Simple Gameplay Test', () => {
     // ========== ACT 2: TRANSITION ==========
     await waitFor(() => {
       // Look for the transition-specific text
-      expect(screen.getByText(/Perspective Labyrinth/i)).toBeInTheDocument();
+      expect(screen.getByText(/Perspektiven-Labyrinth|Perspective Labyrinth/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
     // ========== ACT 2: SKILL SELECTION ==========
@@ -256,7 +256,7 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/BESTÄTIGEN|Confirm/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
-    const confirmBtn1 = screen.getByText(/BESTÄTIGEN/i);
+    const confirmBtn1 = screen.getByText(/BESTÄTIGEN|CONFIRM/i);
     await user.click(confirmBtn1);
     
     // Return to map and complete act2_1
@@ -279,10 +279,10 @@ describe('Simple Gameplay Test', () => {
     await user.click(correctITILButton!);
     
     await waitFor(() => {
-      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
+      expect(screen.getByText(/BESTÄTIGEN|CONFIRM/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
-    const confirmBtn2 = screen.getByText(/BESTÄTIGEN/i);
+    const confirmBtn2 = screen.getByText(/BESTÄTIGEN|CONFIRM/i);
     await user.click(confirmBtn2);
     
     // Return to map and complete act2_2
@@ -304,16 +304,16 @@ describe('Simple Gameplay Test', () => {
     await user.click(changeButton!);
     
     await waitFor(() => {
-      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
+      expect(screen.getByText(/BESTÄTIGEN|CONFIRM/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
-    const confirmBtn3 = screen.getByText(/BESTÄTIGEN/i);
+    const confirmBtn3 = screen.getByText(/BESTÄTIGEN|CONFIRM/i);
     await user.click(confirmBtn3);
     
     // ========== ACT 3: TRANSITION ==========
     await waitFor(() => {
       // Look for the transition-specific text
-      expect(screen.getByText(/Model Boss Fight/i)).toBeInTheDocument();
+      expect(screen.getByText(/Modell-Endgegner|Model Boss Fight/i)).toBeInTheDocument();
     }, { timeout: 15000 });
     
     // ========== ACT 3: SKILL SELECTION ==========
@@ -368,11 +368,11 @@ describe('Simple Gameplay Test', () => {
       // ========== VICTORY ==========
       await waitFor(() => {
         // After completing the boss fight, we should see game over screen with victory
-        expect(screen.getByText(/MISSION ERFÜLLT/i)).toBeInTheDocument();
+        expect(screen.getByText(/MISSION ACCOMPLISHED|MISSION ERFÜLLT/i)).toBeInTheDocument();
       }, { timeout: 15000 });
       
       // Verify we're on end screen with single restart button
-      expect(screen.getByText(/NEU STARTEN/i)).toBeInTheDocument();
+      expect(screen.getByText(/RESTART|NEU STARTEN/i)).toBeInTheDocument();
     } else {
       // Skip victory check if AUTO-FIX not available
       // (In real gameplay, player would solve the puzzle manually)

@@ -268,6 +268,15 @@ export const de: TranslationKey = {
     }
   },
 
+  // Mini-game classify component
+  miniGame: {
+    dataCorruption: "Datenkorruptionsfehler.",
+    back: "ZURÜCK",
+    confirm: "BESTÄTIGEN >>",
+    submitRequest: "ANFRAGE SENDEN >>",
+    chooseWisely: "Wähle weise. Deine Entscheidung beeinflusst die Team-Moral und die SLA."
+  },
+
   // End screen
   endScreen: {
     victory: {

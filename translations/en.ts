@@ -266,6 +266,15 @@ export const en = {
     }
   },
 
+  // Mini-game classify component
+  miniGame: {
+    dataCorruption: "Data corruption error.",
+    back: "BACK",
+    confirm: "CONFIRM >>",
+    submitRequest: "SUBMIT REQUEST >>",
+    chooseWisely: "Choose wisely. Your decision affects Team Morale and SLA."
+  },
+
   // End screen
   endScreen: {
     victory: {
