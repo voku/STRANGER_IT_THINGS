@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Skill, Act, ItemInventory } from '../types';
 import { SKILLS } from '../constants';
+import { useTranslation } from '../translations';
 
 interface SkillSelectProps {
   currentAct: Act;
@@ -11,6 +12,7 @@ interface SkillSelectProps {
 }
 
 const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds, selectedSkill, itemInventory, onSelectSkill }) => {
+  const { t, language } = useTranslation();
   
   // State to hold the randomized skills for this screen
   const [displayedSkills, setDisplayedSkills] = useState<Skill[]>([]);
@@ -39,13 +41,19 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
   const getMissionBrief = () => {
       switch(currentAct) {
           case Act.ACT_1_TICKET:
-              return "STARTE AKT 1: INCIDENT RESPONSE. Wähle dein Werkzeug für die erste Triage.";
+              return language === 'de' 
+                ? "STARTE AKT 1: INCIDENT RESPONSE. Wähle dein Werkzeug für die erste Triage."
+                : "START ACT 1: INCIDENT RESPONSE. Choose your tool for the first triage.";
           case Act.ACT_2_PERSPECTIVE:
-              return "STARTE AKT 2: PERSPEKTIVENWECHSEL. Die Verwirrung breitet sich aus. Rüste dich für die Tiefenanalyse.";
+              return language === 'de'
+                ? "STARTE AKT 2: PERSPEKTIVENWECHSEL. Die Verwirrung breitet sich aus. Rüste dich für die Tiefenanalyse."
+                : "START ACT 2: PERSPECTIVE SHIFT. Confusion spreads. Equip yourself for deep analysis.";
           case Act.ACT_3_BOSS:
-              return "STARTE AKT 3: URSACHENFORSCHUNG. Die letzte Konfrontation. Wähle ein Werkzeug, um das System zu dekonstruieren.";
+              return language === 'de'
+                ? "STARTE AKT 3: URSACHENFORSCHUNG. Die letzte Konfrontation. Wähle ein Werkzeug, um das System zu dekonstruieren."
+                : "START ACT 3: ROOT CAUSE ANALYSIS. The final confrontation. Choose a tool to deconstruct the system.";
           default:
-              return "WÄHLE DEINE AUSRÜSTUNG";
+              return t.skillSelect.title;
       }
   };
 
@@ -59,10 +67,10 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
   return (
     <div className="flex flex-col items-center justify-center min-h-full p-2 sm:p-4 relative z-20 overflow-y-auto">
       <h2 
-        data-text="AUSRÜSTUNGSPHASE"
+        data-text={t.skillSelect.title}
         className="text-2xl sm:text-4xl md:text-5xl stranger-heading text-center mb-4 sm:mb-6 tracking-wider animate-pulse"
       >
-        AUSRÜSTUNGSPHASE
+        {t.skillSelect.title}
       </h2>
       
       <p className="font-vt323 text-lg sm:text-xl text-yellow-400 mb-2 sm:mb-4 text-center max-w-2xl px-2">
@@ -70,7 +78,7 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
       </p>
       
       <p className="font-vt323 text-base sm:text-lg text-gray-400 mb-4 sm:mb-8 text-center max-w-2xl border-b border-gray-700 pb-4 px-2">
-        Wähle 1 von {displayedSkills.length} zufällig ausgewählten Items für diese Mission
+        {t.skillSelect.subtitle} {displayedSkills.length} {language === 'de' ? 'zufällig ausgewählten Items für diese Mission' : 'randomly selected items for this mission'}
       </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-6xl w-full px-2">
@@ -109,7 +117,7 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
                     <div className="absolute inset-0 z-20 bg-black/70 flex items-center justify-center rounded-lg">
                         <div className="text-center">
                             <span className="text-2xl sm:text-4xl drop-shadow-lg block mb-1">📭</span>
-                            <span className="text-xs text-gray-400 font-mono">LEER</span>
+                            <span className="text-xs text-gray-400 font-mono">{language === 'de' ? 'LEER' : 'EMPTY'}</span>
                         </div>
                     </div>
                 )}
@@ -137,13 +145,13 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
 
                 {isRecommended && isSelectable && (
                     <div className="absolute -top-2 sm:-top-3 bg-yellow-600 text-black font-bold font-press-start text-[8px] sm:text-[10px] px-2 sm:px-3 py-1 rounded shadow-lg z-10">
-                        EMPFOHLEN
+                        {language === 'de' ? 'EMPFOHLEN' : 'RECOMMENDED'}
                     </div>
                 )}
 
                 {isAlreadyEquipped && (
                     <div className="absolute -top-2 sm:-top-3 bg-green-600 text-black font-bold font-press-start text-[8px] sm:text-[10px] px-2 sm:px-3 py-1 rounded shadow-lg z-10">
-                        AUSGERÜSTET
+                        {language === 'de' ? 'AUSGERÜSTET' : 'EQUIPPED'}
                     </div>
                 )}
                 
@@ -163,7 +171,7 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
 
                 {isSelectable && (
                     <div className="absolute bottom-1 sm:bottom-2 text-[8px] sm:text-xs text-gray-500 uppercase tracking-widest font-mono group-hover:text-white transition-colors">
-                        Klicken zum Ausrüsten
+                        {language === 'de' ? 'Klicken zum Ausrüsten' : 'Click to Equip'}
                     </div>
                 )}
             </button>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Scenario, Skill, ItemInventory } from '../types';
 import LifecycleDiagram from './LifecycleDiagram';
+import { useTranslation } from '../translations';
 
 interface MiniGameClassifyProps {
   scenario: Scenario;
@@ -10,6 +11,7 @@ interface MiniGameClassifyProps {
 }
 
 const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, itemInventory, onComplete }) => {
+  const { t } = useTranslation();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showDiagram, setShowDiagram] = useState(false);
   const [hintRevealed, setHintRevealed] = useState(false);
@@ -42,7 +44,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
     onComplete(option.qualityChange, option.moraleChange, option.outcome, option.isCorrect ?? false, option.label, hintRevealed);
   };
 
-  if (!scenario.options) return <div>Datenkorruptionsfehler.</div>;
+  if (!scenario.options) return <div>{t.miniGame.dataCorruption}</div>;
 
   // Determine which path to highlight on the diagram
   const getDiagramPath = (): 'INCIDENT' | 'REQUEST' | 'CHANGE' | null => {
@@ -162,13 +164,13 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                     }}
                     className="px-4 sm:px-6 py-2 sm:py-3 border-2 border-gray-600 text-gray-400 font-press-start text-[10px] sm:text-sm hover:border-white hover:text-white transition-all rounded hover:bg-gray-800 active:scale-95"
                 >
-                    ZURÜCK
+                    {t.miniGame.back}
                 </button>
                 <button
                     onClick={handleConfirm}
                     className="px-5 sm:px-8 py-2 sm:py-3 bg-red-700 border-2 border-red-500 text-white font-press-start text-[10px] sm:text-sm hover:bg-red-600 hover:scale-105 transition-all rounded shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse active:scale-95"
                 >
-                    BESTÄTIGEN &gt;&gt;
+                    {t.miniGame.confirm}
                 </button>
              </div>
         </div>
@@ -181,14 +183,18 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                     onClick={handleConfirm}
                     className="px-5 sm:px-8 py-2 sm:py-3 bg-yellow-700 border-2 border-yellow-500 text-white font-press-start text-[10px] sm:text-sm hover:bg-yellow-600 hover:scale-105 transition-all rounded shadow-[0_0_20px_rgba(202,138,4,0.5)] active:scale-95"
                 >
-                    ANFRAGE SENDEN &gt;&gt;
+                    {t.miniGame.submitRequest}
                 </button>
           </div>
       )}
 
       {!showDiagram && !hintRevealed && (
         <p className="mt-4 text-gray-400 font-vt323 text-base sm:text-xl text-center max-w-2xl animate-pulse px-2">
-            Wähle weise. Deine Entscheidung beeinflusst die <span className="text-yellow-400">Team-Moral</span> und die <span className="text-yellow-400">SLA</span>.
+            {t.miniGame.chooseWisely.split('Team Morale')[0]}
+            <span className="text-yellow-400">Team Morale</span>
+            {t.miniGame.chooseWisely.split('Team Morale')[1]?.split('SLA')[0]}
+            <span className="text-yellow-400">SLA</span>
+            {t.miniGame.chooseWisely.split('SLA')[1]}
         </p>
       )}
     </div>

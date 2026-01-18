@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { GameState, CharacterRole, WrongAnswer } from '../types';
 import { ACT_2_CORE_SCENARIOS } from '../constants';
+import { useTranslation, formatMessage } from '../translations';
 
 interface EndScreenProps {
   gameState: GameState;
@@ -8,6 +9,7 @@ interface EndScreenProps {
 }
 
 const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
+  const { t } = useTranslation();
   const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers = [] } = gameState;
   const victory = gameStatus === 'won';
   const charName = selectedCharacter?.name || "Unbekannter Agent";
@@ -28,7 +30,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
   else if (score >= 50) grade = 'C';
   else if (score >= 30) grade = 'D';
 
-  const title = victory ? "MISSION ERFÜLLT" : "SYSTEMFEHLER";
+  const title = victory ? t.endScreen.victory.title : t.endScreen.defeat.title;
   const themeColor = victory ? "text-green-500" : "text-red-600";
   const borderColor = victory ? "border-green-600" : "border-red-600";
   const stampStyle = victory 
@@ -240,13 +242,37 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
                 {/* Wrong Answers Section */}
                 {renderWrongAnswersSection()}
 
+                {/* Contribution Section */}
+                <div className="mt-6 sm:mt-8 bg-gray-900/60 p-4 sm:p-6 rounded-lg border-2 border-cyan-800 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                    <h4 className="text-cyan-400 font-press-start text-xs sm:text-sm mb-3 text-center flex items-center justify-center gap-2">
+                        <span>💖</span>
+                        <span>{t.endScreen.contributeTitle}</span>
+                        <span>💖</span>
+                    </h4>
+                    <p className="font-vt323 text-base sm:text-xl text-gray-300 text-center mb-4">
+                        {t.endScreen.contributeText}
+                    </p>
+                    <a 
+                        href="https://github.com/voku/STRANGER_IT_THINGS" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block w-full px-4 sm:px-6 py-3 bg-gray-800 border-2 border-cyan-600 text-cyan-400 hover:bg-cyan-600 hover:text-black font-press-start text-xs sm:text-sm rounded transition-all shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_25px_rgba(34,211,238,0.6)] active:scale-95 text-center"
+                    >
+                        <span className="inline-flex items-center gap-2">
+                            <span>🌟</span>
+                            <span>{t.endScreen.contributeLink}</span>
+                            <span>🌟</span>
+                        </span>
+                    </a>
+                </div>
+
                  {/* Single Replay Button */}
                  <div className="mt-6 sm:mt-8 w-full">
                     <button 
                         onClick={onReplay}
                         className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gray-800 border-2 border-yellow-600 text-yellow-500 hover:bg-yellow-600 hover:text-black font-press-start text-xs sm:text-sm rounded transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_25px_rgba(234,179,8,0.6)] active:scale-95"
                     >
-                        🎮 NEU STARTEN
+                        🎮 {t.endScreen.replayButton}
                     </button>
                 </div>
 

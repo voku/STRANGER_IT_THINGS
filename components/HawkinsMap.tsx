@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapLocation, Character, Act } from '../types';
 import { MAP_LOCATIONS, STORY_SCENARIOS } from '../constants';
+import { useTranslation } from '../translations';
 
 interface HawkinsMapProps {
   playerName: string;
@@ -12,6 +13,7 @@ interface HawkinsMapProps {
 }
 
 const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlockedLocationIds, currentAct, completedScenarios, onSelectLocation }) => {
+  const { t } = useTranslation();
   
   const isUnlocked = (loc: MapLocation) => {
       if (loc.requiredAct && loc.requiredAct !== currentAct) return false;
@@ -42,9 +44,9 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
   };
 
   const getActHint = () => {
-      if (currentAct === Act.ACT_1_TICKET) return "ZIEL: TRIAGE IN DER STARCOURT MALL";
-      if (currentAct === Act.ACT_2_PERSPECTIVE) return "ZIEL: TRAINING AN DER HAWKINS HIGH";
-      if (currentAct === Act.ACT_3_BOSS) return "ZIEL: KONFRONTATION IM HAWKINS LAB";
+      if (currentAct === Act.ACT_1_TICKET) return t.mapScreen.actHints.act1;
+      if (currentAct === Act.ACT_2_PERSPECTIVE) return t.mapScreen.actHints.act2;
+      if (currentAct === Act.ACT_3_BOSS) return t.mapScreen.actHints.act3;
       return "";
   };
 
@@ -52,16 +54,16 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
     <div className="w-full min-h-full flex flex-col items-center justify-center p-2 sm:p-4 relative z-20 overflow-y-auto">
       <div className="text-center mb-4 sm:mb-6 bg-black/70 p-3 sm:p-4 rounded-lg border border-red-900/50 backdrop-blur-sm animate-fade-in-up shadow-[0_0_20px_rgba(220,38,38,0.3)]">
         <h2 
-            data-text="EINSATZKARTE"
+            data-text={t.mapScreen.title}
             className="text-2xl sm:text-4xl md:text-5xl stranger-heading tracking-widest mb-2"
         >
-            EINSATZKARTE
+            {t.mapScreen.title}
         </h2>
         <p className="font-vt323 text-base sm:text-xl text-yellow-400 mb-2 blink">
             {getActHint()}
         </p>
         <p className="font-vt323 text-sm sm:text-lg text-gray-300">
-            {character.name.toUpperCase()}: <span className="text-blue-400 uppercase">{playerName || 'UNBEKANNT'}</span>
+            {character.name.toUpperCase()}: <span className="text-blue-400 uppercase">{playerName || t.mapScreen.unknown}</span>
         </p>
       </div>
 
@@ -104,7 +106,7 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
                     <div className="font-vt323 text-sm text-gray-400 mt-1">{loc.description}</div>
                     {showProgress && (
                       <div className="font-mono text-xs text-yellow-400 mt-1">
-                        [{progress.completed}/{progress.total} abgeschlossen]
+                        [{progress.completed}/{progress.total} {t.mapScreen.completedProgress}]
                       </div>
                     )}
                   </>

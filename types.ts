@@ -1,19 +1,19 @@
 
 export enum CharacterRole {
-  SERVICE_DESK = 'Service Desk (Die Frontline-Wächter)',
-  IAM = 'AD / IAM (Die Rollen-Meister)',
-  INFRASTRUCTURE = 'Server / Infra (Die Netzwerk-Krieger)',
-  DEVELOPER = 'Softwareentwicklung (Die Code-Zauberer)',
-  LICENSING = 'Lizenz / Beschaffung (Die Lizenz-Diplomaten)',
-  ERP = 'ERP / Business (Die Prozess-Beschwörer)',
-  PURCHASING = 'Einkauf / Logistik (Die Logistik-Ranger)',
+  SERVICE_DESK = 'service_desk',
+  IAM = 'iam',
+  INFRASTRUCTURE = 'infrastructure',
+  DEVELOPER = 'developer',
+  LICENSING = 'licensing',
+  ERP = 'erp',
+  PURCHASING = 'purchasing',
 }
 
 export enum Act {
-  ACT_1_TICKET = 'AKT 1: Das verzerrte Ticket',
-  ACT_2_PERSPECTIVE = 'AKT 2: Das Perspektiven-Labyrinth',
-  ACT_3_BOSS = 'AKT 3: Der Modell-Endgegner',
-  ACT_4_EPILOGUE = 'AKT 4: Die neue Welt'
+  ACT_1_TICKET = 'act1',
+  ACT_2_PERSPECTIVE = 'act2',
+  ACT_3_BOSS = 'act3',
+  ACT_4_EPILOGUE = 'act4'
 }
 
 export interface Character {
