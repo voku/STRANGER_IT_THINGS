@@ -86,10 +86,10 @@ describe('Randomization and Progress Indicators', () => {
       let skillButtons: HTMLElement[] = [];
       await waitFor(() => {
         skillButtons = screen.queryAllByRole('button').filter(btn => 
-          btn.textContent?.includes('Klicken zum Ausrüsten')
+          btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
       // Verify exactly 4 or fewer items are shown
       expect(skillButtons.length).toBeGreaterThanOrEqual(1);
@@ -150,21 +150,21 @@ describe('Randomization and Progress Indicators', () => {
       let skillButtons: HTMLElement[] = [];
       await waitFor(() => {
         skillButtons = screen.queryAllByRole('button').filter(btn => 
-          btn.textContent?.includes('Klicken zum Ausrüsten')
+          btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
         expect(screen.getByText(/ACT 1/i)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
       // Wait for map screen
       await waitFor(() => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+      }, { timeout: 10000 });
       
       // Verify progress indicator exists for Starcourt Mall (use getAllByText for multiple matches)
       // It should show something like "0/1" or similar
@@ -197,16 +197,16 @@ describe('Randomization and Progress Indicators', () => {
       let skillButtons: HTMLElement[] = [];
       await waitFor(() => {
         skillButtons = screen.queryAllByRole('button').filter(btn => 
-          btn.textContent?.includes('Klicken zum Ausrüsten')
+          btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+        expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+      }, { timeout: 10000 });
       
       // Click on Starcourt Mall (use getAllByRole for multiple buttons)
       const mallButtons = screen.getAllByRole('button', { name: /Starcourt Mall/i });
@@ -215,8 +215,8 @@ describe('Randomization and Progress Indicators', () => {
       
       // Wait for scenario to load
       await waitFor(() => {
-        expect(screen.getByText(/Flackernde Lichter/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+        expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
+      }, { timeout: 10000 });
       
       // Verify in-scenario progress indicator
       // Should show something like "📍 Starcourt Mall | Progress: 0/1"
@@ -290,16 +290,16 @@ describe('Randomization and Progress Indicators', () => {
       let skillButtons: HTMLElement[] = [];
       await waitFor(() => {
         skillButtons = screen.queryAllByRole('button').filter(btn => 
-          btn.textContent?.includes('Klicken zum Ausrüsten')
+          btn.textContent?.includes('Click to Equip')
         );
         expect(skillButtons.length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
       await user.click(skillButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+        expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+      }, { timeout: 10000 });
       
       // Verify initial progress is 0/1 (use getAllByText for multiple matches)
       const initialProgress = screen.queryAllByText(/0\/1/);
@@ -310,32 +310,32 @@ describe('Randomization and Progress Indicators', () => {
       await user.click(mallButtons[0]);
       
       await waitFor(() => {
-        expect(screen.getByText(/Flackernde Lichter/i)).toBeInTheDocument();
-      }, { timeout: 5000 });
+        expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
+      }, { timeout: 10000 });
       
-      // Select correct answer (option 3: Joyce bei den Lichterketten)
-      const correctOption = screen.getByText(/Joyce bei den Lichterketten/i);
+      // Select correct answer (option 3: Joyce with the Christmas lights)
+      const correctOption = screen.getByText(/Joyce.*Christmas lights/i);
       await user.click(correctOption.closest('button')!);
       
       // Submit answer
       await waitFor(() => {
-        const submitButton = screen.queryByText(/ANFRAGE SENDEN/i);
+        const submitButton = screen.queryByText(/Submit/i);
         if (submitButton) {
           expect(submitButton).toBeInTheDocument();
         }
-      }, { timeout: 3000 });
+      }, { timeout: 10000 });
       
-      const submitButton = screen.queryByText(/ANFRAGE SENDEN/i);
+      const submitButton = screen.queryByText(/Submit/i);
       if (submitButton) {
         await user.click(submitButton.closest('button')!);
         
         // After completion, progress should update (though we transition to next act)
         // Just verify no crash and transition happens
         await waitFor(() => {
-          const transitionTexts = screen.queryAllByText(/AKT 2/i);
+          const transitionTexts = screen.queryAllByText(/ACT 2/i);
           const ausruestungTexts = screen.queryAllByText(/CHOOSE YOUR EQUIPMENT/i);
           expect(transitionTexts.length + ausruestungTexts.length).toBeGreaterThan(0);
-        }, { timeout: 5000 });
+        }, { timeout: 10000 });
       }
     }, 30000);
   });

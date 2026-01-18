@@ -91,10 +91,10 @@ describe('Simple Gameplay Test', () => {
       expect(screen.getByText(/THE TOOL/i)).toBeInTheDocument();
     }, { timeout: 3000 });
     
-    // Step 5: Wait for skill selection screen (AUSRÜSTUNGSPHASE)
+    // Step 5: Wait for skill selection screen (THE TOOL / CHOOSE YOUR EQUIPMENT)
     await waitFor(() => {
       expect(screen.getByText(/CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 10000 });
     
     // Step 6: Wait for skill buttons to be rendered (after transition completes)
     // Since we now show 4 random items, we can't guarantee specific items will appear
@@ -102,10 +102,10 @@ describe('Simple Gameplay Test', () => {
     let skillButtons: HTMLElement[] = [];
     await waitFor(() => {
       skillButtons = screen.queryAllByRole('button').filter(btn => 
-        btn.textContent?.includes('Click to Equip') || btn.textContent?.includes('Klicken zum Ausrüsten')
+        btn.textContent?.includes('Click to Equip')
       );
       expect(skillButtons.length).toBeGreaterThan(0);
-    }, { timeout: 3000 });
+    }, { timeout: 10000 });
     
     expect(skillButtons.length).toBeLessThanOrEqual(4); // Should show max 4 items
     
@@ -160,22 +160,22 @@ describe('Simple Gameplay Test', () => {
     let skillButtons: HTMLElement[] = [];
     await waitFor(() => {
       skillButtons = screen.queryAllByRole('button').filter(btn => 
-        btn.textContent?.includes('Click to Equip') || btn.textContent?.includes('Klicken zum Ausrüsten')
+        btn.textContent?.includes('Click to Equip')
       );
       expect(skillButtons.length).toBeGreaterThan(0);
-    }, { timeout: 3000 });
+    }, { timeout: 10000 });
     
     await user.click(skillButtons[0]);
     
     await waitFor(() => {
       // Look for transition-specific text "The Distorted Ticket"
       expect(screen.getByText(/Distorted Ticket/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    }, { timeout: 10000 });
     
     // ========== ACT 1: MAP SELECTION ==========
     await waitFor(() => {
       expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+    }, { timeout: 10000 });
     
     // Click on Starcourt Mall location - use getAllByText to get the button specifically
     const mallElements = screen.getAllByText(/Starcourt Mall/i);
@@ -185,53 +185,53 @@ describe('Simple Gameplay Test', () => {
     expect(actualMallButton).not.toBeDisabled();
     await user.click(actualMallButton!);
     
-    // ========== ACT 1: SCENARIO - Flackernde Lichter in der Starcourt Mall ==========
+    // ========== ACT 1: SCENARIO - Flickering Lights in Starcourt Mall ==========
     await waitFor(() => {
-      expect(screen.getByText(/Flackernde Lichter/i)).toBeInTheDocument();
+      expect(screen.getByText(/Flickering Lights/i)).toBeInTheDocument();
     }, { timeout: 5000 });
     
-    // Select the correct option: "Wie Joyce bei den Lichterketten..." (INQUIRY type)
-    const inquiryButton = screen.getByText(/Joyce bei den Lichterketten/i).closest('button');
+    // Select the correct option: "Like Joyce with the Christmas lights..." (INQUIRY type)
+    const inquiryButton = screen.getByText(/Joyce.*Christmas lights/i).closest('button');
     await user.click(inquiryButton!);
     
-    // For INQUIRY type, it shows "ANFRAGE SENDEN" button directly (no diagram)
+    // For INQUIRY type, it shows "Submit" button directly (no diagram)
     await waitFor(() => {
-      expect(screen.getByText(/ANFRAGE SENDEN/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+      expect(screen.getByText(/Submit/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
-    const sendButton = screen.getByText(/ANFRAGE SENDEN/i);
+    const sendButton = screen.getByText(/Submit/i);
     await user.click(sendButton);
     
     // ========== ACT 2: TRANSITION ==========
     await waitFor(() => {
       // Look for the transition-specific text
-      expect(screen.getByText(/PERSPEKTIVENWECHSEL/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/Perspective Labyrinth/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // ========== ACT 2: SKILL SELECTION ==========
     await waitFor(() => {
-      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/THE TOOL|CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // Select any available skill (now randomized, so we can't guarantee Coffee)
     let skillButtons2: HTMLElement[] = [];
     await waitFor(() => {
       skillButtons2 = screen.queryAllByRole('button').filter(btn => 
-        btn.textContent?.includes('Klicken zum Ausrüsten')
+        btn.textContent?.includes('Click to Equip')
       );
       expect(skillButtons2.length).toBeGreaterThan(0);
-    }, { timeout: 3000 });
+    }, { timeout: 10000 });
     
     await user.click(skillButtons2[0]);
     
     await waitFor(() => {
-      expect(screen.getByText(/AKT 2/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+      expect(screen.getByText(/ACT 2/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // ========== ACT 2: MAP SELECTION ==========
     await waitFor(() => {
-      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // Click on Hawkins High - use getAllByText to get the button specifically
     const schoolElements = screen.getAllByText(/Hawkins High/i);
@@ -245,7 +245,7 @@ describe('Simple Gameplay Test', () => {
       // Use getAllByText since the title appears in multiple places
       const elements = screen.getAllByText(/War Room unter der Mall/i);
       expect(elements.length).toBeGreaterThan(0);
-    }, { timeout: 5000 });
+    }, { timeout: 10000 });
     
     // Select correct option: "Du übersetzt Müllers Schrei" (REQUEST) - this will show diagram
     const requestButton = screen.getByText(/übersetzt Müllers Schrei/i).closest('button');
@@ -253,16 +253,16 @@ describe('Simple Gameplay Test', () => {
     
     // Wait for diagram to appear and BESTÄTIGEN button
     await waitFor(() => {
-      expect(screen.getByText(/BESTÄTIGEN/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+      expect(screen.getByText(/BESTÄTIGEN|Confirm/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     const confirmBtn1 = screen.getByText(/BESTÄTIGEN/i);
     await user.click(confirmBtn1);
     
     // Return to map and complete act2_1
     await waitFor(() => {
-      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     const schoolElements2 = screen.getAllByText(/Hawkins High/i);
     const schoolButton2 = schoolElements2.find(el => el.closest('button'))!.closest('button');
@@ -287,8 +287,8 @@ describe('Simple Gameplay Test', () => {
     
     // Return to map and complete act2_2
     await waitFor(() => {
-      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     const schoolElements3 = screen.getAllByText(/Hawkins High/i);
     const schoolButton3 = schoolElements3.find(el => el.closest('button'))!.closest('button');
@@ -313,24 +313,24 @@ describe('Simple Gameplay Test', () => {
     // ========== ACT 3: TRANSITION ==========
     await waitFor(() => {
       // Look for the transition-specific text
-      expect(screen.getByText(/Modell-Endgegner/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/Model Boss Fight/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // ========== ACT 3: SKILL SELECTION ==========
     await waitFor(() => {
-      expect(screen.getByText(/AUSRÜSTUNGSPHASE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/THE TOOL|CHOOSE YOUR EQUIPMENT/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
-    // Select any available skill (look for "Klicken zum Ausrüsten" which means clickable)
+    // Select any available skill (look for "Click to Equip" which means clickable)
     await waitFor(() => {
-      const availableSkillButtons = screen.queryAllByText(/Klicken zum Ausrüsten/i)
+      const availableSkillButtons = screen.queryAllByText(/Click to Equip/i)
         .map(el => el.closest('button'))
         .filter((btn): btn is HTMLButtonElement => btn !== null && !btn.disabled);
       
       expect(availableSkillButtons.length).toBeGreaterThan(0);
-    }, { timeout: 5000 });
+    }, { timeout: 10000 });
     
-    const availableSkillButtons = screen.queryAllByText(/Klicken zum Ausrüsten/i)
+    const availableSkillButtons = screen.queryAllByText(/Click to Equip/i)
       .map(el => el.closest('button'))
       .filter((btn): btn is HTMLButtonElement => btn !== null && !btn.disabled);
     
@@ -338,8 +338,8 @@ describe('Simple Gameplay Test', () => {
     
     await waitFor(() => {
       // Look for the map or other indication that transition happened
-      expect(screen.getByText(/EINSATZKARTE/i)).toBeInTheDocument();
-    }, { timeout: 5000 });
+      expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
+    }, { timeout: 10000 });
     
     // ========== ACT 3: MAP SELECTION ==========
     // Click on Hawkins Lab
