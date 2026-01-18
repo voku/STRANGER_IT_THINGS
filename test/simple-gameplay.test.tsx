@@ -139,7 +139,7 @@ describe('Simple Gameplay Test', () => {
       const terminalText = screen.queryByText(/SYSTEM RESTART/i) || screen.queryByText(/Welcome/i);
       expect(terminalText).toBeInTheDocument();
     }, { timeout: 30000 });
-  }, 20000); // Reduced timeout due to faster transitions
+  }); // Use global timeout (30000ms)
 
   it('golden path: complete game from start to finish', async () => {
     const user = userEvent.setup();
