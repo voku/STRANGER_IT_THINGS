@@ -22,6 +22,7 @@ import { Act, Character, GameState, Scenario, MapLocation, Skill, LogEntry, Wron
 import { initialGameState } from './utils/gameState';
 import { checkGameOver, createLogEntry, clampStat } from './utils/gameHelpers';
 import { useGameMechanics } from './hooks/useGameMechanics';
+import { useTranslation, formatMessage } from './translations';
 
 // UI Components
 import RetroContainer from './components/RetroContainer';
@@ -36,6 +37,7 @@ import HawkinsMap from './components/HawkinsMap';
 import SkillSelect from './components/SkillSelect';
 import EndScreen from './components/EndScreen';
 import SceneTransition from './components/SceneTransition';
+import LanguageSelector from './components/LanguageSelector';
 import { getRandomSystemMessage } from './services/systemService';
 
 /**
@@ -45,6 +47,7 @@ import { getRandomSystemMessage } from './services/systemService';
  * Uses custom hooks for time-based mechanics and helper functions for game logic.
  */
 const App: React.FC = () => {
+  const { t } = useTranslation();
   const [gameState, setGameState] = useState<GameState>(initialGameState);
   
   // Transition state for screen animations
@@ -89,7 +92,7 @@ const App: React.FC = () => {
       
       // Check for game over due to time expiration
       if (newSla <= 0) {
-        addLog("SLA TIME EXPIRED: Zeit ist abgelaufen.", 'SYSTEM');
+        addLog(t.system.slaExpired, 'SYSTEM');
         return {
           ...prev,
           slaTime: 0,
@@ -137,7 +140,7 @@ const App: React.FC = () => {
    * Handler: Start game (no name input needed)
    */
   const handleStartGame = () => {
-    triggerTransition("DIE AUSWAHL", "Wähle deine Rolle", () => {
+    triggerTransition(t.acts.transitions.selection.title, t.acts.transitions.selection.subtitle, () => {
       setGameState(prev => ({ ...prev, currentScreen: 'CHAR_SELECT' }));
     });
   };
@@ -155,7 +158,7 @@ const App: React.FC = () => {
         ticketQuality: char.stats.quality
     }));
     
-    triggerTransition("DAS WERKZEUG", "Rüste dich aus", () => {
+    triggerTransition(t.acts.transitions.equipment.title, t.acts.transitions.equipment.subtitle, () => {
         setGameState(prev => ({ ...prev, currentScreen: 'SKILL_SELECT' }));
     });
   };
@@ -166,15 +169,15 @@ const App: React.FC = () => {
   const getActTransitionInfo = (act: Act): { title: string; subtitle: string } => {
     switch (act) {
       case Act.ACT_1_TICKET:
-        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+        return t.acts.transitions.act1;
       case Act.ACT_2_PERSPECTIVE:
-        return { title: "AKT 2", subtitle: "Das Perspektiven-Labyrinth" };
+        return t.acts.transitions.act2;
       case Act.ACT_3_BOSS:
-        return { title: "AKT 3", subtitle: "Der Modell-Endgegner" };
+        return t.acts.transitions.act3;
       case Act.ACT_4_EPILOGUE:
-        return { title: "AKT 4", subtitle: "Die neue Welt" };
+        return t.acts.transitions.act4;
       default:
-        return { title: "AKT 1", subtitle: "Das verzerrte Ticket" };
+        return t.acts.transitions.act1;
     }
   };
 
@@ -186,8 +189,8 @@ const App: React.FC = () => {
     
     const actInfo = getActTransitionInfo(gameState.currentAct);
     triggerTransition(actInfo.title, actInfo.subtitle, () => {
-        addLog("SYSTEM NEUSTART...", 'SYSTEM');
-        addLog(`Willkommen, ${gameState.selectedCharacter?.name}. Der Demogorgon (User) ist unruhig.`, 'GM');
+        addLog(t.system.restart, 'SYSTEM');
+        addLog(formatMessage(t.system.welcome, { name: gameState.selectedCharacter?.name || '' }), 'GM');
         setGameState(prev => ({ ...prev, currentScreen: 'MAP_SELECT' }));
     });
   };
@@ -198,9 +201,9 @@ const App: React.FC = () => {
    */
   const handleDetourLocation = (location: MapLocation): boolean => {
     if (location.id === 'ARCADE') {
-        addLog(`Du betrittst das Palace Arcade...`, 'SYSTEM');
-        addLog(`Die blinkenden Automaten locken, aber das ist nicht der richtige Weg. Die Mission wartet woanders.`, 'GM');
-        addLog(`-${DETOUR_PENALTIES.ARCADE_SLA_PENALTY} SLA (Zeitverschwendung)`, 'SYSTEM');
+        addLog(t.detours.arcade.enter, 'SYSTEM');
+        addLog(t.detours.arcade.description, 'GM');
+        addLog(formatMessage(t.detours.arcade.penalty, { penalty: DETOUR_PENALTIES.ARCADE_SLA_PENALTY.toString() }), 'SYSTEM');
         setGameState(prev => ({
             ...prev,
             slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.ARCADE_SLA_PENALTY)
@@ -209,9 +212,9 @@ const App: React.FC = () => {
     }
     
     if (location.id === 'FOREST') {
-        addLog(`Du verirrst dich im Mirkwood Forest...`, 'SYSTEM');
-        addLog(`Die dunklen Pfade führen nirgendwohin. Du verlierst wertvolle Zeit. Kehre zurück zur Mission!`, 'GM');
-        addLog(`-${DETOUR_PENALTIES.FOREST_SLA_PENALTY} SLA (Verirrt)`, 'SYSTEM');
+        addLog(t.detours.forest.enter, 'SYSTEM');
+        addLog(t.detours.forest.description, 'GM');
+        addLog(formatMessage(t.detours.forest.penalty, { penalty: DETOUR_PENALTIES.FOREST_SLA_PENALTY.toString() }), 'SYSTEM');
         setGameState(prev => ({
             ...prev,
             slaTime: clampStat(prev.slaTime - DETOUR_PENALTIES.FOREST_SLA_PENALTY)
@@ -220,9 +223,9 @@ const App: React.FC = () => {
     }
     
     if (location.id === 'UPSIDEDOWN') {
-        addLog(`Du versuchst, ins Upside Down vorzudringen...`, 'SYSTEM');
-        addLog(`Die Energie ist zu stark. Du bist noch nicht bereit für diesen Ort. Zugriff verweigert.`, 'GM');
-        addLog(`-${DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY} Moral (Überforderung)`, 'SYSTEM');
+        addLog(t.detours.upsidedown.enter, 'SYSTEM');
+        addLog(t.detours.upsidedown.description, 'GM');
+        addLog(formatMessage(t.detours.upsidedown.penalty, { penalty: DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY.toString() }), 'SYSTEM');
         setGameState(prev => ({
             ...prev,
             teamMorale: clampStat(prev.teamMorale - DETOUR_PENALTIES.UPSIDEDOWN_MORALE_PENALTY)
@@ -275,7 +278,7 @@ const App: React.FC = () => {
                  } else if (!act2_2_completed) {
                      scenarioToLoad = STORY_SCENARIOS.find(s => s.id === 'act2_2');
                  } else {
-                     addLog(`Alle Szenarien in ${location.name} wurden abgeschlossen.`, 'SYSTEM');
+                     addLog(formatMessage(t.system.allScenariosCompleted, { location: location.name }), 'SYSTEM');
                      return;
                  }
              }
@@ -289,11 +292,11 @@ const App: React.FC = () => {
     if (scenarioToLoad) {
         // Prevent replaying completed scenarios
         if (gameState.completedScenarios.includes(scenarioToLoad.id)) {
-            addLog(`Dieses Szenario wurde bereits erfolgreich abgeschlossen.`, 'SYSTEM');
+            addLog(t.system.scenarioCompleted, 'SYSTEM');
             return;
         }
         
-        addLog(`Reise nach ${location.name}...`, 'SYSTEM');
+        addLog(formatMessage(t.ui.travelTo, { location: location.name }), 'SYSTEM');
         addLog(scenarioToLoad.description, 'GM');
         setGameState(prev => ({
             ...prev,
@@ -301,7 +304,7 @@ const App: React.FC = () => {
             currentScreen: 'GAME'
         }));
     } else {
-        addLog(`Dieser Ort scheint momentan ruhig. Zu ruhig.`, 'GM');
+        addLog(t.system.locationQuiet, 'GM');
     }
   };
 
@@ -337,7 +340,7 @@ const App: React.FC = () => {
       
       const scenarioAct = gameState.currentScenario.act;
       if (scenarioAct !== gameState.currentAct) {
-          addLog("Akt-Mismatch: Abschluss zählt nicht zur Progression.", 'SYSTEM');
+          addLog(t.system.actMismatch, 'SYSTEM');
           return;
       }
 
@@ -355,7 +358,11 @@ const App: React.FC = () => {
           const currentCount = newInventory[skill.id] || 0;
           if (currentCount > 0) {
             newInventory[skill.id] = currentCount - 1;
-            addLog(`${skill.icon} ${skill.name} wurde verbraucht. Verbleibend: ${newInventory[skill.id]}`, 'SYSTEM');
+            addLog(formatMessage(t.system.itemConsumed, { 
+              icon: skill.icon, 
+              name: skill.name, 
+              count: newInventory[skill.id].toString() 
+            }), 'SYSTEM');
           }
           
           // Apply bad item effects
@@ -363,7 +370,7 @@ const App: React.FC = () => {
             itemQualityEffect = skill.qualityEffect || 0;
             itemMoraleEffect = skill.moraleEffect || 0;
             if (itemQualityEffect !== 0 || itemMoraleEffect !== 0) {
-              addLog(`WARNUNG: ${skill.name} hat Nebenwirkungen!`, 'SYSTEM');
+              addLog(formatMessage(t.system.itemWarning, { name: skill.name }), 'SYSTEM');
             }
           }
         }
@@ -376,7 +383,10 @@ const App: React.FC = () => {
         const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
         if (skill && skill.targetAct && skill.targetAct !== gameState.currentAct && skill.slaPenalty) {
           slaPenalty += skill.slaPenalty;
-          addLog(`WARNUNG: ${skill.name} ist nicht optimal für diesen Akt. -${skill.slaPenalty}% SLA.`, 'SYSTEM');
+          addLog(formatMessage(t.system.wrongItemWarning, { 
+            name: skill.name, 
+            penalty: skill.slaPenalty.toString() 
+          }), 'SYSTEM');
         }
       }
       
@@ -407,7 +417,7 @@ const App: React.FC = () => {
               explanation: outcomeText
           };
           updatedWrongAnswers.push(wrongAnswer);
-          addLog("HINWEIS: Falsche Entscheidung getroffen. Du kannst weiterspielen, aber beachte die Auswirkungen auf deine Stats.", 'SYSTEM');
+          addLog(t.system.wrongDecision, 'SYSTEM');
       }
 
       // Check game over conditions (only from stats, not from wrong answers)
@@ -433,8 +443,8 @@ const App: React.FC = () => {
                   nextAct = Act.ACT_2_PERSPECTIVE;
                   newUnlockedLocs.push('SCHOOL');
                   
-                  triggerTransition("AKT 2", "Das Perspektiven-Labyrinth", () => {
-                      addLog("Level Up! Ort freigeschaltet: HAWKINS HIGH", 'SYSTEM');
+                  triggerTransition(t.acts.transitions.act2.title, t.acts.transitions.act2.subtitle, () => {
+                      addLog(t.system.levelUp, 'SYSTEM');
                   });
                   newScreen = 'SKILL_SELECT';
               }
@@ -446,8 +456,8 @@ const App: React.FC = () => {
                        nextAct = Act.ACT_3_BOSS;
                        newUnlockedLocs.push('LAB');
                        
-                       triggerTransition("AKT 3", "Der Modell-Endgegner", () => {
-                          addLog("WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.", 'SYSTEM');
+                       triggerTransition(t.acts.transitions.act3.title, t.acts.transitions.act3.subtitle, () => {
+                          addLog(t.system.labWarning, 'SYSTEM');
                        });
                        newScreen = 'SKILL_SELECT';
                    }
@@ -456,7 +466,7 @@ const App: React.FC = () => {
                   // Game won!
                   gameStatus = 'won';
                   newScreen = 'GAME_OVER';
-                  addLog("SIEG! Der Modell-Endgegner wurde besiegt. Das System ist stabil.", 'SYSTEM');
+                  addLog(t.system.victory, 'SYSTEM');
               }
           }
       }
@@ -494,18 +504,22 @@ const App: React.FC = () => {
     if (gameState.currentScreen === 'INTRO') {
       return (
         <div className="flex flex-col items-center justify-center h-full text-center px-4 animate-fade-in">
+          {/* Language Selector at top */}
+          <div className="absolute top-4 right-4 z-50">
+            <LanguageSelector showLabel={false} />
+          </div>
+          
           <h1 className="text-5xl md:text-8xl font-stranger mb-8 drop-shadow-lg text-red-600 tracking-widest animate-pulse">
             <span className="block">STRANGER</span>
             <span className="block text-blue-500">IT THINGS</span>
           </h1>
           <div className="max-w-2xl mb-8 space-y-4">
-            <p className="font-vt323 text-2xl text-red-500">HAWKINS INCIDENT CENTER</p>
+            <p className="font-vt323 text-2xl text-red-500">{t.intro.subtitle}</p>
             <p className="font-mono text-lg text-gray-300">
-              Eine Störung aus dem Upside Down bedroht die Infrastruktur. 
-              Ist es ein Incident oder ein Request?
+              {t.intro.description}
             </p>
             <p className="font-vt323 text-xl text-yellow-400">
-              Wähle deine Rolle. Rette den Service.
+              {t.intro.callToAction}
             </p>
           </div>
           <div className="flex flex-col gap-4 w-full max-w-md">
@@ -513,7 +527,7 @@ const App: React.FC = () => {
               onClick={handleStartGame}
               className="px-8 py-4 bg-red-700 border-2 border-red-500 text-white font-press-start hover:bg-red-600 hover:scale-105 transition-all text-sm shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse"
             >
-              INSERT COIN (START)
+              {t.intro.startButton}
             </button>
           </div>
         </div>
@@ -525,7 +539,7 @@ const App: React.FC = () => {
       return (
         <div className="flex flex-col items-center w-full h-full p-4 animate-fade-in overflow-y-auto">
           <h2 className="text-3xl md:text-5xl font-stranger mb-8 text-yellow-400 tracking-widest">
-            WÄHLE DEINEN CHARAKTER
+            {t.characterSelect.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full">
             {CHARACTERS.map((char) => (
@@ -539,9 +553,9 @@ const App: React.FC = () => {
                 <div className="text-xs text-gray-400">{char.role.split('(')[0]}</div>
                 <p className="text-xs text-center leading-relaxed text-gray-300">{char.description}</p>
                 <div className="flex gap-4 text-xs">
-                  <div>SPD: {char.stats.sla}</div>
-                  <div>ACC: {char.stats.quality}</div>
-                  <div>HP: {char.stats.morale}</div>
+                  <div>{t.ui.stats.speed}: {char.stats.sla}</div>
+                  <div>{t.ui.stats.accuracy}: {char.stats.quality}</div>
+                  <div>{t.ui.stats.hp}: {char.stats.morale}</div>
                 </div>
               </button>
             ))}
@@ -614,12 +628,12 @@ const App: React.FC = () => {
                   <span className="text-gray-400 font-vt323 text-xl">{gameState.currentScenario.environment}</span>
                   {progress && (
                     <div className="mt-2 font-mono text-xs text-cyan-400">
-                      📍 {progress.locationName} | Fortschritt: {progress.completed}/{progress.total}
+                      📍 {progress.locationName} | {formatMessage(t.ui.progress, { completed: progress.completed.toString(), total: progress.total.toString() })}
                     </div>
                   )}
                </div>
                <div className="bg-red-900/40 text-red-400 px-3 py-1 rounded font-mono text-xs border border-red-800 animate-pulse">
-                  PRIORITY: HIGH
+                  {t.ui.priority}
                </div>
             </div>
 
