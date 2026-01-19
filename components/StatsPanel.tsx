@@ -1,5 +1,6 @@
 import React from 'react';
 import { Character, Skill, Act, ItemInventory } from '../types';
+import { useTranslation } from '../translations';
 
 interface StatsPanelProps {
   character: Character;
@@ -22,6 +23,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   gameStatus,
   itemInventory = {}
 }) => {
+  const { t } = useTranslation();
   
   // Get item count for equipped skill
   const equippedItemCount = skill ? (itemInventory[skill.id] || 0) : 0;
@@ -63,10 +65,10 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
   // Dynamic SLA Logic
   const getSLAConfig = (val: number) => {
-    if (val <= 0) return { color: "bg-gray-700", text: "VERLETZT" };
-    if (val < 33) return { color: "bg-red-600 shadow-[0_0_10px_#ef4444]", text: "KRITISCH" };
-    if (val < 66) return { color: "bg-yellow-500 shadow-[0_0_10px_#eab308]", text: "WARNUNG" };
-    return { color: "bg-green-500 shadow-[0_0_10px_#22c55e]", text: "SICHER" };
+    if (val <= 0) return { color: "bg-gray-700", text: t.stats.violated };
+    if (val < 33) return { color: "bg-red-600 shadow-[0_0_10px_#ef4444]", text: t.stats.critical };
+    if (val < 66) return { color: "bg-yellow-500 shadow-[0_0_10px_#eab308]", text: t.stats.warning };
+    return { color: "bg-green-500 shadow-[0_0_10px_#22c55e]", text: t.stats.safe };
   };
 
   const slaConfig = getSLAConfig(slaTime);
@@ -101,9 +103,9 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
       {/* Stats Grid - Full width on mobile */}
       <div className="flex-grow w-full grid grid-cols-3 sm:grid-cols-3 gap-1 sm:gap-4">
-        {renderBar("SLA", slaTime, slaConfig.color, slaConfig.text)}
-        {renderBar("MORAL", teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
-        {renderBar("QUALITÄT", ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
+        {renderBar(t.stats.sla, slaTime, slaConfig.color, slaConfig.text)}
+        {renderBar(t.stats.morale, teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
+        {renderBar(t.stats.quality, ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
       </div>
 
       {/* Act Info & Inventory - Hidden on mobile, shown on desktop */}

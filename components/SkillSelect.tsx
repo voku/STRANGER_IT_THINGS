@@ -42,17 +42,11 @@ const SkillSelect: React.FC<SkillSelectProps> = ({ currentAct, unlockedSkillIds,
   const getMissionBrief = () => {
       switch(currentAct) {
           case Act.ACT_1_TICKET:
-              return language === 'de' 
-                ? "STARTE AKT 1: INCIDENT RESPONSE. Wähle dein Werkzeug für die erste Triage."
-                : "START ACT 1: INCIDENT RESPONSE. Choose your tool for the first triage.";
+              return t.skillSelect.missionBriefs.act1;
           case Act.ACT_2_PERSPECTIVE:
-              return language === 'de'
-                ? "STARTE AKT 2: PERSPEKTIVENWECHSEL. Die Verwirrung breitet sich aus. Rüste dich für die Tiefenanalyse."
-                : "START ACT 2: PERSPECTIVE SHIFT. Confusion spreads. Equip yourself for deep analysis.";
+              return t.skillSelect.missionBriefs.act2;
           case Act.ACT_3_BOSS:
-              return language === 'de'
-                ? "STARTE AKT 3: URSACHENFORSCHUNG. Die letzte Konfrontation. Wähle ein Werkzeug, um das System zu dekonstruieren."
-                : "START ACT 3: ROOT CAUSE ANALYSIS. The final confrontation. Choose a tool to deconstruct the system.";
+              return t.skillSelect.missionBriefs.act3;
           default:
               return t.skillSelect.title;
       }

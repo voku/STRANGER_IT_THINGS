@@ -31,13 +31,13 @@ export function checkGameOver(
   quality: number
 ): { isGameOver: boolean; reason?: string } {
   if (sla <= 0) {
-    return { isGameOver: true, reason: "SLA FAILURE: Zeit ist abgelaufen." };
+    return { isGameOver: true, reason: "SLA FAILURE: Time has expired." };
   }
   if (morale <= 0) {
-    return { isGameOver: true, reason: "MORAL COLLAPSE: Team-Moral ist zusammengebrochen." };
+    return { isGameOver: true, reason: "MORAL COLLAPSE: Team morale has collapsed." };
   }
   if (quality <= 0) {
-    return { isGameOver: true, reason: "QUALITY FAILURE: Ticket-Qualität ist auf Null gesunken." };
+    return { isGameOver: true, reason: "QUALITY FAILURE: Ticket quality has dropped to zero." };
   }
   return { isGameOver: false };
 }
