@@ -103,9 +103,9 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
       {/* Stats Grid - Full width on mobile */}
       <div className="flex-grow w-full grid grid-cols-3 sm:grid-cols-3 gap-1 sm:gap-4">
-        {renderBar("SLA", slaTime, slaConfig.color, slaConfig.text)}
-        {renderBar("MORAL", teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
-        {renderBar("QUALITÄT", ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
+        {renderBar(t.stats.sla, slaTime, slaConfig.color, slaConfig.text)}
+        {renderBar(t.stats.morale, teamMorale, "bg-gradient-to-r from-red-600 to-blue-500")}
+        {renderBar(t.stats.quality, ticketQuality, "bg-gradient-to-r from-yellow-600 to-yellow-300")}
       </div>
 
       {/* Act Info & Inventory - Hidden on mobile, shown on desktop */}

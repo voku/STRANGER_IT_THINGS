@@ -177,7 +177,11 @@ export const de: TranslationKey = {
     victory: "SIEG! Der Modell-Endgegner wurde besiegt. Das System ist stabil.",
     levelUp: "Level Up! Ort freigeschaltet: HAWKINS HIGH",
     labWarning: "WARNUNG: Hohe Energie-Signatur im HAWKINS LAB.",
-    allScenariosCompleted: "Alle Szenarien in {location} wurden abgeschlossen."
+    allScenariosCompleted: "Alle Szenarien in {location} wurden abgeschlossen.",
+    systemFailure: "SYSTEM FAILURE: Kritische Grenzwerte unterschritten.",
+    slaFailure: "SLA FAILURE: Zeit ist abgelaufen.",
+    moraleCollapse: "MORAL COLLAPSE: Team-Moral ist zusammengebrochen.",
+    qualityFailure: "QUALITY FAILURE: Ticket-Qualität ist auf Null gesunken."
   },
 
   // Stats panel
@@ -185,7 +189,10 @@ export const de: TranslationKey = {
     violated: "VERLETZT",
     critical: "KRITISCH",
     warning: "WARNUNG",
-    safe: "SICHER"
+    safe: "SICHER",
+    sla: "SLA",
+    morale: "MORAL",
+    quality: "QUALITÄT"
   },
 
   // Map locations
@@ -258,7 +265,12 @@ export const de: TranslationKey = {
     inventory: "Inventar",
     hint: "Wähle weise - Items sind verbrauchbar!",
     goodItems: "Verfügbare Items",
-    badItems: "Riskante Items"
+    badItems: "Riskante Items",
+    missionBriefs: {
+      act1: "STARTE AKT 1: INCIDENT RESPONSE. Wähle dein Werkzeug für die erste Triage.",
+      act2: "STARTE AKT 2: PERSPEKTIVENWECHSEL. Die Verwirrung breitet sich aus. Rüste dich für die Tiefenanalyse.",
+      act3: "STARTE AKT 3: URSACHENFORSCHUNG. Die letzte Konfrontation. Wähle ein Werkzeug, um das System zu dekonstruieren."
+    }
   },
 
   // Map screen
@@ -820,7 +832,9 @@ export const de: TranslationKey = {
     logic: {
       title: "Logikrätsel",
       instructions: "Löse die logische Herausforderung",
-      hint: "Denke sorgfältig nach..."
+      hint: "Denke sorgfältig nach...",
+      accessGranted: "Zugriff gewährt.",
+      accessDenied: "Zugriff verweigert."
     },
     decipher: {
       title: "Code entschlüsseln",

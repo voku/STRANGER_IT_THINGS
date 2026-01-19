@@ -417,8 +417,8 @@ const App: React.FC = () => {
           const wrongAnswer: WrongAnswer = {
               scenarioId: gameState.currentScenario.id,
               scenarioTitle: gameState.currentScenario.title,
-              selectedOption: selectedOptionLabel || 'Unbekannt',
-              correctOption: correctOption?.label || 'Unbekannt',
+              selectedOption: selectedOptionLabel || t.endScreen.unknown,
+              correctOption: correctOption?.label || t.endScreen.unknown,
               explanation: outcomeText
           };
           updatedWrongAnswers.push(wrongAnswer);
@@ -439,7 +439,7 @@ const App: React.FC = () => {
       if (gameOverCheck.isGameOver) {
           gameStatus = 'lost';
           newScreen = 'GAME_OVER';
-          addLog(gameOverCheck.reason || "SYSTEM FAILURE: Kritische Grenzwerte unterschritten.", 'SYSTEM');
+          addLog(gameOverCheck.reason || t.system.systemFailure, 'SYSTEM');
       } else {
           // Handle act progression (only if correct answer)
           if (isCorrect) {
@@ -670,7 +670,7 @@ const App: React.FC = () => {
                            handleScenarioComplete(
                               success ? 15 : -10,
                               success ? 5 : -5,
-                              success ? "Zugriff gewährt." : "Zugriff verweigert.",
+                              success ? t.miniGames.logic.accessGranted : t.miniGames.logic.accessDenied,
                               success
                            );
                       }}

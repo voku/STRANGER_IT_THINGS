@@ -175,7 +175,11 @@ export const en = {
     victory: "VICTORY! The Model Boss has been defeated. The system is stable.",
     levelUp: "Level Up! Location unlocked: HAWKINS HIGH",
     labWarning: "WARNING: High energy signature at HAWKINS LAB.",
-    allScenariosCompleted: "All scenarios in {location} have been completed."
+    allScenariosCompleted: "All scenarios in {location} have been completed.",
+    systemFailure: "SYSTEM FAILURE: Critical thresholds breached.",
+    slaFailure: "SLA FAILURE: Time has expired.",
+    moraleCollapse: "MORAL COLLAPSE: Team morale has collapsed.",
+    qualityFailure: "QUALITY FAILURE: Ticket quality has dropped to zero."
   },
 
   // Stats panel
@@ -183,7 +187,10 @@ export const en = {
     violated: "VIOLATED",
     critical: "CRITICAL",
     warning: "WARNING",
-    safe: "SAFE"
+    safe: "SAFE",
+    sla: "SLA",
+    morale: "MORALE",
+    quality: "QUALITY"
   },
 
   // Map locations
@@ -256,7 +263,12 @@ export const en = {
     inventory: "Inventory",
     hint: "Choose wisely - Items are consumable!",
     goodItems: "Available Items",
-    badItems: "Risky Items"
+    badItems: "Risky Items",
+    missionBriefs: {
+      act1: "START ACT 1: INCIDENT RESPONSE. Choose your tool for the first triage.",
+      act2: "START ACT 2: PERSPECTIVE SHIFT. Confusion spreads. Equip yourself for deep analysis.",
+      act3: "START ACT 3: ROOT CAUSE ANALYSIS. The final confrontation. Choose a tool to deconstruct the system."
+    }
   },
 
   // Map screen
@@ -818,7 +830,9 @@ export const en = {
     logic: {
       title: "Logic Puzzle",
       instructions: "Solve the logical challenge",
-      hint: "Think carefully..."
+      hint: "Think carefully...",
+      accessGranted: "Access granted.",
+      accessDenied: "Access denied."
     },
     decipher: {
       title: "Decipher Code",
