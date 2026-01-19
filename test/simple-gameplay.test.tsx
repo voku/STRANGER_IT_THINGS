@@ -255,15 +255,15 @@ describe('Simple Gameplay Test', () => {
     const actualSchoolButton = schoolButton!.closest('button');
     await user.click(actualSchoolButton!);
     
-    // ========== ACT 2: ROLE SCENARIO - War Room unter der Mall (for Service Desk) ==========
+    // ========== ACT 2: ROLE SCENARIO - War Room beneath the Mall (for Service Desk) ==========
     await waitFor(() => {
       // Use getAllByText since the title appears in multiple places
-      const elements = screen.getAllByText(/War Room unter der Mall/i);
+      const elements = screen.getAllByText(/War Room (unter der Mall|beneath the Mall)/i);
       expect(elements.length).toBeGreaterThan(0);
     }, { timeout: 30000 });
     
-    // Select correct option: "Du übersetzt Müllers Schrei" (REQUEST) - this will show diagram
-    const requestButton = screen.getByText(/übersetzt Müllers Schrei/i).closest('button');
+    // Select correct option: "You translate Mueller's scream" (REQUEST) - this will show diagram
+    const requestButton = screen.getByText(/(übersetzt Müllers Schrei|translate Mueller's scream)/i).closest('button');
     await user.click(requestButton!);
     
     // Wait for diagram to appear and BESTÄTIGEN button
@@ -283,14 +283,14 @@ describe('Simple Gameplay Test', () => {
     const schoolButton2 = schoolElements2.find(el => el.closest('button'))!.closest('button');
     await user.click(schoolButton2!);
     
-    // ========== ACT 2: Klassenraum von Hawkins High – Drei Türen ==========
+    // ========== ACT 2: Hawkins High Classroom – Three Doors ==========
     await waitFor(() => {
-      const elements = screen.getAllByText(/Klassenraum von Hawkins High/i);
+      const elements = screen.getAllByText(/(Klassenraum von Hawkins High|Hawkins High Classroom)/i);
       expect(elements.length).toBeGreaterThan(0);
     }, { timeout: 30000 });
     
-    // Select correct option: "User beschreibt Impact. IT entscheidet intern..." (REQUEST type - shows diagram)
-    const correctITILButton = screen.getByText(/User beschreibt Impact/i).closest('button');
+    // Select correct option: "User describes Impact. IT decides internally..." (REQUEST type - shows diagram)
+    const correctITILButton = screen.getByText(/(User beschreibt Impact|User describes Impact)/i).closest('button');
     await user.click(correctITILButton!);
     
     await waitFor(() => {
@@ -309,13 +309,14 @@ describe('Simple Gameplay Test', () => {
     const schoolButton3 = schoolElements3.find(el => el.closest('button'))!.closest('button');
     await user.click(schoolButton3!);
     
-    // ========== ACT 2: Das Void – Der Button aus einer anderen Dimension ==========
+    // ========== ACT 2: The Void – The Button from Another Dimension ==========
     await waitFor(() => {
-      expect(screen.getByText(/Das Void/i)).toBeInTheDocument();
+      const elements = screen.getAllByText(/(Das Void|The Void)/i);
+      expect(elements.length).toBeGreaterThan(0);
     }, { timeout: 30000 });
     
-    // Select correct option: "Change: 'Neue Anforderung...'" (CHANGE type - shows diagram)
-    const changeButton = screen.getByText(/Neue Anforderung.*Mind-Flayer-Kill-Button/i).closest('button');
+    // Select correct option: "Change: 'New requirement...'" (CHANGE type - shows diagram)
+    const changeButton = screen.getByText(/(Neue Anforderung.*Mind-Flayer-Kill-Button|New requirement.*Mind-Flayer-Kill-Button)/i).closest('button');
     await user.click(changeButton!);
     
     await waitFor(() => {

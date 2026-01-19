@@ -140,3 +140,18 @@ export const useLocationTranslation = (locationId: string) => {
   
   return translations[locationId] || { name: '', description: '' };
 };
+
+/**
+ * Get translated scenario data
+ */
+export const useScenarioTranslation = (scenarioId: string) => {
+  const { t } = useTranslation();
+  
+  const scenarioData = (t.scenarios as any)[scenarioId];
+  
+  if (!scenarioData) {
+    return null;
+  }
+  
+  return scenarioData;
+};
