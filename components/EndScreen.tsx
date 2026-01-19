@@ -12,8 +12,8 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
   const { t } = useTranslation();
   const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers = [] } = gameState;
   const victory = gameStatus === 'won';
-  const charName = selectedCharacter?.name || "Unbekannter Agent";
-  const skillName = selectedSkill?.name || "Standard-Ausrüstung";
+  const charName = selectedCharacter?.name || t.endScreen.unknown;
+  const skillName = selectedSkill?.name || t.endScreen.standardEquipment;
   const completed = gameState.completedScenarios || [];
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   
@@ -47,76 +47,76 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
         switch (selectedCharacter.role) {
             case CharacterRole.SERVICE_DESK:
                 lines.push(victory 
-                    ? "Der Service Desk hat das Signal erfolgreich vom Rauschen getrennt. Der User-Nebel hat sich aufgelöst."
-                    : "Der Service Desk wurde von Hysterie überrannt. Unfähig, Störungen von Anfragen zu unterscheiden, kollabierte die Warteschlange.");
+                    ? t.endScreen.narrative.serviceDesk.victory
+                    : t.endScreen.narrative.serviceDesk.defeat);
                 break;
             case CharacterRole.IAM:
                 lines.push(victory
-                    ? "Identitätsgrenzen durchgesetzt. Das Prinzip der geringsten Rechte hat das Königreich gerettet."
-                    : "Zugriffskontrollfehler. Berechtigungen wurden ohne Prüfung vergeben, die Tore stehen weit offen.");
+                    ? t.endScreen.narrative.iam.victory
+                    : t.endScreen.narrative.iam.defeat);
                 break;
             case CharacterRole.INFRASTRUCTURE:
                 lines.push(victory
-                    ? "Infrastruktur-Integrität gehalten. Du hast die Uptime erfolgreich gegen Fehlalarme verteidigt."
-                    : "Kritische Systeme ignoriert, während Phantomen nachgejagt wurde. Die physikalische Ebene ist kompromittiert.");
+                    ? t.endScreen.narrative.infrastructure.victory
+                    : t.endScreen.narrative.infrastructure.defeat);
                 break;
             case CharacterRole.DEVELOPER:
                 lines.push(victory
-                    ? "Produktions-Code bewahrt. Du hast echte Bugs von gefährlichem Feature-Creep unterschieden."
-                    : "Technische Schulden explodiert. Die Codebasis ist nun mit Hotfixes für nicht existente Fehler verschmutzt.");
+                    ? t.endScreen.narrative.developer.victory
+                    : t.endScreen.narrative.developer.defeat);
                 break;
             case CharacterRole.LICENSING:
                 lines.push(victory
-                    ? "Compliance erreicht. Das Audit ergab null Abweichungen."
-                    : "Schatten-IT entdeckt. Unlizenzierte Software wuchert im Netzwerk.");
+                    ? t.endScreen.narrative.licensing.victory
+                    : t.endScreen.narrative.licensing.defeat);
                 break;
             case CharacterRole.ERP:
                 lines.push(victory
-                    ? "Prozesslogik wiederhergestellt. Die Bücher sind ausgeglichen und die Workflows sauber."
-                    : "Datenkorruption in den Kernmodulen. Die Geschäftslogik ist zerbrochen.");
+                    ? t.endScreen.narrative.erp.victory
+                    : t.endScreen.narrative.erp.defeat);
                 break;
             case CharacterRole.PURCHASING:
                 lines.push(victory
-                    ? "Lieferkette gesichert. Kritische Assets kamen gerade noch rechtzeitig an."
-                    : "Logistik-Stau. Das Lager ist voll mit Anfragen, aber leer an Lösungen.");
+                    ? t.endScreen.narrative.purchasing.victory
+                    : t.endScreen.narrative.purchasing.defeat);
                 break;
             default:
-                lines.push(victory ? "System stabilisiert." : "Systemkollaps.");
+                lines.push(victory ? t.endScreen.narrative.default.victory : t.endScreen.narrative.default.defeat);
         }
     }
 
     // 1b. Lernpfad-Hinweise
     if (act2CoreMissing.length > 0) {
-        lines.push("Lernpfad verpasst: ITIL-Tempel/Change-Rätsel wurden übersprungen. Klassifizierungsmodell blieb unsauber.");
+        lines.push(t.endScreen.warnings.missedLearning);
     }
 
     // 2. Skill Impact
     if (selectedSkill) {
         if (selectedSkill.id === 'ITIL_BOOK') {
-            lines.push(victory ? "Der ITIL-Kodex lieferte die nötige Struktur." : "Selbst die heiligen Texte konnten dieses Chaos nicht verhindern.");
+            lines.push(victory ? t.endScreen.skillImpact.itilBook.victory : t.endScreen.skillImpact.itilBook.defeat);
         } else if (selectedSkill.id === 'COFFEE') {
-            lines.push(victory ? "Koffeinpegel hielt die kognitive Leistung aufrecht." : "Der Koffein-Absturz kam im denkbar schlechtesten Moment.");
+            lines.push(victory ? t.endScreen.skillImpact.coffee.victory : t.endScreen.skillImpact.coffee.defeat);
         } else if (selectedSkill.id === 'DEBUGGER') {
-            lines.push(victory ? "Die Ursachenanalyse war chirurgisch präzise." : "Der Debugger enthüllte nur noch mehr Fehler.");
+            lines.push(victory ? t.endScreen.skillImpact.debugger.victory : t.endScreen.skillImpact.debugger.defeat);
         } else if (selectedSkill.id === 'RUBBER_DUCK') {
-            lines.push(victory ? "Die Gummiente hörte geduldig zu und führte dich zur Lösung." : "Du sprachst zur Ente, aber die Ente hörte nicht zu.");
+            lines.push(victory ? t.endScreen.skillImpact.rubberDuck.victory : t.endScreen.skillImpact.rubberDuck.defeat);
         }
     }
 
     // 3. Performance Nuance
-    if (ticketQuality < 40) lines.push("WARNUNG: Klassifizierungsgenauigkeit war kritisch niedrig. Nachschulung empfohlen.");
-    if (teamMorale < 30) lines.push("ALARM: Team leidet unter schwerem Burnout.");
-    if (slaTime < 20) lines.push("HINWEIS: Mehrere SLA-Verletzungen verzeichnet.");
+    if (ticketQuality < 40) lines.push(t.endScreen.warnings.lowQuality);
+    if (teamMorale < 30) lines.push(t.endScreen.warnings.lowMorale);
+    if (slaTime < 20) lines.push(t.endScreen.warnings.lowSla);
     if (!victory) {
-        if (slaTime <= 0) lines.push("Grund für Niederlage: SLA-Puffer aufgebraucht – Incident-Handling zu langsam.");
-        if (teamMorale <= 0) lines.push("Grund für Niederlage: Team-Moral kollabiert – zu viel Ping-Pong oder Druck.");
-        if (ticketQuality <= 0) lines.push("Grund für Niederlage: Ticket-Qualität bei 0 – falsche Klassifikation dominierte.");
+        if (slaTime <= 0) lines.push(t.endScreen.warnings.defeatSla);
+        if (teamMorale <= 0) lines.push(t.endScreen.warnings.defeatMorale);
+        if (ticketQuality <= 0) lines.push(t.endScreen.warnings.defeatQuality);
     }
-    if (score > 90) lines.push("BELOBIGUNG: Hervorragende Leistung in allen Metriken.");
+    if (score > 90) lines.push(t.endScreen.warnings.highScore);
     
     // 4. Wrong answers summary
     if (wrongAnswers.length > 0) {
-        lines.push(`FEHLERANALYSE: ${wrongAnswers.length} falsche Entscheidung(en) getroffen.`);
+        lines.push(formatMessage(t.endScreen.warnings.wrongDecisions, { count: wrongAnswers.length }));
     }
 
     return lines.join(" ");
@@ -134,7 +134,7 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
           aria-expanded={showWrongAnswers}
           aria-controls="wrong-answers-list"
         >
-          <span>⚠️ FEHLERANALYSE ({wrongAnswers.length} Fehler)</span>
+          <span>⚠️ {t.endScreen.errorAnalysis} ({wrongAnswers.length} {t.endScreen.errors})</span>
           <span className="text-xl" aria-hidden="true">{showWrongAnswers ? '▲' : '▼'}</span>
         </button>
         
@@ -148,11 +148,11 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
                 <div className="font-vt323 text-base space-y-2">
                   <div className="flex items-start gap-2">
                     <span className="text-red-500 font-bold" aria-hidden="true">✗</span>
-                    <span className="text-red-300">Deine Wahl: {wa.selectedOption}</span>
+                    <span className="text-red-300">{t.endScreen.yourChoice} {wa.selectedOption}</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-green-500 font-bold" aria-hidden="true">✓</span>
-                    <span className="text-green-300">Richtig wäre: {wa.correctOption}</span>
+                    <span className="text-green-300">{t.endScreen.correctWas} {wa.correctOption}</span>
                   </div>
                   <div className="mt-2 text-gray-400 text-sm border-t border-gray-700 pt-2">
                     {wa.explanation}
@@ -182,32 +182,32 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
 
              <div className="text-left font-mono space-y-3 sm:space-y-4 text-gray-300">
                 <div className="border-b border-gray-600 pb-2 mb-3 sm:mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
-                    <span className="text-base sm:text-xl font-bold text-white tracking-wider">VORFALLSBERICHT #{reportNumber}</span>
+                    <span className="text-base sm:text-xl font-bold text-white tracking-wider">{t.endScreen.reportNumber} #{reportNumber}</span>
                     <span className={`text-xs px-2 py-1 text-white rounded font-bold ${victory ? 'bg-green-800' : 'bg-red-800'}`}>
-                        {victory ? 'GELÖST' : 'KRITISCH'}
+                        {victory ? t.endScreen.statusResolved : t.endScreen.statusCritical}
                     </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 sm:gap-y-6 gap-x-4 text-sm font-vt323 text-lg sm:text-xl">
                     <div className="border-l-2 border-gray-700 pl-3">
-                        <span className="block text-gray-500 text-xs font-mono uppercase">{selectedCharacter?.name || 'AGENT'}</span>
-                        <span className="text-white uppercase tracking-widest">{playerName || 'UNBEKANNT'}</span>
+                        <span className="block text-gray-500 text-xs font-mono uppercase">{selectedCharacter?.name || t.endScreen.agent}</span>
+                        <span className="text-white uppercase tracking-widest">{playerName || t.endScreen.unknown}</span>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-3">
-                        <span className="block text-gray-500 text-xs font-mono">ROLLE</span>
+                        <span className="block text-gray-500 text-xs font-mono">{t.endScreen.role}</span>
                         <span className={`text-white uppercase tracking-widest ${selectedCharacter?.themeColor?.split(' ')[0] || 'text-white'}`}>
-                            {selectedCharacter?.role.split('(')[0] || 'UNBEKANNT'}
+                            {selectedCharacter?.role.split('(')[0] || t.endScreen.unknown}
                         </span>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-3">
-                        <span className="block text-gray-500 text-xs font-mono">AUSRÜSTUNG</span>
+                        <span className="block text-gray-500 text-xs font-mono">{t.endScreen.equipment}</span>
                         <span className="text-yellow-400 flex items-center gap-2">
                             {selectedSkill?.icon} {skillName}
                         </span>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-3">
-                        <span className="block text-gray-500 text-xs font-mono">SEKTOR</span>
-                        <span className="text-red-400">HAWKINS LAB</span>
+                        <span className="block text-gray-500 text-xs font-mono">{t.endScreen.sector}</span>
+                        <span className="text-red-400">{t.endScreen.sectorLab}</span>
                     </div>
                 </div>
 
@@ -220,19 +220,19 @@ const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
 
                 <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-3 sm:mt-4 text-center">
                     <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
-                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-yellow-400 transition-colors">QUALITÄT</div>
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-yellow-400 transition-colors">{t.endScreen.quality}</div>
                         <div className={`font-bold text-lg sm:text-2xl ${ticketQuality > 70 ? 'text-green-400' : 'text-red-400'}`}>
                             {Math.round(ticketQuality)}%
                         </div>
                     </div>
                     <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
-                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-blue-400 transition-colors">MORAL</div>
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-blue-400 transition-colors">{t.endScreen.morale}</div>
                         <div className={`font-bold text-lg sm:text-2xl ${teamMorale > 70 ? 'text-blue-400' : 'text-red-400'}`}>
                             {Math.round(teamMorale)}%
                         </div>
                     </div>
                     <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 group">
-                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-purple-400 transition-colors">SLA</div>
+                        <div className="text-[8px] sm:text-[10px] text-gray-500 mb-1 group-hover:text-purple-400 transition-colors">{t.endScreen.sla}</div>
                         <div className={`font-bold text-lg sm:text-2xl ${slaTime > 50 ? 'text-purple-400' : 'text-red-400'}`}>
                             {Math.round(slaTime)}%
                         </div>

@@ -180,6 +180,14 @@ export const de: TranslationKey = {
     allScenariosCompleted: "Alle Szenarien in {location} wurden abgeschlossen."
   },
 
+  // Stats panel
+  stats: {
+    violated: "VERLETZT",
+    critical: "KRITISCH",
+    warning: "WARNUNG",
+    safe: "SICHER"
+  },
+
   // Map locations
   locations: {
     mall: {
@@ -309,7 +317,90 @@ export const de: TranslationKey = {
     replayButton: "NOCHMAL SPIELEN",
     contributeTitle: "Möchtest du beitragen?",
     contributeText: "Dieses Spiel ist Open Source! Hilf uns, es zu verbessern:",
-    contributeLink: "Auf GitHub beitragen"
+    contributeLink: "Auf GitHub beitragen",
+    reportNumber: "VORFALLSBERICHT",
+    statusResolved: "GELÖST",
+    statusCritical: "KRITISCH",
+    agent: "AGENT",
+    role: "ROLLE",
+    equipment: "AUSRÜSTUNG",
+    sector: "SEKTOR",
+    sectorLab: "HAWKINS LAB",
+    unknown: "UNBEKANNT",
+    standardEquipment: "Standard-Ausrüstung",
+    quality: "QUALITÄT",
+    morale: "MORAL",
+    sla: "SLA",
+    errorAnalysis: "FEHLERANALYSE",
+    errors: "Fehler",
+    yourChoice: "Deine Wahl:",
+    correctWas: "Richtig wäre:",
+    // Narrative messages by role
+    narrative: {
+      serviceDesk: {
+        victory: "Der Service Desk hat das Signal erfolgreich vom Rauschen getrennt. Der User-Nebel hat sich aufgelöst.",
+        defeat: "Der Service Desk wurde von Hysterie überrannt. Unfähig, Störungen von Anfragen zu unterscheiden, kollabierte die Warteschlange."
+      },
+      iam: {
+        victory: "Identitätsgrenzen durchgesetzt. Das Prinzip der geringsten Rechte hat das Königreich gerettet.",
+        defeat: "Zugriffskontrollfehler. Berechtigungen wurden ohne Prüfung vergeben, die Tore stehen weit offen."
+      },
+      infrastructure: {
+        victory: "Infrastruktur-Integrität gehalten. Du hast die Uptime erfolgreich gegen Fehlalarme verteidigt.",
+        defeat: "Kritische Systeme ignoriert, während Phantomen nachgejagt wurde. Die physikalische Ebene ist kompromittiert."
+      },
+      developer: {
+        victory: "Produktions-Code bewahrt. Du hast echte Bugs von gefährlichem Feature-Creep unterschieden.",
+        defeat: "Technische Schulden explodiert. Die Codebasis ist nun mit Hotfixes für nicht existente Fehler verschmutzt."
+      },
+      licensing: {
+        victory: "Compliance erreicht. Das Audit ergab null Abweichungen.",
+        defeat: "Schatten-IT entdeckt. Unlizenzierte Software wuchert im Netzwerk."
+      },
+      erp: {
+        victory: "Prozesslogik wiederhergestellt. Die Bücher sind ausgeglichen und die Workflows sauber.",
+        defeat: "Datenkorruption in den Kernmodulen. Die Geschäftslogik ist zerbrochen."
+      },
+      purchasing: {
+        victory: "Lieferkette gesichert. Kritische Assets kamen gerade noch rechtzeitig an.",
+        defeat: "Logistik-Stau. Das Lager ist voll mit Anfragen, aber leer an Lösungen."
+      },
+      default: {
+        victory: "System stabilisiert.",
+        defeat: "Systemkollaps."
+      }
+    },
+    // Skill impact messages
+    skillImpact: {
+      itilBook: {
+        victory: "Der ITIL-Kodex lieferte die nötige Struktur.",
+        defeat: "Selbst die heiligen Texte konnten dieses Chaos nicht verhindern."
+      },
+      coffee: {
+        victory: "Koffeinpegel hielt die kognitive Leistung aufrecht.",
+        defeat: "Der Koffein-Absturz kam im denkbar schlechtesten Moment."
+      },
+      debugger: {
+        victory: "Die Ursachenanalyse war chirurgisch präzise.",
+        defeat: "Der Debugger enthüllte nur noch mehr Fehler."
+      },
+      rubberDuck: {
+        victory: "Die Gummiente hörte geduldig zu und führte dich zur Lösung.",
+        defeat: "Du sprachst zur Ente, aber die Ente hörte nicht zu."
+      }
+    },
+    // Warning messages
+    warnings: {
+      lowQuality: "WARNUNG: Klassifizierungsgenauigkeit war kritisch niedrig. Nachschulung empfohlen.",
+      lowMorale: "ALARM: Team leidet unter schwerem Burnout.",
+      lowSla: "HINWEIS: Mehrere SLA-Verletzungen verzeichnet.",
+      defeatSla: "Grund für Niederlage: SLA-Puffer aufgebraucht – Incident-Handling zu langsam.",
+      defeatMorale: "Grund für Niederlage: Team-Moral kollabiert – zu viel Ping-Pong oder Druck.",
+      defeatQuality: "Grund für Niederlage: Ticket-Qualität bei 0 – falsche Klassifikation dominierte.",
+      highScore: "BELOBIGUNG: Hervorragende Leistung in allen Metriken.",
+      missedLearning: "Lernpfad verpasst: ITIL-Tempel/Change-Rätsel wurden übersprungen. Klassifizierungsmodell blieb unsauber.",
+      wrongDecisions: "FEHLERANALYSE: {count} falsche Entscheidung(en) getroffen."
+    }
   },
 
   // Scenarios - Act 1

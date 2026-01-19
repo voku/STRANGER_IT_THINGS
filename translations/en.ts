@@ -178,6 +178,14 @@ export const en = {
     allScenariosCompleted: "All scenarios in {location} have been completed."
   },
 
+  // Stats panel
+  stats: {
+    violated: "VIOLATED",
+    critical: "CRITICAL",
+    warning: "WARNING",
+    safe: "SAFE"
+  },
+
   // Map locations
   locations: {
     mall: {
@@ -307,7 +315,90 @@ export const en = {
     replayButton: "REPLAY",
     contributeTitle: "Want to contribute?",
     contributeText: "This game is open source! Help us improve it:",
-    contributeLink: "Contribute on GitHub"
+    contributeLink: "Contribute on GitHub",
+    reportNumber: "INCIDENT REPORT",
+    statusResolved: "RESOLVED",
+    statusCritical: "CRITICAL",
+    agent: "AGENT",
+    role: "ROLE",
+    equipment: "EQUIPMENT",
+    sector: "SECTOR",
+    sectorLab: "HAWKINS LAB",
+    unknown: "UNKNOWN",
+    standardEquipment: "Standard Equipment",
+    quality: "QUALITY",
+    morale: "MORALE",
+    sla: "SLA",
+    errorAnalysis: "ERROR ANALYSIS",
+    errors: "errors",
+    yourChoice: "Your choice:",
+    correctWas: "Correct was:",
+    // Narrative messages by role
+    narrative: {
+      serviceDesk: {
+        victory: "The Service Desk successfully separated signal from noise. The user fog has lifted.",
+        defeat: "The Service Desk was overrun by hysteria. Unable to distinguish disruptions from requests, the queue collapsed."
+      },
+      iam: {
+        victory: "Identity boundaries enforced. The principle of least privilege saved the kingdom.",
+        defeat: "Access control failure. Permissions were granted without verification, the gates stand wide open."
+      },
+      infrastructure: {
+        victory: "Infrastructure integrity maintained. You successfully defended uptime against false alarms.",
+        defeat: "Critical systems ignored while chasing phantoms. The physical layer is compromised."
+      },
+      developer: {
+        victory: "Production code preserved. You distinguished real bugs from dangerous feature creep.",
+        defeat: "Technical debt exploded. The codebase is now polluted with hotfixes for non-existent errors."
+      },
+      licensing: {
+        victory: "Compliance achieved. The audit found zero deviations.",
+        defeat: "Shadow IT discovered. Unlicensed software proliferates in the network."
+      },
+      erp: {
+        victory: "Process logic restored. The books are balanced and workflows clean.",
+        defeat: "Data corruption in core modules. Business logic is broken."
+      },
+      purchasing: {
+        victory: "Supply chain secured. Critical assets arrived just in time.",
+        defeat: "Logistics jam. The warehouse is full of requests but empty of solutions."
+      },
+      default: {
+        victory: "System stabilized.",
+        defeat: "System collapse."
+      }
+    },
+    // Skill impact messages
+    skillImpact: {
+      itilBook: {
+        victory: "The ITIL codex provided the necessary structure.",
+        defeat: "Even the sacred texts couldn't prevent this chaos."
+      },
+      coffee: {
+        victory: "Caffeine levels maintained cognitive performance.",
+        defeat: "The caffeine crash came at the worst possible moment."
+      },
+      debugger: {
+        victory: "Root cause analysis was surgically precise.",
+        defeat: "The debugger only revealed more errors."
+      },
+      rubberDuck: {
+        victory: "The rubber duck listened patiently and led you to the solution.",
+        defeat: "You spoke to the duck, but the duck didn't listen."
+      }
+    },
+    // Warning messages
+    warnings: {
+      lowQuality: "WARNING: Classification accuracy was critically low. Retraining recommended.",
+      lowMorale: "ALERT: Team suffering from severe burnout.",
+      lowSla: "NOTE: Multiple SLA violations recorded.",
+      defeatSla: "Reason for defeat: SLA buffer exhausted – incident handling too slow.",
+      defeatMorale: "Reason for defeat: Team morale collapsed – too much ping-pong or pressure.",
+      defeatQuality: "Reason for defeat: Ticket quality at 0 – wrong classification dominated.",
+      highScore: "COMMENDATION: Excellent performance in all metrics.",
+      missedLearning: "Learning path missed: ITIL temple/Change puzzle were skipped. Classification model remained unclear.",
+      wrongDecisions: "ERROR ANALYSIS: {count} wrong decision(s) made."
+    }
   },
 
   // Scenarios - Act 1
