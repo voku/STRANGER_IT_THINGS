@@ -819,7 +819,10 @@ export const en = {
     classify: {
       useItem: "Use Item",
       submit: "Submit Decision",
-      selectOption: "Select an option above"
+      selectOption: "Select an option above",
+      noItemAvailable: "⚠️ No item available!",
+      systemHintDecrypted: ">> SYSTEM HINT DECRYPTED:",
+      optimalActionMarked: "OPTIMAL ACTION MARKED"
     },
     memory: {
       title: "Memory Match",
@@ -850,7 +853,11 @@ export const en = {
       title: "Decipher Code",
       instructions: "Decode the message",
       guess: "Your guess",
-      submit: "Submit"
+      submit: "Submit",
+      time: "TIME:",
+      length: "LENGTH:",
+      skillModuleEmpty: "SKILL MODULE EMPTY",
+      decryptPassword: "DECRYPT THE PASSWORD"
     },
     reflex: {
       title: "Reflex Test",

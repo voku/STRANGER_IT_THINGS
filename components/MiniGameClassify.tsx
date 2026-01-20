@@ -120,7 +120,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
               {formatMessage(t.miniGame.useItem, { item: skill.name })} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : `(${t.miniGame.empty})`}
             </button>
             {!hasItemInInventory && (
-              <p className="text-red-400 text-xs font-mono">⚠️ Kein Item verfügbar!</p>
+              <p className="text-red-400 text-xs font-mono">{t.miniGames.classify.noItemAvailable}</p>
             )}
           </div>
       )}
@@ -128,9 +128,9 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
       {/* Hint Display */}
       {hintRevealed && !showDiagram && (
           <div className="mb-4 sm:mb-6 max-w-xl mx-2 bg-indigo-950/80 border border-indigo-500 p-3 sm:p-4 rounded text-center shadow-[0_0_15px_rgba(99,102,241,0.3)] animate-fade-in-up">
-              <span className="text-indigo-300 font-bold font-mono block mb-1 text-xs sm:text-sm">{'>> SYSTEM-HINWEIS ENTSCHLÜSSELT:'}</span>
+              <span className="text-indigo-300 font-bold font-mono block mb-1 text-xs sm:text-sm">{t.miniGames.classify.systemHintDecrypted}</span>
               <span className="text-white font-vt323 text-base sm:text-lg">{scenario.hint}</span>
-              <div className="text-green-400 font-press-start text-[10px] sm:text-xs mt-2">OPTIMALE HANDLUNG MARKIERT</div>
+              <div className="text-green-400 font-press-start text-[10px] sm:text-xs mt-2">{t.miniGames.classify.optimalActionMarked}</div>
           </div>
       )}
 

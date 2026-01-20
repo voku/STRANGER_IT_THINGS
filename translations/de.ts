@@ -821,7 +821,10 @@ export const de: TranslationKey = {
     classify: {
       useItem: "Item nutzen",
       submit: "Entscheidung abgeben",
-      selectOption: "Wähle eine Option oben"
+      selectOption: "Wähle eine Option oben",
+      noItemAvailable: "⚠️ Kein Item verfügbar!",
+      systemHintDecrypted: ">> SYSTEM-HINWEIS ENTSCHLÜSSELT:",
+      optimalActionMarked: "OPTIMALE HANDLUNG MARKIERT"
     },
     memory: {
       title: "Memory-Spiel",
@@ -852,7 +855,11 @@ export const de: TranslationKey = {
       title: "Code entschlüsseln",
       instructions: "Entschlüssle die Nachricht",
       guess: "Deine Vermutung",
-      submit: "Absenden"
+      submit: "Absenden",
+      time: "ZEIT:",
+      length: "LÄNGE:",
+      skillModuleEmpty: "SKILL-MODUL LEER",
+      decryptPassword: "ENTSCHLÜSSELE DAS KENNWORT"
     },
     reflex: {
       title: "Reaktionstest",
