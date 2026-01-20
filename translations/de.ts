@@ -828,7 +828,8 @@ export const de: TranslationKey = {
       instructions: "Finde die Paare durch Klicken auf die Karten",
       matchFound: "Paar gefunden!",
       tryAgain: "Kein Paar, versuche es nochmal",
-      error: "FEHLER: SEQUENZ-ABWEICHUNG"
+      error: "FEHLER: SEQUENZ-ABWEICHUNG",
+      watchPattern: "Beobachte das Muster..."
     },
     logic: {
       title: "Logikrätsel",
@@ -837,7 +838,15 @@ export const de: TranslationKey = {
       accessGranted: "Zugriff gewährt.",
       accessDenied: "Zugriff verweigert.",
       debuggerButton: "DEBUGGER STARTEN (AUTO-FIX)",
-      autoRefactoring: ">> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN."
+      autoRefactoring: ">> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.",
+      task: "AUFGABE:",
+      taskConnect: "Verbinde",
+      taskUser: "User",
+      taskAnd: "und",
+      taskRole: "Rolle",
+      taskAllNodes: "Alle Knoten müssen",
+      taskGreen: "GRÜN",
+      taskDomainModel: "sein, damit das Domain-Modell kompiliert."
     },
     decipher: {
       title: "Code entschlüsseln",

@@ -16,7 +16,7 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
   const [playerInput, setPlayerInput] = useState<number[]>([]);
   const [isPlayingSequence, setIsPlayingSequence] = useState(false);
   const [activeLight, setActiveLight] = useState<number | null>(null);
-  const [message, setMessage] = useState("Beobachte das Muster...");
+  const [message, setMessage] = useState(t.miniGames.memory.watchPattern);
   
   // Difficulty determines sequence length
   const targetLength = (scenario.difficultyLevel || 1) + 2; 

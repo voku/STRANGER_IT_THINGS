@@ -164,9 +164,9 @@ const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, ski
       )}
 
       <div className="mt-2 font-vt323 text-gray-300 text-center max-w-md bg-black/50 p-4 rounded border border-gray-700">
-        <p className="text-lg text-green-400 mb-1">AUFGABE:</p>
-        Verbinde <span className="text-white">User</span> und <span className="text-white">Rolle</span>.
-        Alle Knoten müssen <span className="text-green-400">GRÜN</span> sein, damit das Domain-Modell kompiliert.
+        <p className="text-lg text-green-400 mb-1">{t.miniGames.logic.task}</p>
+        {t.miniGames.logic.taskConnect} <span className="text-white">{t.miniGames.logic.taskUser}</span> {t.miniGames.logic.taskAnd} <span className="text-white">{t.miniGames.logic.taskRole}</span>.
+        {t.miniGames.logic.taskAllNodes} <span className="text-green-400">{t.miniGames.logic.taskGreen}</span> {t.miniGames.logic.taskDomainModel}
       </div>
     </div>
   );

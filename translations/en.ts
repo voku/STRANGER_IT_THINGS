@@ -826,7 +826,8 @@ export const en = {
       instructions: "Match the pairs by clicking on cards",
       matchFound: "Match found!",
       tryAgain: "Not a match, try again",
-      error: "ERROR: SEQUENCE DEVIATION"
+      error: "ERROR: SEQUENCE DEVIATION",
+      watchPattern: "Watch the pattern..."
     },
     logic: {
       title: "Logic Puzzle",
@@ -835,7 +836,15 @@ export const en = {
       accessGranted: "Access granted.",
       accessDenied: "Access denied.",
       debuggerButton: "START DEBUGGER (AUTO-FIX)",
-      autoRefactoring: ">> AUTOMATIC REFACTORING RUNNING... ALIGNMENT ENFORCED."
+      autoRefactoring: ">> AUTOMATIC REFACTORING RUNNING... ALIGNMENT ENFORCED.",
+      task: "TASK:",
+      taskConnect: "Connect",
+      taskUser: "User",
+      taskAnd: "and",
+      taskRole: "Role",
+      taskAllNodes: "All nodes must be",
+      taskGreen: "GREEN",
+      taskDomainModel: "for the Domain Model to compile."
     },
     decipher: {
       title: "Decipher Code",
