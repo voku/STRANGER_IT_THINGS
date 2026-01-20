@@ -819,26 +819,58 @@ export const en = {
     classify: {
       useItem: "Use Item",
       submit: "Submit Decision",
-      selectOption: "Select an option above"
+      selectOption: "Select an option above",
+      noItemAvailable: "⚠️ No item available!",
+      systemHintDecrypted: ">> SYSTEM HINT DECRYPTED:",
+      optimalActionMarked: "OPTIMAL ACTION MARKED"
     },
     memory: {
       title: "Memory Match",
       instructions: "Match the pairs by clicking on cards",
       matchFound: "Match found!",
-      tryAgain: "Not a match, try again"
+      tryAgain: "Not a match, try again",
+      error: "ERROR: SEQUENCE DEVIATION",
+      watchPattern: "Watch the pattern...",
+      receivingData: "RECEIVING DATA...",
+      repeatSequence: "REPEAT SEQUENCE",
+      patchUploaded: "PATCH UPLOADED",
+      goodExtending: "GOOD. EXTENDING...",
+      sequenceLabel: "SEQUENCE"
     },
     logic: {
       title: "Logic Puzzle",
       instructions: "Solve the logical challenge",
       hint: "Think carefully...",
       accessGranted: "Access granted.",
-      accessDenied: "Access denied."
+      accessDenied: "Access denied.",
+      debuggerButton: "START DEBUGGER (AUTO-FIX)",
+      autoRefactoring: ">> AUTOMATIC REFACTORING RUNNING... ALIGNMENT ENFORCED.",
+      task: "TASK:",
+      taskConnect: "Connect",
+      taskUser: "User",
+      taskAnd: "and",
+      taskRole: "Role",
+      taskAllNodes: "All nodes must be",
+      taskGreen: "GREEN",
+      taskDomainModel: "for the Domain Model to compile.",
+      loading: "Loading logic core...",
+      compileTime: "COMPILE TIME:",
+      refactorings: "REFACTORINGS:",
+      domainModelLevel: "DOMAIN MODEL LEVEL",
+      core: "CORE",
+      node: "NODE",
+      aligned: "ALIGNED",
+      defective: "DEFECTIVE"
     },
     decipher: {
       title: "Decipher Code",
       instructions: "Decode the message",
       guess: "Your guess",
-      submit: "Submit"
+      submit: "Submit",
+      time: "TIME:",
+      length: "LENGTH:",
+      skillModuleEmpty: "SKILL MODULE EMPTY",
+      decryptPassword: "DECRYPT THE PASSWORD"
     },
     reflex: {
       title: "Reflex Test",
@@ -847,6 +879,28 @@ export const en = {
       go: "GO!",
       tooSlow: "Too slow!",
       perfect: "Perfect timing!"
+    }
+  },
+
+  // Lifecycle diagram labels
+  lifecycleDiagram: {
+    incident: {
+      title: "ERROR / BUG",
+      subtitle: "(Broken)",
+      action: "REPAIR",
+      actionSubtitle: "Admin Fix"
+    },
+    change: {
+      title: "NEW SCOPE",
+      subtitle: "(Extension)",
+      action: "DEVELOPMENT",
+      actionSubtitle: "CAB / Dev"
+    },
+    request: {
+      title: "CAPABILITY",
+      subtitle: "(Request)",
+      action: "STANDARD",
+      actionSubtitle: "Approval"
     }
   }
 };

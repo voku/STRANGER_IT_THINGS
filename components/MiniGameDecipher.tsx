@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scenario, Skill } from '../types';
+import { useTranslation } from '../translations';
 
 interface MiniGameDecipherProps {
   scenario: Scenario;
@@ -14,6 +15,7 @@ interface Letter {
 }
 
 const MiniGameDecipher: React.FC<MiniGameDecipherProps> = ({ scenario, skill, onComplete }) => {
+  const { t } = useTranslation();
   const targetWord = scenario.targetWord || "PASSWORD";
   const [letters, setLetters] = useState<Letter[]>([]);
   const [currentGuess, setCurrentGuess] = useState<Letter[]>([]);
@@ -148,9 +150,9 @@ const MiniGameDecipher: React.FC<MiniGameDecipherProps> = ({ scenario, skill, on
     <div className="flex flex-col items-center justify-center w-full">
        <div className="flex justify-between w-full max-w-md mb-6 font-vt323 text-2xl border-b border-gray-700 pb-2">
         <span className={`${timeLeft < 10 ? 'text-red-500 animate-pulse' : 'text-blue-400'}`}>
-            ZEIT: {timeLeft}s
+            {t.miniGames.decipher.time} {timeLeft}s
         </span>
-        <span className="text-gray-400">LÄNGE: {targetWord.length}</span>
+        <span className="text-gray-400">{t.miniGames.decipher.length} {targetWord.length}</span>
       </div>
 
       {/* Slots Area */}
@@ -212,11 +214,11 @@ const MiniGameDecipher: React.FC<MiniGameDecipherProps> = ({ scenario, skill, on
       )}
 
       {skillUsed && (
-          <div className="text-gray-500 font-mono text-sm mt-2">SKILL-MODUL LEER</div>
+          <div className="text-gray-500 font-mono text-sm mt-2">{t.miniGames.decipher.skillModuleEmpty}</div>
       )}
 
       <div className="mt-6 font-vt323 text-gray-400 text-center">
-        <p className="text-xl">ENTSCHLÜSSELE DAS KENNWORT</p>
+        <p className="text-xl">{t.miniGames.decipher.decryptPassword}</p>
       </div>
     </div>
   );

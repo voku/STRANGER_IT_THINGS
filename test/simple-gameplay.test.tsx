@@ -372,12 +372,12 @@ describe('Simple Gameplay Test', () => {
     // Note: Without DEBUGGER skill, solving this requires puzzle-solving logic
     // For this test, we'll just verify the minigame loads correctly
     await waitFor(() => {
-      const gameGrid = screen.queryByText(/AUFGABE/i); // Task description
+      const gameGrid = screen.queryByText(/TASK:/i); // Task description (English default)
       expect(gameGrid).toBeInTheDocument();
     }, { timeout: 30000 });
     
     // If AUTO-FIX is available (player has DEBUGGER, COFFEE, or RUBBER_DUCK skill), use it
-    const autoFixButton = screen.queryByText(/DEBUGGER STARTEN.*AUTO-FIX/i);
+    const autoFixButton = screen.queryByText(/START DEBUGGER.*AUTO-FIX/i);
     if (autoFixButton) {
       await user.click(autoFixButton);
       

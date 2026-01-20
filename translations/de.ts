@@ -821,26 +821,58 @@ export const de: TranslationKey = {
     classify: {
       useItem: "Item nutzen",
       submit: "Entscheidung abgeben",
-      selectOption: "Wähle eine Option oben"
+      selectOption: "Wähle eine Option oben",
+      noItemAvailable: "⚠️ Kein Item verfügbar!",
+      systemHintDecrypted: ">> SYSTEM-HINWEIS ENTSCHLÜSSELT:",
+      optimalActionMarked: "OPTIMALE HANDLUNG MARKIERT"
     },
     memory: {
       title: "Memory-Spiel",
       instructions: "Finde die Paare durch Klicken auf die Karten",
       matchFound: "Paar gefunden!",
-      tryAgain: "Kein Paar, versuche es nochmal"
+      tryAgain: "Kein Paar, versuche es nochmal",
+      error: "FEHLER: SEQUENZ-ABWEICHUNG",
+      watchPattern: "Beobachte das Muster...",
+      receivingData: "EMPFANGE DATEN...",
+      repeatSequence: "SEQUENZ WIEDERHOLEN",
+      patchUploaded: "PATCH HOCHGELADEN",
+      goodExtending: "GUT. ERWEITERE...",
+      sequenceLabel: "SEQUENZ"
     },
     logic: {
       title: "Logikrätsel",
       instructions: "Löse die logische Herausforderung",
       hint: "Denke sorgfältig nach...",
       accessGranted: "Zugriff gewährt.",
-      accessDenied: "Zugriff verweigert."
+      accessDenied: "Zugriff verweigert.",
+      debuggerButton: "DEBUGGER STARTEN (AUTO-FIX)",
+      autoRefactoring: ">> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.",
+      task: "AUFGABE:",
+      taskConnect: "Verbinde",
+      taskUser: "User",
+      taskAnd: "und",
+      taskRole: "Rolle",
+      taskAllNodes: "Alle Knoten müssen",
+      taskGreen: "GRÜN",
+      taskDomainModel: "sein, damit das Domain-Modell kompiliert.",
+      loading: "Lade Logik-Kern...",
+      compileTime: "KOMPILIERZEIT:",
+      refactorings: "REFAKTORIERUNGEN:",
+      domainModelLevel: "DOMAIN-MODELL EBENE",
+      core: "KERN",
+      node: "KNOTEN",
+      aligned: "AUSGERICHTET",
+      defective: "DEFEKT"
     },
     decipher: {
       title: "Code entschlüsseln",
       instructions: "Entschlüssle die Nachricht",
       guess: "Deine Vermutung",
-      submit: "Absenden"
+      submit: "Absenden",
+      time: "ZEIT:",
+      length: "LÄNGE:",
+      skillModuleEmpty: "SKILL-MODUL LEER",
+      decryptPassword: "ENTSCHLÜSSELE DAS KENNWORT"
     },
     reflex: {
       title: "Reaktionstest",
@@ -849,6 +881,28 @@ export const de: TranslationKey = {
       go: "LOS!",
       tooSlow: "Zu langsam!",
       perfect: "Perfektes Timing!"
+    }
+  },
+
+  // Lifecycle diagram labels
+  lifecycleDiagram: {
+    incident: {
+      title: "FEHLER / BUG",
+      subtitle: "(Kaputt)",
+      action: "REPARATUR",
+      actionSubtitle: "Admin Fix"
+    },
+    change: {
+      title: "NEUER SCOPE",
+      subtitle: "(Erweiterung)",
+      action: "ENTWICKLUNG",
+      actionSubtitle: "CAB / Dev"
+    },
+    request: {
+      title: "FÄHIGKEIT",
+      subtitle: "(Bestellung)",
+      action: "STANDARD",
+      actionSubtitle: "Genehmigung"
     }
   }
 };

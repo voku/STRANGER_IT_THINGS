@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from '../translations';
 
 interface LifecycleDiagramProps {
   activePath: 'INCIDENT' | 'REQUEST' | 'CHANGE' | null;
@@ -6,6 +7,7 @@ interface LifecycleDiagramProps {
 }
 
 const LifecycleDiagram: React.FC<LifecycleDiagramProps> = ({ activePath, className = '' }) => {
+  const { t } = useTranslation();
   const isInc = activePath === 'INCIDENT';
   const isReq = activePath === 'REQUEST';
   const isChg = activePath === 'CHANGE';
@@ -86,15 +88,15 @@ const LifecycleDiagram: React.FC<LifecycleDiagramProps> = ({ activePath, classNa
         {/* --- LEFT SIDE: INCIDENT PATH --- */}
         <g className="transition-opacity duration-500">
             <rect x="100" y="110" width="100" height="60" rx="6" className={getNodeClass(isInc, 'red')} filter={isInc ? "url(#glow)" : ""} />
-            <text x="150" y="135" textAnchor="middle" className={getTextClass(isInc)}>FEHLER / BUG</text>
-            <text x="150" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">(Kaputt)</text>
+            <text x="150" y="135" textAnchor="middle" className={getTextClass(isInc)}>{t.lifecycleDiagram.incident.title}</text>
+            <text x="150" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.incident.subtitle}</text>
             
             <path d="M150,170 L150,220" className={getPathClass(isInc, 'red')} markerEnd={isInc ? "url(#arrow-inc)" : ""} />
             {isInc && <circle r="3" fill="#ef4444"><animateMotion dur="1s" repeatCount="indefinite" path="M150,170 L150,220" /></circle>}
             
             <rect x="100" y="220" width="100" height="60" rx="6" className={getNodeClass(isInc, 'red')} />
-            <text x="150" y="245" textAnchor="middle" className={getTextClass(isInc)}>REPARATUR</text>
-            <text x="150" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">Admin Fix</text>
+            <text x="150" y="245" textAnchor="middle" className={getTextClass(isInc)}>{t.lifecycleDiagram.incident.action}</text>
+            <text x="150" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.incident.actionSubtitle}</text>
             
             <path d="M150,280 L150,310" className={getPathClass(isInc, 'red')} />
             
@@ -106,15 +108,15 @@ const LifecycleDiagram: React.FC<LifecycleDiagramProps> = ({ activePath, classNa
         {/* --- MIDDLE: CHANGE PATH --- */}
         <g className="transition-opacity duration-500">
             <rect x="350" y="110" width="100" height="60" rx="6" className={getNodeClass(isChg, 'purple')} filter={isChg ? "url(#glow)" : ""} />
-            <text x="400" y="135" textAnchor="middle" className={getTextClass(isChg)}>NEUER SCOPE</text>
-            <text x="400" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">(Erweiterung)</text>
+            <text x="400" y="135" textAnchor="middle" className={getTextClass(isChg)}>{t.lifecycleDiagram.change.title}</text>
+            <text x="400" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.change.subtitle}</text>
 
             <path d="M400,170 L400,220" className={getPathClass(isChg, 'purple')} markerEnd={isChg ? "url(#arrow-chg)" : ""} />
             {isChg && <circle r="3" fill="#c084fc"><animateMotion dur="1s" repeatCount="indefinite" path="M400,170 L400,220" /></circle>}
 
             <rect x="350" y="220" width="100" height="60" rx="6" className={getNodeClass(isChg, 'purple')} />
-            <text x="400" y="245" textAnchor="middle" className={getTextClass(isChg)}>ENTWICKLUNG</text>
-            <text x="400" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">CAB / Dev</text>
+            <text x="400" y="245" textAnchor="middle" className={getTextClass(isChg)}>{t.lifecycleDiagram.change.action}</text>
+            <text x="400" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.change.actionSubtitle}</text>
 
             <path d="M400,280 L400,310" className={getPathClass(isChg, 'purple')} />
 
@@ -126,15 +128,15 @@ const LifecycleDiagram: React.FC<LifecycleDiagramProps> = ({ activePath, classNa
         {/* --- RIGHT SIDE: REQUEST PATH --- */}
         <g>
             <rect x="600" y="110" width="100" height="60" rx="6" className={getNodeClass(isReq, 'blue')} filter={isReq ? "url(#glow)" : ""} />
-            <text x="650" y="135" textAnchor="middle" className={getTextClass(isReq)}>FÄHIGKEIT</text>
-            <text x="650" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">(Bestellung)</text>
+            <text x="650" y="135" textAnchor="middle" className={getTextClass(isReq)}>{t.lifecycleDiagram.request.title}</text>
+            <text x="650" y="155" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.request.subtitle}</text>
 
             <path d="M650,170 L650,220" className={getPathClass(isReq, 'blue')} markerEnd={isReq ? "url(#arrow-req)" : ""} />
             {isReq && <circle r="3" fill="#60a5fa"><animateMotion dur="1s" repeatCount="indefinite" path="M650,170 L650,220" /></circle>}
 
             <rect x="600" y="220" width="100" height="60" rx="6" className={getNodeClass(isReq, 'blue')} />
-            <text x="650" y="245" textAnchor="middle" className={getTextClass(isReq)}>STANDARD</text>
-            <text x="650" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">Genehmigung</text>
+            <text x="650" y="245" textAnchor="middle" className={getTextClass(isReq)}>{t.lifecycleDiagram.request.action}</text>
+            <text x="650" y="265" textAnchor="middle" className="font-vt323 text-sm fill-gray-400">{t.lifecycleDiagram.request.actionSubtitle}</text>
 
             <path d="M650,280 L650,310" className={getPathClass(isReq, 'blue')} />
 
