@@ -827,14 +827,17 @@ export const de: TranslationKey = {
       title: "Memory-Spiel",
       instructions: "Finde die Paare durch Klicken auf die Karten",
       matchFound: "Paar gefunden!",
-      tryAgain: "Kein Paar, versuche es nochmal"
+      tryAgain: "Kein Paar, versuche es nochmal",
+      error: "FEHLER: SEQUENZ-ABWEICHUNG"
     },
     logic: {
       title: "Logikrätsel",
       instructions: "Löse die logische Herausforderung",
       hint: "Denke sorgfältig nach...",
       accessGranted: "Zugriff gewährt.",
-      accessDenied: "Zugriff verweigert."
+      accessDenied: "Zugriff verweigert.",
+      debuggerButton: "DEBUGGER STARTEN (AUTO-FIX)",
+      autoRefactoring: ">> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN."
     },
     decipher: {
       title: "Code entschlüsseln",
@@ -849,6 +852,28 @@ export const de: TranslationKey = {
       go: "LOS!",
       tooSlow: "Zu langsam!",
       perfect: "Perfektes Timing!"
+    }
+  },
+
+  // Lifecycle diagram labels
+  lifecycleDiagram: {
+    incident: {
+      title: "FEHLER / BUG",
+      subtitle: "(Kaputt)",
+      action: "REPARATUR",
+      actionSubtitle: "Admin Fix"
+    },
+    change: {
+      title: "NEUER SCOPE",
+      subtitle: "(Erweiterung)",
+      action: "ENTWICKLUNG",
+      actionSubtitle: "CAB / Dev"
+    },
+    request: {
+      title: "FÄHIGKEIT",
+      subtitle: "(Bestellung)",
+      action: "STANDARD",
+      actionSubtitle: "Genehmigung"
     }
   }
 };

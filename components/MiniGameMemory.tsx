@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scenario } from '../types';
+import { useTranslation } from '../translations';
 
 interface MiniGameMemoryProps {
   scenario: Scenario;
@@ -10,6 +11,7 @@ const COLORS = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
 const GRID_SIZE = 4; // 2x2 grid
 
 const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete }) => {
+  const { t } = useTranslation();
   const [sequence, setSequence] = useState<number[]>([]);
   const [playerInput, setPlayerInput] = useState<number[]>([]);
   const [isPlayingSequence, setIsPlayingSequence] = useState(false);
@@ -62,7 +64,7 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
 
     // Check correctness immediately
     if (newInput[newInput.length - 1] !== sequence[newInput.length - 1]) {
-      setMessage("FEHLER: SEQUENZ-ABWEICHUNG");
+      setMessage(t.miniGames.memory.error);
       setTimeout(() => onComplete(false), 1000);
       return;
     }

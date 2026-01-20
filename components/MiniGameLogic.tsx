@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scenario, Skill } from '../types';
+import { useTranslation } from '../translations';
 
 interface MiniGameLogicProps {
   scenario: Scenario;
@@ -10,6 +11,7 @@ interface MiniGameLogicProps {
 const GRID_SIZE = 3;
 
 const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, skill }) => {
+  const { t } = useTranslation();
   const [grid, setGrid] = useState<boolean[][]>([]);
   const [timeLeft, setTimeLeft] = useState(60); 
   const [moves, setMoves] = useState(0);
@@ -151,13 +153,13 @@ const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, ski
             onClick={handleAutoFix}
             className="mb-4 px-4 py-2 bg-green-900 border border-green-400 text-green-300 font-press-start text-xs rounded shadow-[0_0_10px_rgba(74,222,128,0.5)] hover:bg-green-800 animate-pulse"
           >
-            {skill.icon} DEBUGGER STARTEN (AUTO-FIX)
+            {skill.icon} {t.miniGames.logic.debuggerButton}
           </button>
       )}
 
       {hintRevealed && (
           <div className="mb-4 text-green-400 font-mono bg-black/80 p-2 border border-green-700 rounded animate-pulse">
-            {'>> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.'}
+            {t.miniGames.logic.autoRefactoring}
           </div>
       )}
 
