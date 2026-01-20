@@ -847,7 +847,15 @@ export const en = {
       taskRole: "Role",
       taskAllNodes: "All nodes must be",
       taskGreen: "GREEN",
-      taskDomainModel: "for the Domain Model to compile."
+      taskDomainModel: "for the Domain Model to compile.",
+      loading: "Loading logic core...",
+      compileTime: "COMPILE TIME:",
+      refactorings: "REFACTORINGS:",
+      domainModelLevel: "DOMAIN MODEL LEVEL",
+      core: "CORE",
+      node: "NODE",
+      aligned: "ALIGNED",
+      defective: "DEFECTIVE"
     },
     decipher: {
       title: "Decipher Code",

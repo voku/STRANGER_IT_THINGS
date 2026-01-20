@@ -109,18 +109,18 @@ const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, ski
 
   const canUseHint = skill?.id === 'DEBUGGER' || skill?.id === 'COFFEE' || skill?.id === 'RUBBER_DUCK';
 
-  if (grid.length === 0) return <div>Lade Logik-Kern...</div>;
+  if (grid.length === 0) return <div>{t.miniGames.logic.loading}</div>;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex justify-between w-full max-w-xs mb-4 font-vt323 text-xl">
-        <span className="text-yellow-400">KOMPILIERZEIT: {timeLeft}s</span>
-        <span className="text-blue-400">REFAKTORIERUNGEN: {moves}</span>
+        <span className="text-yellow-400">{t.miniGames.logic.compileTime} {timeLeft}s</span>
+        <span className="text-blue-400">{t.miniGames.logic.refactorings} {moves}</span>
       </div>
 
       <div className="relative">
           {/* Schematic Labels */}
-          <div className="absolute -top-6 left-0 w-full text-center text-gray-500 font-mono text-xs">DOMAIN-MODELL EBENE</div>
+          <div className="absolute -top-6 left-0 w-full text-center text-gray-500 font-mono text-xs">{t.miniGames.logic.domainModelLevel}</div>
           
           <div className="grid grid-cols-3 gap-3 p-4 bg-gray-900 border-4 border-gray-600 rounded-lg shadow-2xl mb-8">
             {grid.map((row, rowIndex) => (
@@ -137,10 +137,10 @@ const MiniGameLogic: React.FC<MiniGameLogicProps> = ({ scenario, onComplete, ski
                 `}
                 >
                 <div className={`text-2xl mb-1 ${isActive ? 'text-green-300' : 'text-red-300'}`}>
-                    {rowIndex === 1 && colIndex === 1 ? 'KERN' : 'KNOTEN'}
+                    {rowIndex === 1 && colIndex === 1 ? t.miniGames.logic.core : t.miniGames.logic.node}
                 </div>
                 <span className={`text-xs font-mono ${isActive ? 'text-green-200' : 'text-red-200'}`}>
-                    {isActive ? 'AUSGERICHTET' : 'DEFEKT'}
+                    {isActive ? t.miniGames.logic.aligned : t.miniGames.logic.defective}
                 </span>
                 </button>
             ))

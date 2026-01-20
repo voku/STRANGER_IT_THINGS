@@ -849,7 +849,15 @@ export const de: TranslationKey = {
       taskRole: "Rolle",
       taskAllNodes: "Alle Knoten müssen",
       taskGreen: "GRÜN",
-      taskDomainModel: "sein, damit das Domain-Modell kompiliert."
+      taskDomainModel: "sein, damit das Domain-Modell kompiliert.",
+      loading: "Lade Logik-Kern...",
+      compileTime: "KOMPILIERZEIT:",
+      refactorings: "REFAKTORIERUNGEN:",
+      domainModelLevel: "DOMAIN-MODELL EBENE",
+      core: "KERN",
+      node: "KNOTEN",
+      aligned: "AUSGERICHTET",
+      defective: "DEFEKT"
     },
     decipher: {
       title: "Code entschlüsseln",
