@@ -830,7 +830,12 @@ export const en = {
       matchFound: "Match found!",
       tryAgain: "Not a match, try again",
       error: "ERROR: SEQUENCE DEVIATION",
-      watchPattern: "Watch the pattern..."
+      watchPattern: "Watch the pattern...",
+      receivingData: "RECEIVING DATA...",
+      repeatSequence: "REPEAT SEQUENCE",
+      patchUploaded: "PATCH UPLOADED",
+      goodExtending: "GOOD. EXTENDING...",
+      sequenceLabel: "SEQUENCE"
     },
     logic: {
       title: "Logic Puzzle",

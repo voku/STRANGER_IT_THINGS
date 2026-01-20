@@ -832,7 +832,12 @@ export const de: TranslationKey = {
       matchFound: "Paar gefunden!",
       tryAgain: "Kein Paar, versuche es nochmal",
       error: "FEHLER: SEQUENZ-ABWEICHUNG",
-      watchPattern: "Beobachte das Muster..."
+      watchPattern: "Beobachte das Muster...",
+      receivingData: "EMPFANGE DATEN...",
+      repeatSequence: "SEQUENZ WIEDERHOLEN",
+      patchUploaded: "PATCH HOCHGELADEN",
+      goodExtending: "GUT. ERWEITERE...",
+      sequenceLabel: "SEQUENZ"
     },
     logic: {
       title: "Logikrätsel",

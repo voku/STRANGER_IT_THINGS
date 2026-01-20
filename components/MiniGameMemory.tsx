@@ -29,7 +29,7 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
   const startRound = () => {
     setPlayerInput([]);
     setIsPlayingSequence(true);
-    setMessage("EMPFANGE DATEN...");
+    setMessage(t.miniGames.memory.receivingData);
     
     const newStep = Math.floor(Math.random() * GRID_SIZE);
     setSequence(prev => [...prev, newStep]);
@@ -49,7 +49,7 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
       setActiveLight(null);
     }
     setIsPlayingSequence(false);
-    setMessage("SEQUENZ WIEDERHOLEN");
+    setMessage(t.miniGames.memory.repeatSequence);
   };
 
   const handleClick = (index: number) => {
@@ -72,10 +72,10 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
     // Check if round complete
     if (newInput.length === sequence.length) {
       if (sequence.length === targetLength) {
-        setMessage("PATCH HOCHGELADEN");
+        setMessage(t.miniGames.memory.patchUploaded);
         setTimeout(() => onComplete(true), 1000);
       } else {
-        setMessage("GUT. ERWEITERE...");
+        setMessage(t.miniGames.memory.goodExtending);
         setTimeout(() => startRound(), 1000);
       }
     }
@@ -99,7 +99,7 @@ const MiniGameMemory: React.FC<MiniGameMemoryProps> = ({ scenario, onComplete })
         ))}
       </div>
       <div className="mt-4 font-mono text-gray-500 text-sm">
-        SEQUENZ: {sequence.length} / {targetLength}
+        {t.miniGames.memory.sequenceLabel}: {sequence.length} / {targetLength}
       </div>
     </div>
   );
