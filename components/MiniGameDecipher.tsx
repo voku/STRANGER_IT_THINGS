@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Scenario, Skill } from '../types';
-import { useTranslation } from '../translations';
+import { useTranslation, formatMessage } from '../translations';
+import { useSkillTranslation } from '../translations/helpers';
 
 interface MiniGameDecipherProps {
   scenario: Scenario;
@@ -16,6 +17,8 @@ interface Letter {
 
 const MiniGameDecipher: React.FC<MiniGameDecipherProps> = ({ scenario, skill, onComplete }) => {
   const { t } = useTranslation();
+  const skillTranslation = useSkillTranslation(skill?.id ?? '');
+  const skillName = skill ? (skillTranslation.name || skill.name) : '';
   const targetWord = scenario.targetWord || "PASSWORD";
   const [letters, setLetters] = useState<Letter[]>([]);
   const [currentGuess, setCurrentGuess] = useState<Letter[]>([]);
@@ -209,7 +212,7 @@ const MiniGameDecipher: React.FC<MiniGameDecipherProps> = ({ scenario, skill, on
             `}
         >
             <span className="text-2xl">{skill.icon}</span>
-            <span>{skill.name.toUpperCase()} AKTIVIEREN</span>
+            <span>{formatMessage(t.miniGames.decipher.activateSkill, { skill: skillName.toUpperCase() })}</span>
         </button>
       )}
 
