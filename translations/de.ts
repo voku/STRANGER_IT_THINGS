@@ -192,7 +192,10 @@ export const de: TranslationKey = {
     safe: "SICHER",
     sla: "SLA",
     morale: "MORAL",
-    quality: "QUALITÄT"
+    quality: "QUALITÄT",
+    statusLabel: "STATUS",
+    itemLabel: "ITEM",
+    none: "KEINS"
   },
 
   // Map locations
@@ -280,6 +283,7 @@ export const de: TranslationKey = {
     locked: "GESPERRT",
     completed: "ABGESCHLOSSEN",
     unknown: "UNBEKANNT",
+    agentLabel: "AGENT",
     completedProgress: "abgeschlossen",
     actHints: {
       act1: "ZIEL: TRIAGE IN DER STARCOURT MALL",
@@ -824,7 +828,8 @@ export const de: TranslationKey = {
       selectOption: "Wähle eine Option oben",
       noItemAvailable: "⚠️ Kein Item verfügbar!",
       systemHintDecrypted: ">> SYSTEM-HINWEIS ENTSCHLÜSSELT:",
-      optimalActionMarked: "OPTIMALE HANDLUNG MARKIERT"
+      optimalActionMarked: "OPTIMALE HANDLUNG MARKIERT",
+      simulatedImpact: "> Simulierte Auswirkung auf SLA und Backend-Prozesse..."
     },
     memory: {
       title: "Memory-Spiel",
@@ -837,7 +842,9 @@ export const de: TranslationKey = {
       repeatSequence: "SEQUENZ WIEDERHOLEN",
       patchUploaded: "PATCH HOCHGELADEN",
       goodExtending: "GUT. ERWEITERE...",
-      sequenceLabel: "SEQUENZ"
+      sequenceLabel: "SEQUENZ",
+      resultSuccess: "Pattern erkannt.",
+      resultFailure: "Fehlerhafte Zuordnung."
     },
     logic: {
       title: "Logikrätsel",
@@ -847,6 +854,8 @@ export const de: TranslationKey = {
       accessDenied: "Zugriff verweigert.",
       debuggerButton: "DEBUGGER STARTEN (AUTO-FIX)",
       autoRefactoring: ">> AUTOMATISCHES REFACTORING LÄUFT... ALIGNMENT ERZWUNGEN.",
+      refactorSuccess: "Modell erfolgreich refakturiert.",
+      refactorFailure: "Refactoring fehlgeschlagen. Spaghetti-Code entstanden.",
       task: "AUFGABE:",
       taskConnect: "Verbinde",
       taskUser: "User",
@@ -871,6 +880,7 @@ export const de: TranslationKey = {
       submit: "Absenden",
       time: "ZEIT:",
       length: "LÄNGE:",
+      activateSkill: "{skill} AKTIVIEREN",
       skillModuleEmpty: "SKILL-MODUL LEER",
       decryptPassword: "ENTSCHLÜSSELE DAS KENNWORT"
     },

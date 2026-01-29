@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { GameState, CharacterRole, WrongAnswer } from '../types';
 import { ACT_2_CORE_SCENARIOS } from '../constants';
 import { useTranslation, formatMessage } from '../translations';
+import { useSkillTranslation } from '../translations/helpers';
 
 interface EndScreenProps {
   gameState: GameState;
@@ -11,9 +12,10 @@ interface EndScreenProps {
 const EndScreen: React.FC<EndScreenProps> = ({ gameState, onReplay }) => {
   const { t } = useTranslation();
   const { playerName, selectedCharacter, selectedSkill, ticketQuality, teamMorale, slaTime, gameStatus, wrongAnswers = [] } = gameState;
+  const skillTranslation = useSkillTranslation(selectedSkill?.id ?? '');
   const victory = gameStatus === 'won';
   const charName = selectedCharacter?.name || t.endScreen.unknown;
-  const skillName = selectedSkill?.name || t.endScreen.standardEquipment;
+  const skillName = selectedSkill ? (skillTranslation.name || selectedSkill.name) : t.endScreen.standardEquipment;
   const completed = gameState.completedScenarios || [];
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   

@@ -190,7 +190,10 @@ export const en = {
     safe: "SAFE",
     sla: "SLA",
     morale: "MORALE",
-    quality: "QUALITY"
+    quality: "QUALITY",
+    statusLabel: "STATUS",
+    itemLabel: "ITEM",
+    none: "NONE"
   },
 
   // Map locations
@@ -278,6 +281,7 @@ export const en = {
     locked: "LOCKED",
     completed: "COMPLETED",
     unknown: "UNKNOWN",
+    agentLabel: "AGENT",
     completedProgress: "completed",
     actHints: {
       act1: "TARGET: TRIAGE AT STARCOURT MALL",
@@ -822,7 +826,8 @@ export const en = {
       selectOption: "Select an option above",
       noItemAvailable: "⚠️ No item available!",
       systemHintDecrypted: ">> SYSTEM HINT DECRYPTED:",
-      optimalActionMarked: "OPTIMAL ACTION MARKED"
+      optimalActionMarked: "OPTIMAL ACTION MARKED",
+      simulatedImpact: "> Simulated impact on SLA and backend processes..."
     },
     memory: {
       title: "Memory Match",
@@ -835,7 +840,9 @@ export const en = {
       repeatSequence: "REPEAT SEQUENCE",
       patchUploaded: "PATCH UPLOADED",
       goodExtending: "GOOD. EXTENDING...",
-      sequenceLabel: "SEQUENCE"
+      sequenceLabel: "SEQUENCE",
+      resultSuccess: "Pattern recognized.",
+      resultFailure: "Incorrect mapping."
     },
     logic: {
       title: "Logic Puzzle",
@@ -845,6 +852,8 @@ export const en = {
       accessDenied: "Access denied.",
       debuggerButton: "START DEBUGGER (AUTO-FIX)",
       autoRefactoring: ">> AUTOMATIC REFACTORING RUNNING... ALIGNMENT ENFORCED.",
+      refactorSuccess: "Model successfully refactored.",
+      refactorFailure: "Refactoring failed. Spaghetti code formed.",
       task: "TASK:",
       taskConnect: "Connect",
       taskUser: "User",
@@ -869,6 +878,7 @@ export const en = {
       submit: "Submit",
       time: "TIME:",
       length: "LENGTH:",
+      activateSkill: "ACTIVATE {skill}",
       skillModuleEmpty: "SKILL MODULE EMPTY",
       decryptPassword: "DECRYPT THE PASSWORD"
     },

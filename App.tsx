@@ -51,6 +51,20 @@ import { getRandomSystemMessage } from './services/systemService';
 const App: React.FC = () => {
   const { t } = useTranslation();
   const [gameState, setGameState] = useState<GameState>(initialGameState);
+
+  const getTranslatedSkillName = (skill: Skill) => {
+    const translations: Record<string, string> = {
+      RUBBER_DUCK: t.skills.rubberDuck.name,
+      ITIL_BOOK: t.skills.itilBook.name,
+      COFFEE: t.skills.coffee.name,
+      DEBUGGER: t.skills.debugger.name,
+      EXPIRED_ENERGY_DRINK: t.skills.expiredDrink.name,
+      OUTDATED_DOCUMENTATION: t.skills.outdatedDocs.name,
+      BUGGY_SCRIPT: t.skills.buggyScript.name
+    };
+
+    return translations[skill.id] || skill.name;
+  };
   
   // Transition state for screen animations
   const [transition, setTransition] = useState<{ 
@@ -359,13 +373,14 @@ const App: React.FC = () => {
       if (itemUsed && gameState.selectedSkill) {
         const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
         if (skill) {
+          const translatedSkillName = getTranslatedSkillName(skill);
           // Consume item from inventory
           const currentCount = newInventory[skill.id] || 0;
           if (currentCount > 0) {
             newInventory[skill.id] = currentCount - 1;
             addLog(formatMessage(t.system.itemConsumed, { 
               icon: skill.icon, 
-              name: skill.name, 
+              name: translatedSkillName, 
               count: newInventory[skill.id].toString() 
             }), 'SYSTEM');
           }
@@ -375,7 +390,7 @@ const App: React.FC = () => {
             itemQualityEffect = skill.qualityEffect || 0;
             itemMoraleEffect = skill.moraleEffect || 0;
             if (itemQualityEffect !== 0 || itemMoraleEffect !== 0) {
-              addLog(formatMessage(t.system.itemWarning, { name: skill.name }), 'SYSTEM');
+              addLog(formatMessage(t.system.itemWarning, { name: translatedSkillName }), 'SYSTEM');
             }
           }
         }
@@ -388,8 +403,9 @@ const App: React.FC = () => {
         const skill = SKILLS.find(s => s.id === gameState.selectedSkill?.id);
         if (skill && skill.targetAct && skill.targetAct !== gameState.currentAct && skill.slaPenalty) {
           slaPenalty += skill.slaPenalty;
+          const translatedSkillName = getTranslatedSkillName(skill);
           addLog(formatMessage(t.system.wrongItemWarning, { 
-            name: skill.name, 
+            name: translatedSkillName, 
             penalty: skill.slaPenalty.toString() 
           }), 'SYSTEM');
         }
@@ -509,11 +525,6 @@ const App: React.FC = () => {
     if (gameState.currentScreen === 'INTRO') {
       return (
         <div className="flex flex-col items-center justify-center h-full text-center px-4 animate-fade-in">
-          {/* Language Selector at top */}
-          <div className="absolute top-4 right-4 z-50">
-            <LanguageSelector showLabel={false} />
-          </div>
-          
           <h1 className="text-5xl md:text-8xl font-stranger mb-8 drop-shadow-lg text-red-600 tracking-widest animate-pulse">
             <span className="block">STRANGER</span>
             <span className="block text-blue-500">IT THINGS</span>
@@ -590,6 +601,9 @@ const App: React.FC = () => {
     if (gameState.currentScreen === 'GAME' && gameState.currentScenario) {
       // Calculate location progress
       const getScenarioProgress = () => {
+        if (gameState.currentAct === Act.ACT_1_TICKET) {
+          return null;
+        }
         if (gameState.selectedLocation) {
           const locationScenarios = STORY_SCENARIOS.filter(scenario => {
             if (gameState.selectedLocation!.id === 'MALL' && gameState.selectedLocation!.requiredAct === Act.ACT_1_TICKET) {
@@ -655,11 +669,11 @@ const App: React.FC = () => {
                           handleScenarioComplete(
                               success ? 20 : -20, 
                               success ? 10 : -10, 
-                              success ? "Modell erfolgreich refakturiert." : "Refactoring fehlgeschlagen. Spaghetti-Code entstanden.",
-                              success
-                          );
-                      }}
-                  />
+                          success ? t.miniGames.logic.refactorSuccess : t.miniGames.logic.refactorFailure,
+                          success
+                      );
+                  }}
+              />
               )}
 
               {gameState.currentScenario.type === 'DECRYPT' && (
@@ -685,11 +699,11 @@ const App: React.FC = () => {
                           handleScenarioComplete(
                               success ? 15 : -10,
                               success ? 5 : -5,
-                              success ? "Pattern erkannt." : "Fehlerhafte Zuordnung.",
-                              success
-                          );
-                      }}
-                  />
+                          success ? t.miniGames.memory.resultSuccess : t.miniGames.memory.resultFailure,
+                          success
+                      );
+                  }}
+              />
               )}
 
               {gameState.currentScenario.type === 'REFLEX' && (
@@ -700,11 +714,11 @@ const App: React.FC = () => {
                           handleScenarioComplete(
                               success ? 10 : -10,
                               success ? 5 : -5,
-                              success ? "Reaktionstest bestanden." : "Zu langsam.",
-                              success
-                          );
-                      }}
-                  />
+                          success ? t.miniGames.reflex.perfect : t.miniGames.reflex.tooSlow,
+                          success
+                      );
+                  }}
+              />
               )}
           </div>
         </div>
@@ -726,6 +740,10 @@ const App: React.FC = () => {
 
   return (
     <RetroContainer>
+      <div className="absolute top-4 right-4 z-50">
+        <LanguageSelector showLabel={false} />
+      </div>
+
       {/* Transition overlay */}
       {transition.active && (
         <SceneTransition 

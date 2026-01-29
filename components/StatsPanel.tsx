@@ -1,6 +1,7 @@
 import React from 'react';
 import { Character, Skill, Act, ItemInventory } from '../types';
 import { useTranslation } from '../translations';
+import { useSkillTranslation } from '../translations/helpers';
 
 interface StatsPanelProps {
   character: Character;
@@ -24,6 +25,9 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   itemInventory = {}
 }) => {
   const { t } = useTranslation();
+  const skillTranslation = useSkillTranslation(skill?.id ?? '');
+  const skillName = skill ? (skillTranslation.name || skill.name) : '';
+  const skillDescription = skill ? (skillTranslation.description || skill.description) : '';
   
   // Get item count for equipped skill
   const equippedItemCount = skill ? (itemInventory[skill.id] || 0) : 0;
@@ -90,7 +94,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         <div className="flex sm:hidden items-center gap-1 bg-black/40 px-2 py-1 rounded border border-gray-600 flex-shrink-0">
             {skill ? (
                 <div className="flex items-center gap-1">
-                    <span className="text-sm text-yellow-400" title={skill.description}>
+                    <span className="text-sm text-yellow-400" title={skillDescription}>
                         {skill.icon}
                     </span>
                     <span className="text-[10px] text-gray-400 font-mono">x{equippedItemCount}</span>
@@ -113,24 +117,24 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         <div className="font-vt323 text-right">
             <div className="text-xl text-green-400 mb-1 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">{currentAct.split(':')[0]}</div>
             <div className={`text-xs uppercase tracking-widest ${gameStatus === 'active' ? 'text-gray-400' : gameStatus === 'won' ? 'text-green-400' : 'text-red-500'}`}>
-                Status: {gameStatus}
+                {t.stats.statusLabel}: {gameStatus}
             </div>
         </div>
 
         {/* Active Skill Display */}
         <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded border border-gray-600">
-            <span className="text-xs text-gray-500 font-vt323">ITEM:</span>
+            <span className="text-xs text-gray-500 font-vt323">{t.stats.itemLabel}:</span>
             {skill ? (
                 <div className="flex items-center gap-1">
-                    <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={skill.description}>
-                        {skill.icon} <span className="hidden lg:inline">{skill.name}</span>
+                    <span className="text-sm text-yellow-400 font-bold flex items-center gap-1" title={skillDescription}>
+                        {skill.icon} <span className="hidden lg:inline">{skillName}</span>
                     </span>
                     <span className={`text-xs font-mono ${equippedItemCount === 0 ? 'text-red-400' : 'text-gray-400'}`}>
                         x{equippedItemCount}
                     </span>
                 </div>
             ) : (
-                <span className="text-xs text-gray-600 italic">KEINS</span>
+                <span className="text-xs text-gray-600 italic">{t.stats.none}</span>
             )}
         </div>
       </div>

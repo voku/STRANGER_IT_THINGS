@@ -63,7 +63,7 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
             {getActHint()}
         </p>
         <p className="font-vt323 text-sm sm:text-lg text-gray-300">
-            {character.name.toUpperCase()}: <span className="text-blue-400 uppercase">{playerName || t.mapScreen.unknown}</span>
+            {t.mapScreen.agentLabel}: <span className="text-blue-400 uppercase">{playerName || t.mapScreen.unknown}</span>
         </p>
       </div>
 
@@ -72,7 +72,7 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
         {MAP_LOCATIONS.map((loc) => {
           const unlocked = isUnlocked(loc);
           const progress = getLocationProgress(loc);
-          const showProgress = unlocked && progress.total > 0;
+          const showProgress = unlocked && progress.total > 0 && currentAct !== Act.ACT_1_TICKET;
           
           return (
             <button
@@ -141,7 +141,7 @@ const HawkinsMap: React.FC<HawkinsMapProps> = ({ playerName, character, unlocked
         {MAP_LOCATIONS.map((loc) => {
             const unlocked = isUnlocked(loc);
             const progress = getLocationProgress(loc);
-            const showProgress = unlocked && progress.total > 0;
+            const showProgress = unlocked && progress.total > 0 && currentAct !== Act.ACT_1_TICKET;
             
             return (
                 <button

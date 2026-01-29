@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Scenario, Skill, ItemInventory } from '../types';
 import LifecycleDiagram from './LifecycleDiagram';
 import { useTranslation, formatMessage } from '../translations';
+import { useSkillTranslation } from '../translations/helpers';
 
 interface MiniGameClassifyProps {
   scenario: Scenario;
@@ -12,6 +13,8 @@ interface MiniGameClassifyProps {
 
 const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, itemInventory, onComplete }) => {
   const { t } = useTranslation();
+  const skillTranslation = useSkillTranslation(skill?.id ?? '');
+  const skillName = skill ? (skillTranslation.name || skill.name) : '';
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showDiagram, setShowDiagram] = useState(false);
   const [hintRevealed, setHintRevealed] = useState(false);
@@ -117,7 +120,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                   : 'bg-gray-900 border-gray-600 text-gray-600 cursor-not-allowed opacity-50'
                 }`}
             >
-              {formatMessage(t.miniGame.useItem, { item: skill.name })} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : `(${t.miniGame.empty})`}
+              {formatMessage(t.miniGame.useItem, { item: skillName })} {hasItemInInventory ? `(${itemInventory[skill.id]}x)` : `(${t.miniGame.empty})`}
             </button>
             {!hasItemInInventory && (
               <p className="text-red-400 text-xs font-mono">{t.miniGames.classify.noItemAvailable}</p>
@@ -152,7 +155,7 @@ const MiniGameClassify: React.FC<MiniGameClassifyProps> = ({ scenario, skill, it
                  </div>
                  
                  <p className="text-center font-mono text-xs sm:text-sm text-green-400 mt-2 sm:mt-4 mb-2 animate-pulse">
-                    &gt; Simulierte Auswirkung auf SLA und Backend-Prozesse...
+                    {t.miniGames.classify.simulatedImpact}
                  </p>
              </div>
 

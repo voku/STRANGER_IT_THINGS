@@ -186,10 +186,9 @@ describe('Randomization and Progress Indicators', () => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
       }, { timeout: 30000 });
       
-      // Verify progress indicator exists for Starcourt Mall (use getAllByText for multiple matches)
-      // It should show something like "0/1" or similar
+      // Verify progress indicator is hidden in Act 1 to avoid hinting the path
       const progressTexts = screen.queryAllByText(/0\/1/);
-      expect(progressTexts.length).toBeGreaterThan(0); // At least one progress indicator
+      expect(progressTexts.length).toBe(0);
     });
     
     it('should show location name and progress in active scenario', async () => {
@@ -240,10 +239,9 @@ describe('Randomization and Progress Indicators', () => {
         expect(screen.getByText(/Flackernde Lichter|Flickering Lights/i)).toBeInTheDocument();
       }, { timeout: 30000 });
       
-      // Verify in-scenario progress indicator
-      // Should show something like "📍 Starcourt Mall | Progress: 0/1"
+      // Verify in-scenario progress indicator is hidden for Act 1
       const progressIndicator = screen.queryByText(/📍.*Starcourt Mall.*Progress/i);
-      expect(progressIndicator).toBeInTheDocument();
+      expect(progressIndicator).not.toBeInTheDocument();
     });
   });
 
@@ -327,9 +325,9 @@ describe('Randomization and Progress Indicators', () => {
         expect(screen.getByText(/HAWKINS MAP/i)).toBeInTheDocument();
       }, { timeout: 30000 });
       
-      // Verify initial progress is 0/1 (use getAllByText for multiple matches)
+      // Verify initial progress is hidden for Act 1
       const initialProgress = screen.queryAllByText(/0\/1/);
-      expect(initialProgress.length).toBeGreaterThan(0);
+      expect(initialProgress.length).toBe(0);
       
       // Click location and complete scenario
       const mallButtons = screen.getAllByRole('button', { name: /Starcourt Mall/i });
